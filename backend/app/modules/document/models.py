@@ -1,19 +1,52 @@
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime, Enum
+    Column, Integer, String, DateTime, Enum, ForeignKey
 )
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.core.database import Base
-from app.shared.enums import RoleEnum
+from app.shared.enums import TypeDocumentEnum
 
-class Utilisateur(Base):
-    __tablename__ = "utilisateurs"
+
+class Document(Base):
+    __tablename__ = "documents"
 
     id = Column(Integer, primary_key=True, index=True)
-    nom = Column(String(100), nullable=False)
-    prenom = Column(String(100), nullable=False)
-    email = Column(String(150), unique=True, nullable=False, index=True)
-    motDePasse = Column(String(255), nullable=False)
-    role = Column(Enum(RoleEnum), nullable=False)
-    actif = Column(Boolean, default=True)
-    dateCreation = Column(DateTime, default=datetime.utcnow)
+    id_utilisateur = Column(Integer, ForeignKey("utilisateurs.id"), nullable=False)
+
+    nom_fichier = Column(String(255), nullable=False)
+    type_document = Column(Enum(TypeDocumentEnum), nullable=False)
+
+    chemin_acces = Column(String(500), nullable=False)
+    taille = Column(Integer, nullable=False)
+    date_upload = Column(DateTime, default=datetime.utcnow)
+
+    utilisateur = relationship("Utilisateur", back_populates="documents")
+
+    __mapper_args__ = {
+        "polymorphic_on": type_document,
+        "polymorphic_identity": "document",
+    }
+
+
+class RapportFinal(Document):
+    __tablename__ = "rapports_finals"
+
+    id = Column(Integer, ForeignKey("documents.id"), primary_key=True)
+    sujet = Column(String(255), nullable=False)
+    resume = Column(String(1000))
+
+    __mapper_args__ = {
+        "polymorphic_identity": "rapport_final",
+    }
+
+
+class Attestation(Document):
+    __tablename__ = "attestations"
+
+    id = Column(Integer, ForeignKey("documents.id"), primary_key=True)
+    date_emission = Column(DateTime, default=datetime.utcnow)
+    valide_jusqua = Column(DateTime)
+
+    __mapper_args__ = {
+        "polymorphic_identity": "attestation",
+    }

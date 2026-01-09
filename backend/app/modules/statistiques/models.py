@@ -6,14 +6,13 @@ from datetime import datetime
 from app.core.database import Base
 from app.shared.enums import RoleEnum
 
-class Utilisateur(Base):
-    __tablename__ = "utilisateurs"
+class Statistiques(Base):
+    __tablename__ = "statistiques"
 
     id = Column(Integer, primary_key=True, index=True)
-    nom = Column(String(100), nullable=False)
-    prenom = Column(String(100), nullable=False)
-    email = Column(String(150), unique=True, nullable=False, index=True)
-    motDePasse = Column(String(255), nullable=False)
-    role = Column(Enum(RoleEnum), nullable=False)
-    actif = Column(Boolean, default=True)
-    dateCreation = Column(DateTime, default=datetime.utcnow)
+    periode = Column(String(50), nullable=False)
+    nombreDemandes = Column(Integer, default=0)
+    nbrStagesvalides = Column(Integer, default=0)
+    nbrStagesencours = Column(Integer, default=0)
+    taxeReussite = Column(float, default=0)
+    

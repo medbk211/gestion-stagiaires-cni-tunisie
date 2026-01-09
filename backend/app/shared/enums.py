@@ -23,3 +23,16 @@ class StatutStageEnum(str, enum.Enum):
 class TypeJournalEnum(str, enum.Enum):
     JOURNALIER = "JOURNALIER"
     HEBDOMADAIRE = "HEBDOMADAIRE"
+
+
+class NotificationTypeEnum(str, enum.Enum):
+    info = "SYSTEM"
+    warning = "WARNING"
+    alert = "ALERT"
+    error = "ERROR"
+    validation = "VALIDATION"
+
+
+class TypeDocumentEnum(str, enum.Enum):
+    RAPPORT_FINAL = "RAPPORT_FINAL"
+    ATTESTATION = "ATTESTATION"

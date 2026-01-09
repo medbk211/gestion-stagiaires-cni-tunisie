@@ -1,19 +1,22 @@
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime, Enum
+    Column, Integer, String, Boolean, DateTime, Enum, ForeignKey
 )
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.core.database import Base
 from app.shared.enums import RoleEnum
 
-class Utilisateur(Base):
-    __tablename__ = "utilisateurs"
+class MessageInterne(Base):
+    __tablename__ = "messages_internes"
 
     id = Column(Integer, primary_key=True, index=True)
-    nom = Column(String(100), nullable=False)
-    prenom = Column(String(100), nullable=False)
-    email = Column(String(150), unique=True, nullable=False, index=True)
-    motDePasse = Column(String(255), nullable=False)
-    role = Column(Enum(RoleEnum), nullable=False)
-    actif = Column(Boolean, default=True)
-    dateCreation = Column(DateTime, default=datetime.utcnow)
+    id_expediteur = Column(Integer, ForeignKey("utilisateurs.id"), nullable=False)
+    id_destinataire = Column(Integer, ForeignKey("utilisateurs.id"), nullable=False)
+    sujet = Column(String(255), nullable=False)
+    contenu = Column(String(1000), nullable=False)
+    date_envoi = Column(DateTime, default=datetime.utcnow)
+    lu = Column(Boolean, default=False)
+
+    expediteur = relationship("Utilisateur", foreign_keys=[id_expediteur])
+    destinataire = relationship("Utilisateur", foreign_keys=[id_destinataire])
+

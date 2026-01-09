@@ -1,19 +1,21 @@
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime, Enum
+    Column, Integer, String, Boolean, DateTime, Enum, ForeignKey
 )
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.core.database import Base
-from app.shared.enums import RoleEnum
+from app.shared.enums import NotificationTypeEnum
 
-class Utilisateur(Base):
-    __tablename__ = "utilisateurs"
+class Notification(Base):
+    __tablename__ = "notifications"
 
     id = Column(Integer, primary_key=True, index=True)
-    nom = Column(String(100), nullable=False)
-    prenom = Column(String(100), nullable=False)
-    email = Column(String(150), unique=True, nullable=False, index=True)
-    motDePasse = Column(String(255), nullable=False)
-    role = Column(Enum(RoleEnum), nullable=False)
-    actif = Column(Boolean, default=True)
-    dateCreation = Column(DateTime, default=datetime.utcnow)
+    idUtilisateur = Column(Integer, ForeignKey("utilisateurs.id"), nullable=False)
+    message = Column(String(255), nullable=False)
+    type = Column(Enum(NotificationTypeEnum), nullable=False)
+    datdenvoi = Column(DateTime, default=datetime.utcnow)
+    lu = Column(Boolean, default=False)
+
+    utilisateur = relationship("Utilisateur", back_populates="notifications")   
+
+
