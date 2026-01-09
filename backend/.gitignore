@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.env
+*.sqlite3
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+
+# MySQL / DB backups
+*.sql
+*.db
+
+# Alembic / Migrations
+alembic/versions/*.pyc
+alembic/versions/*.pyo
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
