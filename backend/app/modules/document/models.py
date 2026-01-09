@@ -40,13 +40,13 @@ class RapportFinal(Document):
     }
 
 
-class Attestation(Document):
-    __tablename__ = "attestations"
+# class Attestation(Document):
+#     __tablename__ = "attestations"
 
-    id = Column(Integer, ForeignKey("documents.id"), primary_key=True)
-    date_emission = Column(DateTime, default=datetime.utcnow)
-    valide_jusqua = Column(DateTime)
+#     id = Column(Integer, ForeignKey("documents.id"), primary_key=True)
+#     date_emission = Column(DateTime, default=datetime.utcnow)
+#     valide_jusqua = Column(DateTime)
 
-    __mapper_args__ = {
-        "polymorphic_identity": "attestation",
-    }
+#     __mapper_args__ = {
+#         "polymorphic_identity": "attestation",
+#     }
