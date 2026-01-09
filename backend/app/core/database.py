@@ -22,10 +22,10 @@ def get_db():
         db.close()
 
 
-def test_db_connection():
-    try:
-        with engine.connect() as conn:
-            conn.execute(text("SELECT 1"))
-        print("✅ Connected to database")
-    except Exception as e:
-        print("❌ Connection failed:", e)
+# def test_db_connection():
+#     try:
+#         with engine.connect() as conn:
+#             conn.execute(text("SELECT 1"))
+#         print("✅ Connected to database")
+#     except Exception as e:
+#         print("❌ Connection failed:", e)
