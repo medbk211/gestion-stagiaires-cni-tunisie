@@ -19,6 +19,8 @@ class StatutStageEnum(str, enum.Enum):
     EN_COURS = "EN_COURS"
     TERMINE = "TERMINE"
     ANNULE = "ANNULE"
+    EN_ATTENTE = "EN_ATTENTE"
+
 
 class TypeJournalEnum(str, enum.Enum):
     JOURNALIER = "JOURNALIER"
@@ -36,3 +38,11 @@ class NotificationTypeEnum(str, enum.Enum):
 class TypeDocumentEnum(str, enum.Enum):
     RAPPORT_FINAL = "RAPPORT_FINAL"
     ATTESTATION = "ATTESTATION"
+
+
+class TypeStageEnum(str, enum.Enum):
+    PFE = "PFE"
+    INITIATION = "INITIATION"
+    PERFECTIONNEMENT = "PERFECTIONNEMENT"    
+
+
