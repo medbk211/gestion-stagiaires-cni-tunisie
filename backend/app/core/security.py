@@ -7,6 +7,9 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.modules.utilisateur.models import Utilisateur
 
+import secrets
+import string
+
 SECRET_KEY = "SUPER_SECRET_KEY"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
@@ -44,6 +47,11 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise credentials_exception
     return user
+
+
+def generate_password(length: int = 10) -> str:
+    chars = string.ascii_letters + string.digits
+    return ''.join(secrets.choice(chars) for _ in range(length))
 
 def require_role(*roles):
     def role_checker(current_user = Depends(get_current_user)):

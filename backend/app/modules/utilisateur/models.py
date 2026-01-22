@@ -30,4 +30,9 @@ class Utilisateur(Base):
     )
 
     dernierLogin = Column(DateTime, nullable=True)
+    reset_tokens = relationship(
+        "ResetMotDePasse",
+        back_populates="utilisateur",
+        cascade="all, delete-orphan"
+    )
 

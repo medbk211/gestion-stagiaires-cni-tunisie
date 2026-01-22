@@ -26,6 +26,12 @@ class TypeJournalEnum(str, enum.Enum):
     JOURNALIER = "JOURNALIER"
     HEBDOMADAIRE = "HEBDOMADAIRE"
 
+    
+class GradeEnum(str, enum.Enum):
+    junior = "Junior"
+    senior = "Senior"
+    expert = "Expert"
+
 
 class NotificationTypeEnum(str, enum.Enum):
     info = "SYSTEM"
@@ -35,7 +41,10 @@ class NotificationTypeEnum(str, enum.Enum):
     validation = "VALIDATION"
 
 
-class TypeDocumentEnum(str, enum.Enum):
+class DocumentTypeEnum(str, enum.Enum):
+    CV = "cv"
+    LETTRE = "lettre"
+    CONVOCATION = "convocation"
     RAPPORT_FINAL = "RAPPORT_FINAL"
     ATTESTATION = "ATTESTATION"
 
@@ -44,5 +53,33 @@ class TypeStageEnum(str, enum.Enum):
     PFE = "PFE"
     INITIATION = "INITIATION"
     PERFECTIONNEMENT = "PERFECTIONNEMENT"    
+
+
+class DepartementEnum(str, enum.Enum):
+    INFORMATIQUE = "INFORMATIQUE"
+    RH = "RESSOURCES_HUMAINES"
+    FINANCES = "FINANCES"
+    EXPLOITATION = "EXPLOITATION"
+    SUPPORT = "SUPPORT"
+    ADMINISTRATION = "ADMINISTRATION"
+class NiveauEnum(str, enum.Enum):
+    LICENCE = "LICENCE"
+    MASTER = "MASTER"
+    DOCTORAT = "DOCTORAT"
+
+class ProjetStatusEnum(str, enum.Enum):
+    DISPONIBLE = "DISPONIBLE"
+    AFFECTE = "AFFECTE"
+    TERMINE = "TERMINE"
+      
+
+
+
+
+
+
+
+
+
 
 

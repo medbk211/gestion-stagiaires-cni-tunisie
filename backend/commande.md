@@ -49,3 +49,18 @@ alembic downgrade -1
 
 
 
+Demande de stage (sans compte)
+        ↓
+Proposition 3 projets
+        ↓
+Choix projet (stagiaire offline)
+        ↓
+Validation encadrant
+        ↓
+Affectation finale
+        ↓
+Création compte stagiaire
+        ↓
+Envoi email (password temporaire)
+        ↓
+Connexion dashboard

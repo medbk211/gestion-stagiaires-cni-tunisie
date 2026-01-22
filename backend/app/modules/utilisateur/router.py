@@ -33,7 +33,7 @@ def get_user_or_404(db: Session, user_id: int):
 def create_user(
     data: UtilisateurCreate,
     db: Session = Depends(get_db),
-    current_user = Depends(require_role(RoleEnum.ADMIN))
+    # current_user = Depends(require_role(RoleEnum.ADMIN))
 ):
     return create_utilisateur(db, data)
 

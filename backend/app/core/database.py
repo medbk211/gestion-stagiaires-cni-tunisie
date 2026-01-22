@@ -6,13 +6,18 @@ from app.core.config import DATABASE_URL
 
 engine = create_engine(
     DATABASE_URL,
-    echo=True,  # prints SQL queries for debugging
+    echo=True,
 )
-
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+# ✅ Register models here (important for relationships)
+from app.modules.utilisateur.models import Utilisateur
+from app.modules.auth.models import ResetMotDePasse
+from app.modules.encadreurs.models import Encadreur
+
 
 def get_db():
     db = SessionLocal()

@@ -11,6 +11,12 @@ from app.core.database import Base
 
 # import all models 👇👇
 from app.modules.utilisateur.models import Utilisateur
+from app.modules.auth.models import ResetMotDePasse
+from app.modules.demande_stage.models import DemandeStage
+from app.modules.document.models import Document
+from app.shared.enums import *
+from app.modules.projet_stage.models import Projet
+from app.modules.encadreurs.models import Encadreur
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

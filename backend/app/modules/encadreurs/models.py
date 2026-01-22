@@ -1,31 +1,63 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import (
+    Column, Integer, String, Boolean,
+    ForeignKey, Enum, CheckConstraint
+)
 from sqlalchemy.orm import relationship
-# from app.core.database import Base
+from datetime import datetime
 from app.modules.utilisateur.models import Utilisateur
+from app.shared.enums import GradeEnum, DepartementEnum
+
 
 class Encadreur(Utilisateur):
     __tablename__ = "encadreurs"
 
-    id = Column(Integer, ForeignKey("utilisateurs.id"), primary_key=True)
+    id = Column(
+        Integer,
+        ForeignKey("utilisateurs.id", ondelete="CASCADE"),
+        primary_key=True
+    )
 
     matricule = Column(String(50), unique=True, index=True, nullable=False)
 
-    grade = Column(String(100), nullable=False)
-    poste = Column(String(100), nullable=False)
+    grade = Column(
+        Enum(GradeEnum),
+        nullable=False
+    )
 
-    departement = Column(String(100))
-    structure = Column(String(150), nullable=False)
+    departement = Column(Enum(DepartementEnum), index=True)
 
-    actif_encadrement = Column(Boolean, default=True)
-    peut_valider = Column(Boolean, default=False)
+    actif_encadrement = Column(Boolean, default=True, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
 
-    max_stagiaires = Column(Integer, default=5)
+    max_stagiaires = Column(
+        Integer,
+        default=5,
+        nullable=False
+    )
 
-    stagiaires = relationship(
-        "Stagiaire",
-        back_populates="encadreur"
+    # ========================
+    # Constraints
+    # ========================
+    __table_args__ = (
+        CheckConstraint(
+            "max_stagiaires >= 1",
+            name="ck_encadreur_max_stagiaires_positive"
+        ),
     )
 
     __mapper_args__ = {
         "polymorphic_identity": "encadreur",
     }
+
+    # ========================
+    # Business Helpers
+    # ========================
+    @property
+    def nb_stagiaires_actuels(self) -> int:
+        return len(self.stagiaires)
+
+    def peut_prendre_stagiaire(self) -> bool:
+        return (
+            self.actif_encadrement
+            and self.nb_stagiaires_actuels < self.max_stagiaires
+        )
