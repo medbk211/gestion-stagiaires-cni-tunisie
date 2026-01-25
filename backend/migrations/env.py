@@ -17,6 +17,7 @@ from app.modules.document.models import Document
 from app.shared.enums import *
 from app.modules.projet_stage.models import Projet
 from app.modules.encadreurs.models import Encadreur
+from app.modules.affectations.models import PropositionProjet
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 
 class ProjetProposeResponse(BaseModel):
@@ -9,9 +9,8 @@ class ProjetProposeResponse(BaseModel):
 
 
 class ChoixProjetRequest(BaseModel):
-    demande_id: int
-    projet_id: int
     token: str
+    projet_id: int
 
 
 class AssignEncadreurRequest(BaseModel):
