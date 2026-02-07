@@ -4,9 +4,6 @@ from app.modules.projet_stage.models import Projet
 from app.modules.projet_stage.schemas import ProjetStageCreate, ProjetStageUpdate
 import uuid
 
-from app.modules.demande_stage.models import DemandeStage
-from app.modules.projet_stage.models import Projet
-
 
 def create_projet_stage(db: Session, projet_data: ProjetStageCreate):
     """Créer un nouveau projet de stage."""

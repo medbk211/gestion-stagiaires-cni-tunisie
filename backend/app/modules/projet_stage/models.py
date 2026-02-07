@@ -30,6 +30,7 @@ class Projet(Base):
 
     status = Column(Enum(ProjetStatusEnum), default=ProjetStatusEnum.DISPONIBLE)
     nombre_max_stagiaires = Column(Integer, default=1)
+    encadreur_id = Column(Integer, ForeignKey("encadreurs.id"), nullable=True)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
