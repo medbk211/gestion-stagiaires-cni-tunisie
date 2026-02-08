@@ -13,6 +13,7 @@ from app.modules.encadreurs.router import router as encadreur_router
 from app.modules.stage.router import router as Stages
 from app.modules.document.router import router as document_router
 from app.modules.stagiaires.router import router as stagiaire_router
+from app.modules.tasks.router import router as tasks_router
 
 
 app = FastAPI(title="Gestion des Stagiaires - CNI")
@@ -29,6 +30,7 @@ app.include_router(stagiaire_router, tags=["Stagiaires"], prefix="/stagiaires")
 app.include_router(choix_projet_router, tags=["Choix Projet"], prefix="/choix-projet")
 app.include_router(propositions_projets_router, tags=["propositions_projets_router"], prefix="/propositions_projets_router")
 app.include_router(document_router)
+app.include_router(tasks_router, tags=["Tasks"], prefix="/tasks")
 
 
 

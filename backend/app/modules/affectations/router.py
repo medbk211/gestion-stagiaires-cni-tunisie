@@ -66,7 +66,7 @@ async def create_affectation_endpoint(
 
 @router.get(
     "/",
-    response_model=List[AffectationRead],
+    response_model=List[AffectationReadDetailed],
     summary="List all affectations",
     description="Get all internship affectations with pagination"
 )

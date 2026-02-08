@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.core.security import require_role
 from app.shared.enums import RoleEnum
 from sqlalchemy.orm import Session
+from typing import List
 
 from app.core.database import get_db
 
@@ -11,7 +12,7 @@ from app.modules.utilisateur.schemas import (
 )
 from app.modules.utilisateur.models import Utilisateur
 from app.modules.utilisateur.service import (
-    create_utilisateur, update_utilisateur, toggle_utilisateur
+    create_utilisateur, update_utilisateur, toggle_utilisateur, get_all_utilisateurs
 )
 
 
@@ -27,6 +28,11 @@ def get_user_or_404(db: Session, user_id: int):
             detail="Utilisateur non trouvé"
         )
     return user
+
+
+@router.get("/", response_model=List[UtilisateurRead])
+def list_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return get_all_utilisateurs(db, skip, limit)
 
 
 @router.post("/create", response_model=UtilisateurRead)

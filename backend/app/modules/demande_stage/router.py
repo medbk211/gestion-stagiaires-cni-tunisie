@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, Form, UploadFile, File, status
+from fastapi import APIRouter, Depends, Form, UploadFile, File, status, HTTPException
 from pydantic import EmailStr
 from sqlalchemy.orm import Session 
 from datetime import date
 
 from app.core.database import get_db
 from app.modules.demande_stage.schemas import DemandeStageCreateResponse, DemandeStageRead
-from app.modules.demande_stage.service import create_demande_with_upload, get_all_demandes_stage
+from app.modules.demande_stage.service import create_demande_with_upload, get_all_demandes_stage, accepter_demande
 from app.shared.enums import TypeStageEnum
 from app.shared.enums import DepartementEnum
 
@@ -54,4 +54,15 @@ async def create_demande_stage(
 @router.get("/demandes-stage",response_model=list[DemandeStageRead],status_code=status.HTTP_200_OK)
 def read_demandes_stage( db: Session = Depends(get_db)):
     return get_all_demandes_stage(db)
+
+@router.post("/{demande_id}/accepter_demande_stage")
+async def accepter_demande_route(demande_id: int,encadreur_id :int, db: Session = Depends(get_db)):
+    
+   
+    try:
+        return await accepter_demande(demande_id, encadreur_id, db)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    
+    
 

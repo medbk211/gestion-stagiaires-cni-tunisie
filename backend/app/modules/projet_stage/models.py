@@ -2,6 +2,7 @@ from app.core.database import Base
 from sqlalchemy import Column,Integer, String, Enum, Text, ForeignKey, JSON, DateTime
 from app.shared.enums import DepartementEnum, TypeStageEnum, NiveauEnum, ProjetStatusEnum
 from datetime import datetime
+from sqlalchemy.orm import relationship
 
 
 
@@ -34,3 +35,4 @@ class Projet(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    tasks = relationship("Task", back_populates="projet", cascade="all, delete-orphan")

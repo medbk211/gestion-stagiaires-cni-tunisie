@@ -17,6 +17,14 @@ Base = declarative_base()
 from app.modules.utilisateur.models import Utilisateur
 from app.modules.auth.models import ResetMotDePasse
 from app.modules.encadreurs.models import Encadreur
+from app.modules.stagiaires.models import Stagiaire
+from app.modules.demande_stage.models import DemandeStage
+from app.modules.stage.models import Stage
+from app.modules.document.models import Document
+# from app.modules.evaluation.models import Evaluation
+from app.modules.projet_stage.models import Projet
+from app.modules.propositions_projets.models import PropositionProjet
+# from app.modules.affectations.models import Affectation
 
 
 def get_db():
@@ -24,7 +32,7 @@ def get_db():
     try:
         yield db
     finally:
-        db.close()
+            db.close()
 
 
 def test_db_connection():

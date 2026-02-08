@@ -13,21 +13,23 @@ class Stagiaire(Utilisateur):
 
     id = Column(Integer, ForeignKey("utilisateurs.id"), primary_key=True)
 
-    numero_dossier = Column(String(50), unique=True, index=True)
+    matricule = Column(String(30), unique=True, index=True, nullable=False)
 
     type_stage = Column(Enum(TypeStageEnum), nullable=False)
-    statut_stage = Column(Enum(StatutStageEnum), default="EN_ATTENTE", nullable=False)
+    statut_stage = Column(Enum(StatutStageEnum), default=StatutStageEnum.EN_ATTENTE, nullable=False)
 
     date_debut_stage = Column(Date, nullable=False)
     date_fin_stage = Column(Date, nullable=False)
 
-    structure = Column(String(150), nullable=False)
     etablissement = Column(String(150), nullable=False)
     niveau_etude = Column(String(100))
-    specialite = Column(String(150))
 
-    encadreur_id = Column(Integer, ForeignKey("encadreurs.id"))
-    encadreur = relationship("Encadreur", backref="stagiaires")
+    encadreur_id = Column(Integer, ForeignKey("encadreurs.id"), nullable=True)
+    encadreur = relationship(
+        "Encadreur",
+        backref="stagiaires",
+        foreign_keys=[encadreur_id]
+    )
 
     date_validation = Column(DateTime, nullable=True)
     note_finale = Column(Integer, nullable=True)

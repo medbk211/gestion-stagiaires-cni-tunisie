@@ -35,9 +35,7 @@ class Encadreur(Utilisateur):
         nullable=False
     )
 
-    # ========================
-    # Constraints
-    # ========================
+
     __table_args__ = (
         CheckConstraint(
             "max_stagiaires >= 1",

@@ -5,7 +5,8 @@ from app.modules.encadreurs.service import (
     get_encadreur_by_id,
     delete_encadreur as delete_encadreur_service,
     update_encadreur as update_encadreur_service,
-    get_available_encadreurs as get_available_encadreurs_service,
+    get_available_encadreurs as get_available_encadreurs_service,accepter_demande
+
 )
 from app.modules.encadreurs.schemas import EncadreurCreateSchema, EncadreurResponseSchema, EncadreurUpdateSchema
 from app.core.database import get_db
@@ -68,3 +69,14 @@ def delete_encadreur( encadreur_id: int, db: Session = Depends(get_db)):
 @router.get("/available/",response_model=list[EncadreurResponseSchema])
 def get_available_encadreurs( db: Session = Depends(get_db)):
     return get_available_encadreurs_service(db)
+
+@router.post("/{demande_id}/accepter")
+def accepter_demande_route(demande_id: int,encadreur_id :int, db: Session = Depends(get_db)):
+    
+   
+    try:
+        return  accepter_demande(demande_id, encadreur_id, db)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    
+    

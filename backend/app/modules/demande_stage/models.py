@@ -8,7 +8,6 @@ from app.shared.enums import StatutDemandeEnum
 
 
 
-
 class DemandeStage(Base):
     __tablename__ = "demandes_stage"
 
@@ -35,6 +34,9 @@ class DemandeStage(Base):
         nullable=False
     )
 
+    # Associer un encadreur
+    encadreur_id = Column(Integer, ForeignKey("encadreurs.id"), nullable=True)
+
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relation (optionnelle)
@@ -44,3 +46,5 @@ class DemandeStage(Base):
         back_populates="demande",
         cascade="all, delete-orphan"
     )
+    
+    encadreur = relationship("Encadreur", backref="demandes")

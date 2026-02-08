@@ -38,3 +38,6 @@ def toggle_utilisateur(db, user, actif: bool):
     user.actif = actif
     db.commit()
 
+
+def get_all_utilisateurs(db, skip: int = 0, limit: int = 100):
+    return db.query(Utilisateur).offset(skip).limit(limit).all()

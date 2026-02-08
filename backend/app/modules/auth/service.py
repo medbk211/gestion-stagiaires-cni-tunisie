@@ -26,7 +26,7 @@ def login_user(db:  Session, email: str, password: str):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Mot de passe incorrect"
         )
-    if  user.actif == True:
+    if  user.actif == False:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Utilisateur désactivé"
@@ -56,8 +56,8 @@ def forgot_password_user(db: Session, email: str):
         token=token,
         date_expiration=expires_at
     )
-    # db.add(reset_token)
-    # db.commit()
+    db.add(reset_token)
+    db.commit()
     print(f"Reset link: http://frontend/reset-password?token={token}")
     
     # Here you would typically generate a password reset token and send an email

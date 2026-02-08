@@ -10,6 +10,16 @@ class StatutDemandeEnum(str, enum.Enum):
     ACCEPTEE = "ACCEPTEE"
     REFUSEE = "REFUSEE"
 
+class taskStatusEnum(str, enum.Enum):
+    TODO = "todo"
+    IN_PROGRESS = "in_progress"
+    DONE = "done"
+    VALIDATED = "validated"
+class taskPriorityEnum(str, enum.Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"        
+
 class StatutProjetEnum(str, enum.Enum):
     DISPONIBLE = "DISPONIBLE"
     AFFECTE = "AFFECTE"
