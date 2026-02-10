@@ -4,12 +4,10 @@ from typing import List
 from app.core.database import get_db
 from app.modules.tasks.schemas import TaskRead, TaskCreate, TaskUpdate, TaskStatusUpdate
 from app.modules.tasks.service import TaskService
-# from app.api.dependencies.auth import get_current_user, check_role
+# from app.core.security import get_current_user, check_role
 
 router = APIRouter()
 
-# GET /stages/{stage_id}/tasks est souvent mis dans le router de Stage, 
-# mais voici les endpoints directs :
 
 @router.get("/{task_id}", response_model=TaskRead)
 def get_task(task_id: int, db: Session = Depends(get_db)):
@@ -39,3 +37,41 @@ def validate_task(
    
 ):
     return TaskService.validate_task(db, task_id)
+
+@router.put("/{task_id}", response_model=TaskRead)
+def update_task(
+    task_id: int, 
+    task_in: TaskUpdate, 
+    db: Session = Depends(get_db),
+    
+):
+    return TaskService.update_task(db, task_id, task_in)
+
+
+@router.delete("/{task_id}", status_code=204)
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    TaskService.delete_task(db, task_id)
+    return None 
+
+
+@router.get("/my-tasks", response_model=List[TaskRead])
+def get_my_tasks(
+    db: Session = Depends(get_db), 
+    # current_user = Security(get_current_user, scopes=["stagiaire"])
+):
+    # return TaskService.get_tasks_for_user(db, current_user.id)
+    pass  # Implémentation à venir
+
+
+@router.post("/{task_id}/submit", status_code=204)
+def submit_task(
+    task_id: int, 
+    content: str = None, 
+    file_url: str = None, 
+    db: Session = Depends(get_db), 
+    # current_user = Security(get_current_user, scopes=["stagiaire"])
+):
+    # TaskService.submit_task(db, task_id, current_user.id, content, file_url)
+    pass  # Implémentation à venir
+
+

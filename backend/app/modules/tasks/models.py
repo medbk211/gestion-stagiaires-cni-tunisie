@@ -15,6 +15,7 @@ class Task(Base):
 
     stage_id = Column(Integer, ForeignKey("stages.id"), nullable=False)
     projet_id = Column(Integer, ForeignKey("projets.id"), nullable=False)
+    created_by = Column(Integer, ForeignKey("encadreurs.id"), nullable=False)
 
     status = Column(Enum(taskStatusEnum), default=taskStatusEnum.TODO, nullable=False)
     priority = Column(Enum(taskPriorityEnum), default=taskPriorityEnum.MEDIUM, nullable=False)
@@ -26,3 +27,21 @@ class Task(Base):
     # relationships
     stage = relationship("Stage", back_populates="tasks")
     projet = relationship("Projet", back_populates="tasks")
+    creator = relationship("Encadreur", back_populates="tasks")
+
+class Task_submission(Base):
+    __tablename__ = "task_submissions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    task_id = Column(Integer, ForeignKey("tasks.id"), nullable=False)
+    stagiaire_id = Column(Integer, ForeignKey("stagiaires.id"), nullable=False)
+    
+    content = Column(Text, nullable=True)
+    file_url = Column(String(500), nullable=True)
+    
+    submitted_at = Column(DateTime, default=datetime.utcnow)
+
+    # relationships
+    task = relationship("Task")
+    stagiaire = relationship("Stagiaire")
+    

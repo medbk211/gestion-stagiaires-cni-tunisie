@@ -35,3 +35,27 @@ class TaskService:
         task.status = "VALIDATED" # Ou un enum spécifique si existant
         db.commit()
         return task
+    @staticmethod
+    def delete_task(task_id:int , db:Session):
+        task = db.query(Task).filter(Task.id == task_id).first
+
+        if not task:
+            raise HTTPException(status_code=404, detail="Task not found")
+        db.delete(task)
+        db.commit()
+        return None
+    
+    @staticmethod
+    def update_task(db: Session, task_id: int, task_data: TaskUpdate):  
+        task = db.query(Task).filter(Task.id == task_id).first()
+        if not task:
+            raise HTTPException(status_code=404, detail="Task not found")
+        
+        for key, value in task_data.model_dump(exclude_unset=True).items():
+            setattr(task, key, value)
+        
+        db.commit()
+        return task
+
+
+      

@@ -12,6 +12,7 @@ class TaskBase(BaseModel):
 
 class TaskCreate(TaskBase):
     stage_id: int
+    encadreur_id: int
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
