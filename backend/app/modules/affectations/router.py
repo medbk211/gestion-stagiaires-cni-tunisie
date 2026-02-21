@@ -1,211 +1,160 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+
 from app.core.database import get_db
+from app.core.security import get_current_user, require_role
 from app.modules.affectations.schemas import (
-    AssignEncadreurRequest,
-    ChoixProjetRequest,
     AffectationCreate,
-    AffectationUpdate,
     AffectationRead,
-    AffectationReadDetailed
+    AffectationReadDetailed,
+    AffectationUpdate,
+    AssignEncadreurRequest,
 )
 from app.modules.affectations.service import (
     assigner_encadreur,
-    # New affectation services
     create_affectation,
-    get_affectation_by_id,
-    get_all_affectations,
-    update_affectation_status,
     delete_affectation,
-    get_affectations_by_stagiaire,
+    get_affectation_by_id,
     get_affectations_by_encadreur,
     get_affectations_by_projet,
+    get_affectations_by_stagiaire,
+    get_all_affectations,
+    update_affectation_status,
 )
-from app.modules.demande_stage.models import DemandeStage
-from app.modules.projet_stage.models import Projet
+from app.modules.utilisateur.models import Utilisateur
+from app.shared.enums import RoleEnum
 
 router = APIRouter()
 
-# Proposition-related endpoints moved to `app.modules.propositions_projets.router`
 
-@router.post("/assign-encadreur")
+@router.post(
+    '/assign-encadreur',
+    dependencies=[Depends(require_role(RoleEnum.ADMIN))],
+)
 def router_assigner_encadreur(payload: AssignEncadreurRequest, db: Session = Depends(get_db)):
     return assigner_encadreur(payload.demande_id, payload.encadreur_id, db)
 
 
-# ============ NEW AFFECTATION ENDPOINTS ============
-
 @router.post(
-    "/",
+    '/',
     response_model=AffectationRead,
     status_code=status.HTTP_201_CREATED,
-    summary="Create affectation",
-    description="Create a new affectation linking demand, project, and supervisor"
+    dependencies=[Depends(require_role(RoleEnum.ADMIN))],
 )
 async def create_affectation_endpoint(
     affectation_data: AffectationCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    """
-    Create a new internship affectation.
-    
-    Links together:
-    - DemandeStage (application)
-    - Projet (chosen project)
-    - Encadreur (assigned supervisor)
-    - Stagiaire (optional, assigned later)
-    """
     try:
         return await create_affectation(affectation_data, db)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error creating affectation: {str(e)}")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f'Error creating affectation: {str(exc)}')
 
 
 @router.get(
-    "/",
+    '/',
     response_model=List[AffectationReadDetailed],
-    summary="List all affectations",
-    description="Get all internship affectations with pagination"
+    dependencies=[Depends(require_role(RoleEnum.ADMIN))],
 )
 def list_affectations(
     skip: int = 0,
     limit: int = 100,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    """
-    Get all affectations with optional pagination.
-    
-    Query Parameters:
-    - skip: Number of records to skip (default: 0)
-    - limit: Maximum number of records (default: 100, max: 500)
-    """
     if limit > 500:
         limit = 500
     return get_all_affectations(db, skip, limit)
 
 
 @router.get(
-    "/{affectation_id}",
+    '/{affectation_id}',
     response_model=AffectationReadDetailed,
-    summary="Get affectation details",
-    description="Get detailed information about a specific affectation"
+    dependencies=[Depends(require_role(RoleEnum.ADMIN))],
 )
 def get_affectation_details(
     affectation_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    """
-    Get detailed affectation with all related objects.
-    """
     affectation = get_affectation_by_id(affectation_id, db)
     if not affectation:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Affectation {affectation_id} not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Affectation {affectation_id} not found')
     return affectation
 
 
 @router.put(
-    "/{affectation_id}",
+    '/{affectation_id}',
     response_model=AffectationRead,
-    summary="Update affectation",
-    description="Update affectation status or dates"
+    dependencies=[Depends(require_role(RoleEnum.ADMIN))],
 )
 async def update_affectation_endpoint(
     affectation_id: int,
     affectation_data: AffectationUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    """
-    Update an affectation.
-    
-    Can update:
-    - statut (AFFECTEE, EN_COURS, COMPLETEE, ANNULEE)
-    - stagiaire_id (assign intern)
-    - date_debut_prevue
-    - date_fin_prevue
-    """
     try:
         updated = await update_affectation_status(affectation_id, affectation_data, db)
         if not updated:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Affectation {affectation_id} not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Affectation {affectation_id} not found')
         return updated
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
 
 
 @router.delete(
-    "/{affectation_id}",
+    '/{affectation_id}',
     status_code=status.HTTP_204_NO_CONTENT,
-    summary="Delete affectation",
-    description="Delete/cancel an affectation"
+    dependencies=[Depends(require_role(RoleEnum.ADMIN))],
 )
 async def delete_affectation_endpoint(
     affectation_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    """
-    Delete an affectation.
-    """
     success = delete_affectation(affectation_id, db)
     if not success:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Affectation {affectation_id} not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Affectation {affectation_id} not found')
+
 
 @router.get(
-    "/stagiaire/{stagiaire_id}",
+    '/stagiaire/{stagiaire_id}',
     response_model=List[AffectationRead],
-    summary="Get stagiaire affectations",
-    description="Get all affectations for a specific intern"
+    dependencies=[Depends(require_role(RoleEnum.ADMIN, RoleEnum.STAGIAIRE))],
 )
 def list_stagiaire_affectations(
     stagiaire_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: Utilisateur = Depends(get_current_user),
 ):
-    """
-    Get all affectations for a specific intern (Stagiaire).
-    """
+    if current_user.role == RoleEnum.STAGIAIRE and current_user.id != stagiaire_id:
+        raise HTTPException(status_code=403, detail='Acces interdit')
     return get_affectations_by_stagiaire(stagiaire_id, db)
 
 
 @router.get(
-    "/encadreur/{encadreur_id}/affectations",
+    '/encadreur/{encadreur_id}/affectations',
     response_model=List[AffectationRead],
-    summary="Get encadreur affectations",
-    description="Get all affectations for a specific supervisor"
+    dependencies=[Depends(require_role(RoleEnum.ADMIN, RoleEnum.ENCADREUR))],
 )
 def list_encadreur_affectations(
     encadreur_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: Utilisateur = Depends(get_current_user),
 ):
-    """
-    Get all affectations for a specific supervisor (Encadreur).
-    """
+    if current_user.role == RoleEnum.ENCADREUR and current_user.id != encadreur_id:
+        raise HTTPException(status_code=403, detail='Acces interdit')
     return get_affectations_by_encadreur(encadreur_id, db)
 
 
 @router.get(
-    "/projet/{projet_id}",
+    '/projet/{projet_id}',
     response_model=List[AffectationRead],
-    summary="Get projet affectations",
-    description="Get all affectations for a specific project"
+    dependencies=[Depends(require_role(RoleEnum.ADMIN, RoleEnum.ENCADREUR))],
 )
 def list_projet_affectations(
     projet_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    """
-    Get all affectations for a specific project.
-    """
     return get_affectations_by_projet(projet_id, db)
-
-

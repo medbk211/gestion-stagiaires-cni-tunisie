@@ -53,3 +53,36 @@ class StagiaireRead(StagiaireBase):
 
     class Config:
         from_attributes = True
+
+
+class StagiaireProfileRead(BaseModel):
+    id: int
+    nom: str
+    prenom: str
+    email: EmailStr
+    role: RoleEnum
+    actif: bool
+    etablissement: Optional[str] = None
+    niveau_etude: Optional[str] = None
+    has_stagiaire_record: bool = True
+
+
+class StagiaireProfileUpdate(BaseModel):
+    nom: Optional[str] = None
+    prenom: Optional[str] = None
+    email: Optional[EmailStr] = None
+    etablissement: Optional[str] = None
+    niveau_etude: Optional[str] = None
+
+
+class StagiaireProgressRead(BaseModel):
+    stagiaire_id: int
+    stage_id: Optional[int] = None
+    tasks_total: int = 0
+    tasks_done: int = 0
+    tasks_in_progress: int = 0
+    tasks_todo: int = 0
+    retard: int = 0
+    progress_pct: int = 0
+    evaluations_count: int = 0
+    moyenne_note: Optional[float] = None

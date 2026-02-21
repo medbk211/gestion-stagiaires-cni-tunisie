@@ -27,7 +27,7 @@ class Task(Base):
     # relationships
     stage = relationship("Stage", back_populates="tasks")
     projet = relationship("Projet", back_populates="tasks")
-    creator = relationship("Encadreur", back_populates="tasks")
+    encadreur = relationship("Encadreur", back_populates="tasks")
 
 class Task_submission(Base):
     __tablename__ = "task_submissions"

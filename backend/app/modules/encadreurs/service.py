@@ -8,14 +8,13 @@ from app.modules.auth.models import ResetMotDePasse
 from app.shared.sending_emails import send_email_with_template
 from app.shared.enums import RoleEnum, StatutDemandeEnum, StatutStageEnum
 from app.shared.utils import generate_matricule
-from fastapi import HTTPException   
+from fastapi import HTTPException
 
 from app.core.security import (
     generate_password,
     hash_password,
 )
 from fastapi.responses import JSONResponse
-# from app.modules.encadreurs.emails import send_encadreur_credentials    
 
 
 async def create_encadreur_by_admin(
@@ -106,39 +105,27 @@ def get_available_encadreurs(db: Session):
     return db.query(Encadreur).filter(Encadreur.is_active == True).all()
 
 
+def get_stagiaires_for_encadreur(db: Session, encadreur_id: int):
+    from app.modules.affectations.models import Affectation
 
-def accepter_demande(demande_id: int, encadreur_id: int, db: Session):
-  
-    # 1️⃣ Récupérer la demande
-    demande: DemandeStage = db.query(DemandeStage).get(demande_id)
-    if not demande:
-        raise HTTPException(status_code=404, detail=f"Demande avec id {demande_id} introuvable.")
+    # Source 1: lien direct sur la table stagiaires
+    direct_stagiaires = (
+        db.query(Stagiaire)
+        .filter(Stagiaire.encadreur_id == encadreur_id)
+        .all()
+    )
 
-    # 2️⃣ Récupérer l'encadreur
-    encadreur: Encadreur = db.query(Encadreur).get(encadreur_id)
-    if not encadreur:
-        raise HTTPException(status_code=404, detail=f"Encadreur avec id {encadreur_id} introuvable.")
+    # Source 2: stagiaires reliés via la table affectations
+    affectation_stagiaires = (
+        db.query(Stagiaire)
+        .join(Affectation, Affectation.stagiaire_id == Stagiaire.id)
+        .filter(Affectation.encadreur_id == encadreur_id)
+        .all()
+    )
 
-    # 3️⃣ Vérifier que la demande est en attente
-    if demande.statut != StatutDemandeEnum.EN_ATTENTE:
-        raise HTTPException(
-            status_code=400,
-            detail=f"La demande (id={demande_id}) n'est pas en attente. Statut actuel: {demande.statut.value}"
-        )
+    # Fusion sans doublons
+    merged_by_id = {stagiaire.id: stagiaire for stagiaire in direct_stagiaires}
+    for stagiaire in affectation_stagiaires:
+        merged_by_id[stagiaire.id] = stagiaire
 
-    # 4️⃣ Accepter la demande
-    demande.statut = StatutDemandeEnum.ACCEPTEE
-    db.commit()
-    db.refresh(demande)
-
-    # 5️⃣ Retour structuré
-    return {
-        "success": True,
-        "message": f"Demande (id={demande_id}) acceptée par l'encadreur (id={encadreur_id}).",
-        "demande": {
-            "id": demande.id,
-            "nom": demande.nom,
-            "prenom": demande.prenom,
-            "statut": demande.statut.value
-        }
-    }
+    return list(merged_by_id.values())

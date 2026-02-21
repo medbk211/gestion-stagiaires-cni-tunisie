@@ -30,6 +30,11 @@ class Stagiaire(Utilisateur):
         backref="stagiaires",
         foreign_keys=[encadreur_id]
     )
+    evaluations = relationship(
+        "Evaluation",
+        back_populates="stagiaire",
+        cascade="all, delete-orphan",
+    )
 
     date_validation = Column(DateTime, nullable=True)
     note_finale = Column(Integer, nullable=True)

@@ -30,4 +30,4 @@ class StageRead(StageBase):
     projet_id: Optional[int] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True

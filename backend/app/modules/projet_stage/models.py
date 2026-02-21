@@ -18,6 +18,7 @@ class Projet(Base):
     description = Column(Text)
     objectifs = Column(Text)
     livrables = Column(Text)
+    fiche_pdf_path = Column(String(500), nullable=True)
 
     duree_semaines = Column(Integer, default=4)
     charge_hebdo = Column(Integer, default=20)
@@ -36,3 +37,8 @@ class Projet(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     tasks = relationship("Task", back_populates="projet", cascade="all, delete-orphan")
+    evaluations = relationship(
+        "Evaluation",
+        back_populates="projet",
+        cascade="all, delete-orphan",
+    )

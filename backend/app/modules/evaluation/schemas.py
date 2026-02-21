@@ -1,19 +1,17 @@
-from pydantic import BaseModel, Field
-from typing import Optional
 from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class EvaluationCreate(BaseModel):
     stagiaire_id: int
     projet_id: int
     note: int = Field(..., ge=0, le=20)
-    commentaire: Optional[str] = None
+    commentaire: str | None = None
 
 
 class EvaluationUpdate(BaseModel):
-    note: Optional[int] = Field(None, ge=0, le=20)
-    commentaire: Optional[str] = None
-
+    note: int | None = Field(None, ge=0, le=20)
+    commentaire: str | None = None
 
 
 class EvaluationRead(BaseModel):
@@ -22,8 +20,8 @@ class EvaluationRead(BaseModel):
     projet_id: int
     encadreur_id: int
     note: int
-    commentaire: Optional[str]
+    commentaire: str | None
     created_at: datetime
+    updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

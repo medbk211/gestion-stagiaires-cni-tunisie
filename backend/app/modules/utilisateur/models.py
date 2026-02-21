@@ -30,9 +30,16 @@ class Utilisateur(Base):
     )
 
     dernierLogin = Column(DateTime, nullable=True)
+
     reset_tokens = relationship(
         "ResetMotDePasse",
         back_populates="utilisateur",
         cascade="all, delete-orphan"
     )
 
+    # 🔥 أضف هذا
+    documents = relationship(
+        "Document",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )

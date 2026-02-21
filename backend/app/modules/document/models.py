@@ -12,14 +12,14 @@ class Document(Base):
 
     id = Column(Integer, primary_key=True)
     demande_id = Column(Integer, ForeignKey("demandes_stage.id"), nullable=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    user_id = Column(Integer, ForeignKey("utilisateurs.id"), nullable=True)
 
     type = Column(Enum(DocumentTypeEnum), nullable=False)
     file_path = Column(String(255), nullable=False) 
     created_at = Column(DateTime, default=datetime.utcnow)
 
     demande = relationship("DemandeStage", back_populates="documents")
-    user = relationship("User", back_populates="documents")
+    user = relationship("Utilisateur", back_populates="documents")
 
 
 

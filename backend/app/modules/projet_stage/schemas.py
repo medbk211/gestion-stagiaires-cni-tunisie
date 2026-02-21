@@ -1,8 +1,7 @@
-from pydantic import BaseModel
-from typing import List, Optional
+from pydantic import BaseModel, Field
+from typing import Dict, List, Optional
 from app.shared.enums import DepartementEnum, TypeStageEnum, NiveauEnum, ProjetStatusEnum
 from datetime import datetime
-from app.shared.competences import DEPARTEMENT_COMPETENCES
 
 # ---------------- Create ----------------
 class ProjetStageCreate(BaseModel):
@@ -18,8 +17,8 @@ class ProjetStageCreate(BaseModel):
     charge_hebdo: int = 20
 
     niveau_requis: NiveauEnum
-    competences: List[str] = DEPARTEMENT_COMPETENCES
-    tags: List[str] = []
+    competences: List[str] = Field(default_factory=list)
+    tags: List[str] = Field(default_factory=list)
 
     complexite: int 
     priorite: int 
@@ -36,13 +35,14 @@ class ProjetStageRead(BaseModel):
     description: str
     objectifs: str
     livrables: str
+    fiche_pdf_path: Optional[str] = None
 
     duree_semaines: int
     charge_hebdo: int
 
     niveau_requis: NiveauEnum
-    competences: List[str] = []
-    tags: List[str] = []
+    competences: List[str] = Field(default_factory=list)
+    tags: List[str] = Field(default_factory=list)
 
     complexite: int
     priorite: int
@@ -65,6 +65,7 @@ class ProjetStageUpdate(BaseModel):
     description: Optional[str]
     objectifs: Optional[str]
     livrables: Optional[str]
+    fiche_pdf_path: Optional[str]
 
     duree_semaines: Optional[int]
     charge_hebdo: Optional[int]
@@ -81,3 +82,8 @@ class ProjetStageUpdate(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ProjetStageOptionsRead(BaseModel):
+    competences_by_departement: Dict[str, List[str]]
+    tags: List[str] = Field(default_factory=list)

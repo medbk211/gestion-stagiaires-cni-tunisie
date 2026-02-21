@@ -5,6 +5,24 @@ from app.modules.stage.schemas import StageCreate, StageUpdate
 def get_stage(db: Session, stage_id: int):
     return db.query(Stage).filter(Stage.id == stage_id).first()
 
+def get_stage_by_stagiaire_id(db: Session, stagiaire_id: int):
+    return (
+        db.query(Stage)
+        .filter(Stage.stagiaire_id == stagiaire_id)
+        .order_by(Stage.id.desc())
+        .first()
+    )
+
+def get_stages_by_encadreur_id(db: Session, encadreur_id: int, skip: int = 0, limit: int = 100):
+    return (
+        db.query(Stage)
+        .filter(Stage.encadreur_id == encadreur_id)
+        .order_by(Stage.id.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
 def get_all_stages(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Stage).offset(skip).limit(limit).all()
 

@@ -1,3 +1,5 @@
+import json
+import logging
 import secrets
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
@@ -5,8 +7,49 @@ from app.modules.demande_stage.models import DemandeStage
 from app.modules.projet_stage.models import Projet
 from app.modules.propositions_projets.models import PropositionProjet, StatutPropositionEnum
 from app.modules.choix_projet.models import ChoixProjet
-from app.shared.enums import StatutDemandeEnum, ProjetStatusEnum
+from app.modules.notifications.service import create_notification
+from app.modules.utilisateur.models import Utilisateur
+from app.shared.enums import RoleEnum, StatutDemandeEnum, ProjetStatusEnum
 from fastapi import HTTPException
+
+logger = logging.getLogger(__name__)
+
+
+def _notify_admins_project_selection(db: Session, demande: DemandeStage | None, projet: Projet | None):
+    if not demande:
+        return
+
+    admins = db.query(Utilisateur).filter(Utilisateur.role == RoleEnum.ADMIN).all()
+    if not admins:
+        return
+
+    candidat_nom = f"{demande.prenom} {demande.nom}".strip()
+    projet_label = projet.intitule if projet and projet.intitule else "projet selectionne"
+    route = f"/admin/demandes/{demande.id}"
+    payload = json.dumps(
+        {
+            "type": "project_selection",
+            "route": route,
+            "demande_id": demande.id,
+        }
+    )
+
+    for admin in admins:
+        try:
+            create_notification(
+                db,
+                user_id=admin.id,
+                title="Projet choisi par un candidat",
+                message=f'{candidat_nom} a choisi le projet "{projet_label}".',
+                category="project_selection",
+                payload=payload,
+            )
+        except Exception:
+            logger.exception(
+                "Impossible de creer la notification admin (user_id=%s, demande_id=%s)",
+                admin.id,
+                demande.id,
+            )
 
 
 
@@ -91,19 +134,18 @@ def choisir_projet(token: str, projet_id: int, db: Session):
     projet = db.query(Projet).get(projet_id)
     if projet:
         projet.status = ProjetStatusEnum.AFFECTE
-
+    
     demande = db.query(DemandeStage).get(propositions[0].demande_id)
-    if demande:
-        demande.statut = StatutDemandeEnum.ACCEPTEE
-
-    choisir_projet = ChoixProjet(
-        demande_id=demande.id,
+    
+    choix = ChoixProjet(
+        demande_id=demande.id if demande else propositions[0].demande_id,
         projet_id=projet_id,
         date_choix=datetime.utcnow()
     )
-    db.add(choisir_projet)
+    db.add(choix)
     db.commit()
-     
+
+    _notify_admins_project_selection(db, demande, projet)
 
 
 

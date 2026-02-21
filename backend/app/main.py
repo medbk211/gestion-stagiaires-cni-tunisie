@@ -14,6 +14,11 @@ from app.modules.stage.router import router as Stages
 from app.modules.document.router import router as document_router
 from app.modules.stagiaires.router import router as stagiaire_router
 from app.modules.tasks.router import router as tasks_router
+from app.modules.message_interne.router import router as communication_router
+from app.modules.evaluation.router import router as evaluation_router
+from app.modules.planning.router import router as planning_router
+from app.modules.statistiques.router import router as statistiques_router
+from app.modules.notifications.router import router as notifications_router
 
 
 app = FastAPI(title="Gestion des Stagiaires - CNI")
@@ -31,6 +36,11 @@ app.include_router(choix_projet_router, tags=["Choix Projet"], prefix="/choix-pr
 app.include_router(propositions_projets_router, tags=["propositions_projets_router"], prefix="/propositions_projets_router")
 app.include_router(document_router)
 app.include_router(tasks_router, tags=["Tasks"], prefix="/tasks")
+app.include_router(communication_router, tags=["Communication"], prefix="/communication")
+app.include_router(evaluation_router, tags=["Evaluations"], prefix="/evaluations")
+app.include_router(planning_router, tags=["Planning"], prefix="/planning")
+app.include_router(statistiques_router, tags=["Statistiques"], prefix="/statistiques")
+app.include_router(notifications_router)
 
 
 
@@ -39,6 +49,8 @@ app.include_router(tasks_router, tags=["Tasks"], prefix="/tasks")
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
 ]
 
 app.add_middleware(

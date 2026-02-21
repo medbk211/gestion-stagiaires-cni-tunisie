@@ -7,6 +7,7 @@ class RoleEnum(str, enum.Enum):
 
 class StatutDemandeEnum(str, enum.Enum):
     EN_ATTENTE = "EN_ATTENTE"
+    EN_COURS = "EN_COURS"
     ACCEPTEE = "ACCEPTEE"
     REFUSEE = "REFUSEE"
 
@@ -18,7 +19,14 @@ class taskStatusEnum(str, enum.Enum):
 class taskPriorityEnum(str, enum.Enum):
     LOW = "low"
     MEDIUM = "medium"
-    HIGH = "high"        
+    HIGH = "high"
+
+
+class planningEventTypeEnum(str, enum.Enum):
+    MEETING = "meeting"
+    REVIEW = "review"
+    VISIT = "visit"
+    DEADLINE = "deadline"
 
 class StatutProjetEnum(str, enum.Enum):
     DISPONIBLE = "DISPONIBLE"

@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from typing import List
 from app.core.database import get_db
 
 from app.modules.propositions_projets import service
@@ -9,10 +8,7 @@ router = APIRouter()
 
 @router.post("/demande/{demande_id}/proposer-projets")
 async def proposer_projets(demande_id: int, db: Session = Depends(get_db)):
-    try:
-        return await service.proposer_top3_projets(demande_id, db)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+    return await service.proposer_top3_projets(demande_id, db)
 
 
 

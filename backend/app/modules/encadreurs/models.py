@@ -46,6 +46,21 @@ class Encadreur(Utilisateur):
     __mapper_args__ = {
         "polymorphic_identity": "encadreur",
     }
+    tasks = relationship(
+        "Task",
+        back_populates="encadreur",
+        cascade="all, delete-orphan",
+    )
+    evaluations = relationship(
+        "Evaluation",
+        back_populates="encadreur",
+        cascade="all, delete-orphan",
+    )
+    planning_events = relationship(
+        "PlanningEvent",
+        back_populates="encadreur",
+        cascade="all, delete-orphan",
+    )
 
     # ========================
     # Business Helpers
