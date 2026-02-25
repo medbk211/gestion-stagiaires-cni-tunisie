@@ -47,3 +47,51 @@ def test_notifications_end_to_end(client, db_session, auth_as, make_user):
 
     assert unread_after_response.status_code == 200
     assert unread_after_response.json()["unread_count"] == 0
+
+
+def test_notifications_category_filtering(client, db_session, auth_as, make_user):
+    user = make_user(
+        db_session,
+        email="user.notif.category@example.com",
+        role=RoleEnum.ADMIN,
+        password="Password123!",
+    )
+
+    create_notification(
+        db_session,
+        user_id=user.id,
+        title="Message notif",
+        message="Message interne",
+        category="message_interne",
+    )
+    create_notification(
+        db_session,
+        user_id=user.id,
+        title="Task notif",
+        message="Deadline tache",
+        category="task_deadline",
+    )
+
+    with auth_as(user):
+        unread_messages_response = client.get("/notifications/me/unread-count?category=message_interne")
+        messages_list_response = client.get("/notifications/me?category=message_interne")
+        mark_messages_response = client.patch("/notifications/me/read-all?category=message_interne")
+        unread_messages_after_response = client.get("/notifications/me/unread-count?category=message_interne")
+        unread_total_response = client.get("/notifications/me/unread-count")
+
+    assert unread_messages_response.status_code == 200
+    assert unread_messages_response.json()["unread_count"] == 1
+
+    assert messages_list_response.status_code == 200
+    body = messages_list_response.json()
+    assert len(body) == 1
+    assert body[0]["category"] == "message_interne"
+
+    assert mark_messages_response.status_code == 200
+    assert mark_messages_response.json()["updated"] == 1
+
+    assert unread_messages_after_response.status_code == 200
+    assert unread_messages_after_response.json()["unread_count"] == 0
+
+    assert unread_total_response.status_code == 200
+    assert unread_total_response.json()["unread_count"] == 1
