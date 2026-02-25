@@ -25,6 +25,7 @@ def mes_notifications(
     skip: int = 0,
     limit: int = 20,
     unread_only: bool = False,
+    category: str | None = None,
     db: Session = Depends(get_db),
     current_user: Utilisateur = Depends(get_current_user),
 ):
@@ -53,6 +54,7 @@ def mes_notifications(
         skip=skip,
         limit=limit,
         unread_only=unread_only,
+        category=category,
     )
 
 
@@ -62,6 +64,7 @@ def mes_notifications(
     dependencies=[Depends(require_role(RoleEnum.ADMIN, RoleEnum.ENCADREUR, RoleEnum.STAGIAIRE))],
 )
 def mes_notifications_non_lues(
+    category: str | None = None,
     db: Session = Depends(get_db),
     current_user: Utilisateur = Depends(get_current_user),
 ):
@@ -84,7 +87,7 @@ def mes_notifications_non_lues(
             TaskService.emit_deadline_notifications_for_encadreur(db, current_user.id)
         except Exception:
             db.rollback()
-    return {'unread_count': unread_count(db, current_user.id)}
+    return {'unread_count': unread_count(db, current_user.id, category=category)}
 
 
 @router.patch(
@@ -105,7 +108,8 @@ def marquer_notification_lue(
     dependencies=[Depends(require_role(RoleEnum.ADMIN, RoleEnum.ENCADREUR, RoleEnum.STAGIAIRE))],
 )
 def marquer_tout_lu(
+    category: str | None = None,
     db: Session = Depends(get_db),
     current_user: Utilisateur = Depends(get_current_user),
 ):
-    return mark_all_as_read(db, current_user.id)
+    return mark_all_as_read(db, current_user.id, category=category)

@@ -95,6 +95,7 @@ async def upload_document_service(
     demande_id: int,
     type: DocumentTypeEnum,
     file: UploadFile,
+    user_id: int | None = None,
 ):
     validate_file(file)
 
@@ -109,12 +110,36 @@ async def upload_document_service(
 
     document_data = Document(
         demande_id=demande_id,
+        user_id=user_id,
         type=type,
         file_path=file_path,
     )
 
     created = repository.create_document(db, document_data)
     return _attach_review(created, None)
+
+
+async def upload_my_rapport_service(
+    db: Session,
+    current_user: Utilisateur,
+    file: UploadFile,
+):
+    demande = (
+        db.query(DemandeStage)
+        .filter(DemandeStage.email == current_user.email)
+        .order_by(DemandeStage.created_at.desc(), DemandeStage.id.desc())
+        .first()
+    )
+    if not demande:
+        raise HTTPException(status_code=404, detail='Aucune demande de stage liee a ce compte')
+
+    return await upload_document_service(
+        db=db,
+        demande_id=demande.id,
+        type=DocumentTypeEnum.RAPPORT_FINAL,
+        file=file,
+        user_id=current_user.id,
+    )
 
 
 def get_demande_documents_service(db: Session, demande_id: int):

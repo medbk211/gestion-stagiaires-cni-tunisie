@@ -30,6 +30,19 @@ async def upload_document(
     return await service.upload_document_service(db, demande_id, type, file)
 
 
+@router.post(
+    '/me/upload-rapport',
+    response_model=schemas.DocumentRead,
+    dependencies=[Depends(require_role(RoleEnum.STAGIAIRE))],
+)
+async def upload_my_rapport(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: Utilisateur = Depends(get_current_user),
+):
+    return await service.upload_my_rapport_service(db, current_user, file)
+
+
 @router.get(
     '/',
     response_model=list[schemas.DocumentRead],
