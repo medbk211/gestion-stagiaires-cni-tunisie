@@ -40,7 +40,7 @@ def list_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 @router.post(
     '/create',
     response_model=UtilisateurRead,
-    dependencies=[Depends(require_role(RoleEnum.ADMIN))],
+    
 )
 def create_user(
     data: UtilisateurCreate,
