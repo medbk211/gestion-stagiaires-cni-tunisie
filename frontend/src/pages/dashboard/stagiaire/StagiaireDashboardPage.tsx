@@ -433,9 +433,8 @@ export default function StagiaireDashboardPage() {
         badge: documentStats.total > 0 ? String(documentStats.total) : undefined,
       },
       {
-        id: "calendar",
-        label: "Calendrier",
-        href: "/dashboard/stagiaire/calendar",
+        label: "Planification",
+        href: "/dashboard/stagiaire/planning",
         icon: CalendarDays,
       },
       { label: "Journal de bord", href: "/dashboard/stagiaire/journal", icon: BookOpen },

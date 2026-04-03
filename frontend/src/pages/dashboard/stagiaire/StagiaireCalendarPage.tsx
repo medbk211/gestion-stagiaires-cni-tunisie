@@ -205,7 +205,7 @@ export default function StagiaireCalendarPage() {
           navigate("/connexion", { replace: true })
           return
         }
-        setPageError(asErrorMessage(error, "Chargement du calendrier impossible pour le moment."))
+        setPageError(asErrorMessage(error, "Chargement de la planification impossible pour le moment."))
       } finally {
         if (silent) {
           setIsRefreshing(false)
@@ -265,7 +265,7 @@ export default function StagiaireCalendarPage() {
     <DashboardShell role="stagiaire" navItems={navItems} userName={userName} userRole={userRole}>
       <div className="flex flex-col gap-6">
         <DashboardPageHeader
-          title="Calendrier"
+          title="Planification"
           subtitle="مواعيد • Deadlines • Réunions"
           actions={(
             <Button
@@ -303,7 +303,7 @@ export default function StagiaireCalendarPage() {
           <Card className="shadow-sm">
             <CardContent className="flex items-center gap-2 py-6 text-sm text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Chargement du calendrier...
+              Chargement de la planification...
             </CardContent>
           </Card>
         ) : (

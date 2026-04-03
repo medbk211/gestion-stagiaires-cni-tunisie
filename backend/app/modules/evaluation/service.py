@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
@@ -7,9 +8,15 @@ from app.modules.evaluation.models import Evaluation
 from app.modules.evaluation.schemas import EvaluationCreate, EvaluationUpdate
 from app.modules.notifications.service import create_notification
 from app.modules.stage.models import Stage
+from app.modules.tasks.models import Task
+from app.shared.enums import taskStatusEnum
 
 
 class EvaluationService:
+    @staticmethod
+    def _utcnow_naive() -> datetime:
+        return datetime.now(timezone.utc).replace(tzinfo=None)
+
     @staticmethod
     def _notify_stagiaire_for_evaluation(
         db: Session,
@@ -98,6 +105,37 @@ class EvaluationService:
                 detail="Ce stagiaire n'est pas rattache a ce projet sous votre encadrement",
             )
         return stage
+
+    @staticmethod
+    def _ensure_stage_tasks_completed(
+        db: Session,
+        stage: Stage,
+    ) -> None:
+        task_statuses = [
+            task_status
+            for (task_status,) in (
+                db.query(Task.status)
+                .filter(Task.stage_id == stage.id)
+                .all()
+            )
+        ]
+
+        if not task_statuses:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Le stagiaire doit avoir au moins une tache avant l'evaluation",
+            )
+
+        completed_statuses = {taskStatusEnum.DONE, taskStatusEnum.VALIDATED}
+        completed_count = sum(1 for task_status in task_statuses if task_status in completed_statuses)
+        if completed_count != len(task_statuses):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "Le stagiaire doit terminer toutes ses taches avant l'evaluation "
+                    f"({completed_count}/{len(task_statuses)})"
+                ),
+            )
 
     @staticmethod
     def get_all_evaluations(
@@ -190,6 +228,7 @@ class EvaluationService:
             projet_id=payload.projet_id,
             encadreur_id=encadreur_id,
         )
+        EvaluationService._ensure_stage_tasks_completed(db, stage)
 
         existing = (
             db.query(Evaluation)
@@ -217,6 +256,7 @@ class EvaluationService:
 
         if stage.stagiaire:
             stage.stagiaire.note_finale = payload.note
+            stage.stagiaire.date_validation = EvaluationService._utcnow_naive()
 
         db.commit()
         db.refresh(evaluation)
@@ -263,8 +303,11 @@ class EvaluationService:
         for field, value in update_data.items():
             setattr(evaluation, field, value)
 
-        if "note" in update_data and evaluation.stagiaire:
-            evaluation.stagiaire.note_finale = update_data["note"]
+        if evaluation.stagiaire:
+            if "note" in update_data:
+                evaluation.stagiaire.note_finale = update_data["note"]
+            if update_data:
+                evaluation.stagiaire.date_validation = EvaluationService._utcnow_naive()
 
         db.commit()
         db.refresh(evaluation)
@@ -299,5 +342,6 @@ class EvaluationService:
 
         if stagiaire and stagiaire.note_finale == note:
             stagiaire.note_finale = None
+            stagiaire.date_validation = None
 
         db.commit()

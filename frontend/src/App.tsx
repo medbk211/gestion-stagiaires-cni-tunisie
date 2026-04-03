@@ -21,6 +21,7 @@ const AdminSettingsPage = lazy(() => import("@/pages/dashboard/admin/AdminSettin
 const EncadrantDashboardPage = lazy(() => import("@/pages/dashboard/encadrant/EncadrantDashboardPage"))
 const EncadrantStagiairesPage = lazy(() => import("@/pages/dashboard/encadrant/EncadrantStagiairesPage"))
 const EncadrantStagiaireDetailsPage = lazy(() => import("@/pages/dashboard/encadrant/EncadrantStagiaireDetailsPage"))
+const EncadrantTasksPage = lazy(() => import("@/pages/dashboard/encadrant/EncadrantTasksPage"))
 const EncadrantPlanningPage = lazy(() => import("@/pages/dashboard/encadrant/EncadrantPlanningPage"))
 const EncadrantMessagesPage = lazy(() => import("@/pages/dashboard/encadrant/EncadrantMessagesPage"))
 const EncadrantEvaluationsPage = lazy(() => import("@/pages/dashboard/encadrant/EncadrantEvaluationsPage"))
@@ -72,6 +73,7 @@ export function App() {
           path="/dashboard/encadrant/stagiaires/:stagiaireId"
           element={<EncadrantStagiaireDetailsPage />}
         />
+        <Route path="/dashboard/encadrant/taches" element={<EncadrantTasksPage />} />
         <Route path="/dashboard/encadrant/planning" element={<EncadrantPlanningPage />} />
         <Route path="/dashboard/encadrant/messages" element={<EncadrantMessagesPage />} />
         <Route path="/dashboard/encadrant/evaluations" element={<EncadrantEvaluationsPage />} />
@@ -81,7 +83,8 @@ export function App() {
         <Route path="/dashboard/stagiaire/stage" element={<StagiaireStagePage />} />
         <Route path="/dashboard/stagiaire/taches" element={<StagiaireTachesKanbanPage />} />
         <Route path="/dashboard/stagiaire/documents" element={<StagiaireDocumentsPage />} />
-        <Route path="/dashboard/stagiaire/calendar" element={<StagiaireCalendarPage />} />
+        <Route path="/dashboard/stagiaire/planning" element={<StagiaireCalendarPage />} />
+        <Route path="/dashboard/stagiaire/calendar" element={<Navigate to="/dashboard/stagiaire/planning" replace />} />
         <Route path="/dashboard/stagiaire/journal" element={<StagiaireJournalPage />} />
         <Route path="/dashboard/stagiaire/messages" element={<StagiaireMessagesPage />} />
         <Route path="/dashboard/stagiaire/settings" element={<StagiaireSettingsPage />} />

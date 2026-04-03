@@ -1,25 +1,18 @@
-from sqlalchemy.orm import Session
-from app.modules.encadreurs.models import Encadreur
-from app.modules.demande_stage.models import DemandeStage
-from app.modules.encadreurs.schemas import EncadreurCreateSchema, EncadreurUpdateSchema
-from app.modules.utilisateur.models import Utilisateur
-from app.modules.stagiaires.models import Stagiaire
-from app.modules.auth.models import ResetMotDePasse
-from app.shared.sending_emails import send_email_with_template
-from app.shared.enums import RoleEnum, StatutDemandeEnum, StatutStageEnum
-from app.shared.utils import generate_matricule
-from fastapi import HTTPException
-
-from app.core.security import (
-    generate_password,
-    hash_password,
-)
 from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
+
+from app.core.security import generate_password, hash_password
+from app.modules.encadreurs.models import Encadreur
+from app.modules.encadreurs.schemas import EncadreurCreateSchema, EncadreurUpdateSchema
+from app.modules.stage.models import Stage
+from app.modules.stagiaires.models import Stagiaire
+from app.shared.enums import RoleEnum
+from app.shared.sending_emails import send_email_with_template
 
 
 async def create_encadreur_by_admin(
     db: Session,
-    data: EncadreurCreateSchema
+    data: EncadreurCreateSchema,
 ):
     plain_password = generate_password()
     hashed_password = hash_password(plain_password)
@@ -47,27 +40,25 @@ async def create_encadreur_by_admin(
             "nom": data.nom,
             "prenom": data.prenom,
             "email": data.email,
-            "password": plain_password
+            "password": plain_password,
         },
         subject="Votre compte Encadreur - CNI",
-        template_name="encadreur_created.html"
+        template_name="encadreur_created.html",
     )
 
     if not email_sent:
         return JSONResponse(
             status_code=500,
-            content={"message": "Encadreur créé لكن الإيميل فشل"}
+            content={"message": "Encadreur créé لكن الإيميل فشل"},
         )
 
     return JSONResponse(
         status_code=201,
         content={
             "message": "Encadreur créé والإيميل تبعث ✅",
-            "encadreur_id": encadreur.id
-        }
+            "encadreur_id": encadreur.id,
+        },
     )
-
-
 
 
 def get_all_encadreurs(db: Session):
@@ -105,27 +96,49 @@ def get_available_encadreurs(db: Session):
     return db.query(Encadreur).filter(Encadreur.is_active == True).all()
 
 
-def get_stagiaires_for_encadreur(db: Session, encadreur_id: int):
+def get_stagiaire_ids_for_encadreur(db: Session, encadreur_id: int) -> set[int]:
     from app.modules.affectations.models import Affectation
 
-    # Source 1: lien direct sur la table stagiaires
-    direct_stagiaires = (
+    direct_ids = {
+        stagiaire_id
+        for (stagiaire_id,) in (
+            db.query(Stagiaire.id)
+            .filter(Stagiaire.encadreur_id == encadreur_id)
+            .all()
+        )
+    }
+
+    affectation_ids = {
+        stagiaire_id
+        for (stagiaire_id,) in (
+            db.query(Stagiaire.id)
+            .join(Affectation, Affectation.stagiaire_id == Stagiaire.id)
+            .filter(Affectation.encadreur_id == encadreur_id)
+            .all()
+        )
+    }
+
+    stage_ids = {
+        stagiaire_id
+        for (stagiaire_id,) in (
+            db.query(Stagiaire.id)
+            .join(Stage, Stage.stagiaire_id == Stagiaire.id)
+            .filter(Stage.encadreur_id == encadreur_id)
+            .all()
+        )
+    }
+
+    return direct_ids | affectation_ids | stage_ids
+
+
+def get_stagiaires_for_encadreur(db: Session, encadreur_id: int):
+    stagiaire_ids = get_stagiaire_ids_for_encadreur(db, encadreur_id)
+    if not stagiaire_ids:
+        return []
+
+    return (
         db.query(Stagiaire)
-        .filter(Stagiaire.encadreur_id == encadreur_id)
+        .filter(Stagiaire.id.in_(stagiaire_ids))
+        .order_by(Stagiaire.id.desc())
         .all()
     )
-
-    # Source 2: stagiaires reliés via la table affectations
-    affectation_stagiaires = (
-        db.query(Stagiaire)
-        .join(Affectation, Affectation.stagiaire_id == Stagiaire.id)
-        .filter(Affectation.encadreur_id == encadreur_id)
-        .all()
-    )
-
-    # Fusion sans doublons
-    merged_by_id = {stagiaire.id: stagiaire for stagiaire in direct_stagiaires}
-    for stagiaire in affectation_stagiaires:
-        merged_by_id[stagiaire.id] = stagiaire
-
-    return list(merged_by_id.values())

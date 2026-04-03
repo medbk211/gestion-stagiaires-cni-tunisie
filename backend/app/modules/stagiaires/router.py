@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.security import get_current_user, require_role
+from app.modules.encadreurs.service import get_stagiaire_ids_for_encadreur
 from app.modules.evaluation.models import Evaluation
 from app.modules.stage.models import Stage
 from app.modules.stagiaires.models import Stagiaire
@@ -97,7 +98,9 @@ def read_stagiaires(
 ):
     query = db.query(Stagiaire)
     if current_user.role == RoleEnum.ENCADREUR:
-        query = query.filter(Stagiaire.encadreur_id == current_user.id)
+        query = query.filter(
+            Stagiaire.id.in_(get_stagiaire_ids_for_encadreur(db, current_user.id))
+        )
     elif current_user.role == RoleEnum.STAGIAIRE:
         query = query.filter(Stagiaire.id == current_user.id)
 
@@ -268,8 +271,10 @@ def read_stagiaire(
     if db_stagiaire is None:
         raise HTTPException(status_code=404, detail='Stagiaire non trouve')
 
-    if current_user.role == RoleEnum.ENCADREUR and db_stagiaire.encadreur_id != current_user.id:
-        raise HTTPException(status_code=403, detail='Acces interdit')
+    if current_user.role == RoleEnum.ENCADREUR:
+        allowed_stagiaire_ids = get_stagiaire_ids_for_encadreur(db, current_user.id)
+        if stagiaire_id not in allowed_stagiaire_ids:
+            raise HTTPException(status_code=403, detail='Acces interdit')
     if current_user.role == RoleEnum.STAGIAIRE and db_stagiaire.id != current_user.id:
         raise HTTPException(status_code=403, detail='Acces interdit')
 

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Calendar,
   CheckCircle2,
+  ClipboardList,
   Clock,
   GraduationCap,
   Loader2,
@@ -390,11 +391,17 @@ export default function EncadrantStagiairesPage() {
                       </div>
                     </Link>
 
-                    <div className="flex items-start gap-2 lg:flex-col lg:w-28 shrink-0">
+                    <div className="flex items-start gap-2 lg:w-32 lg:flex-col shrink-0">
                       <Button asChild variant="outline" size="sm" className="flex-1 lg:w-full text-xs h-8 gap-1">
                         <Link to="/dashboard/encadrant/messages">
                           <MessageSquare className="h-3 w-3" />
                           Message
+                        </Link>
+                      </Button>
+                      <Button asChild variant="outline" size="sm" className="flex-1 lg:w-full text-xs h-8 gap-1">
+                        <Link to={`/dashboard/encadrant/taches?stagiaire=${item.stagiaire.id}`}>
+                          <ClipboardList className="h-3 w-3" />
+                          Taches
                         </Link>
                       </Button>
                       <Button asChild variant="outline" size="sm" className="flex-1 lg:w-full text-xs h-8 gap-1">

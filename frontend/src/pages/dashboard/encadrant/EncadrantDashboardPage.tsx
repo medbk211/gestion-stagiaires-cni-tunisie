@@ -2,11 +2,13 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Calendar,
   CheckCircle2,
+  ClipboardList,
   Clock,
   FileText,
   GraduationCap,
   Loader2,
   MessageSquare,
+  Plus,
   RefreshCw,
   Star,
   TrendingUp,
@@ -594,7 +596,7 @@ export default function EncadrantDashboardPage() {
                               <span>{item.tasksDone}/{item.tasksTotal} taches terminees</span>
                             </div>
 
-                            <div className="mt-2 flex items-center gap-1">
+                            <div className="mt-2 flex flex-wrap items-center gap-1">
                               <Button asChild variant="ghost" size="sm" className="h-7 gap-1 text-xs">
                                 <Link to={`/dashboard/encadrant/stagiaires/${item.stagiaire.id}`}>
                                   <FileText className="h-3 w-3" />
@@ -607,6 +609,12 @@ export default function EncadrantDashboardPage() {
                                   Message
                                 </Link>
                               </Button>
+                              <Button asChild variant="ghost" size="sm" className="h-7 gap-1 text-xs">
+                                <Link to={`/dashboard/encadrant/taches?stagiaire=${item.stagiaire.id}`}>
+                                  <ClipboardList className="h-3 w-3" />
+                                  Taches
+                                </Link>
+                              </Button>
                             </div>
                           </div>
                         )
@@ -617,9 +625,17 @@ export default function EncadrantDashboardPage() {
               </div>
 
               <Card className="shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-base">Agenda</CardTitle>
-                  <CardDescription>Planning et deadlines a venir.</CardDescription>
+                <CardHeader className="flex-row items-center justify-between gap-3">
+                  <div>
+                    <CardTitle className="text-base">Agenda</CardTitle>
+                    <CardDescription>Planning et deadlines a venir.</CardDescription>
+                  </div>
+                  <Button asChild variant="outline" size="sm" className="text-xs">
+                    <Link to="/dashboard/encadrant/planning?create=1">
+                      <Plus className="mr-1.5 h-3.5 w-3.5" />
+                      Ajouter
+                    </Link>
+                  </Button>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-3">
                   {agendaItems.length === 0 ? (

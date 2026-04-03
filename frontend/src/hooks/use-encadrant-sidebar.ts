@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Calendar,
+  ClipboardList,
   LayoutDashboard,
   MessageSquare,
   Settings,
@@ -23,12 +24,19 @@ interface NotificationUnreadCount {
   unread_count: number
 }
 
+interface EncadreurOverviewRead {
+  totaux: {
+    tasks_in_review: number
+  }
+}
+
 interface UseEncadrantSidebarResult {
   navItems: NavItem[]
   userName: string
   userRole: string
   unreadCount: number
   internsCount: number
+  tasksInReviewCount: number
   sidebarWarning: string
   refreshSidebar: (options?: { silent?: boolean }) => Promise<void>
 }
@@ -57,7 +65,11 @@ function asErrorMessage(error: unknown, fallback: string): string {
   return fallback
 }
 
-function buildEncadrantNavItems(unreadCount: number, internsCount: number): NavItem[] {
+function buildEncadrantNavItems(
+  unreadCount: number,
+  internsCount: number,
+  tasksInReviewCount: number,
+): NavItem[] {
   return [
     { label: "Tableau de bord", href: "/dashboard/encadrant", icon: LayoutDashboard },
     {
@@ -65,6 +77,12 @@ function buildEncadrantNavItems(unreadCount: number, internsCount: number): NavI
       href: "/dashboard/encadrant/stagiaires",
       icon: Users,
       badge: internsCount > 0 ? String(internsCount) : undefined,
+    },
+    {
+      label: "Taches",
+      href: "/dashboard/encadrant/taches",
+      icon: ClipboardList,
+      badge: tasksInReviewCount > 0 ? String(tasksInReviewCount) : undefined,
     },
     { label: "Evaluations", href: "/dashboard/encadrant/evaluations", icon: Star },
     { label: "Planification", href: "/dashboard/encadrant/planning", icon: Calendar },
@@ -97,6 +115,7 @@ export function useEncadrantSidebar(): UseEncadrantSidebarResult {
 
   const [unreadCount, setUnreadCount] = useState(0)
   const [internsCount, setInternsCount] = useState(0)
+  const [tasksInReviewCount, setTasksInReviewCount] = useState(0)
   const [userName, setUserName] = useState(() => (localStorage.getItem("cni_user_name") || "").trim() || "Encadrant")
   const [userRole, setUserRole] = useState(() => {
     const roleFromStorage = localStorage.getItem("cni_user_role")
@@ -117,14 +136,15 @@ export function useEncadrantSidebar(): UseEncadrantSidebarResult {
       }
 
       try {
-        const [meResult, unreadCountResult, internsResult] = await Promise.allSettled([
+        const [meResult, unreadCountResult, internsResult, overviewResult] = await Promise.allSettled([
           requestAuthJson<CurrentUserResponse>("/auth/me"),
           requestAuthJson<NotificationUnreadCount>("/notifications/me/unread-count?category=message_interne"),
           requestAuthJson<Array<{ id: number }>>("/encadreur/me/stagiaires"),
+          requestAuthJson<EncadreurOverviewRead>("/statistiques/encadreur/overview"),
         ] as const)
 
         if (
-          [meResult, unreadCountResult, internsResult].some(
+          [meResult, unreadCountResult, internsResult, overviewResult].some(
             (result) => result.status === "rejected" && isApiErrorStatus(result.reason, 401),
           )
         ) {
@@ -148,6 +168,13 @@ export function useEncadrantSidebar(): UseEncadrantSidebarResult {
           warnings.push(`Stagiaires: ${asErrorMessage(internsResult.reason, "indisponibles")}`)
         }
 
+        const nextTasksInReviewCount = overviewResult.status === "fulfilled"
+          ? overviewResult.value.totaux.tasks_in_review
+          : 0
+        if (overviewResult.status === "rejected") {
+          warnings.push(`Taches: ${asErrorMessage(overviewResult.reason, "indisponibles")}`)
+        }
+
         if (nextCurrentUser) {
           localStorage.setItem("cni_user_email", nextCurrentUser.email)
           localStorage.setItem("cni_user_name", `${nextCurrentUser.prenom} ${nextCurrentUser.nom}`.trim())
@@ -160,6 +187,7 @@ export function useEncadrantSidebar(): UseEncadrantSidebarResult {
         setUserRole(resolveUserRole(nextCurrentUser))
         setUnreadCount(nextUnreadCount)
         setInternsCount(nextInternsCount)
+        setTasksInReviewCount(nextTasksInReviewCount)
         setSidebarWarning(warnings[0] || "")
       } catch (error) {
         if (isApiErrorStatus(error, 401)) {
@@ -177,7 +205,10 @@ export function useEncadrantSidebar(): UseEncadrantSidebarResult {
     void refreshSidebar()
   }, [refreshSidebar])
 
-  const navItems = useMemo(() => buildEncadrantNavItems(unreadCount, internsCount), [internsCount, unreadCount])
+  const navItems = useMemo(
+    () => buildEncadrantNavItems(unreadCount, internsCount, tasksInReviewCount),
+    [internsCount, tasksInReviewCount, unreadCount],
+  )
 
   return {
     navItems,
@@ -185,6 +216,7 @@ export function useEncadrantSidebar(): UseEncadrantSidebarResult {
     userRole,
     unreadCount,
     internsCount,
+    tasksInReviewCount,
     sidebarWarning,
     refreshSidebar,
   }

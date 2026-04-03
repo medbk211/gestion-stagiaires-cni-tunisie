@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
 import {
   Calendar,
   Clock,
@@ -7,12 +7,24 @@ import {
   Plus,
   RefreshCw,
 } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
 import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { ApiError, clearAuthSession, requestAuthJson } from "@/lib/api"
 import { useEncadrantSidebar } from "@/hooks/use-encadrant-sidebar"
 
@@ -50,6 +62,13 @@ interface PlanningWeekOverview {
   deadlines: PlanningDeadlineRead[]
 }
 
+interface StagiaireRead {
+  id: number
+  nom: string
+  prenom: string
+  email: string
+}
+
 interface AgendaItem {
   id: string
   title: string
@@ -57,6 +76,21 @@ interface AgendaItem {
   startAt: string
   endAt: string | null
   helper: string
+}
+
+type PlanningEventType = "meeting" | "review" | "visit" | "deadline"
+type PlanningPriority = "low" | "medium" | "high"
+
+interface PlanningCreateFormState {
+  title: string
+  description: string
+  event_type: PlanningEventType
+  priority: PlanningPriority
+  attendee_name: string
+  location: string
+  start_at: string
+  end_at: string
+  stagiaire_id: string
 }
 
 const DATE_FORMATTER = new Intl.DateTimeFormat("fr-FR", {
@@ -87,6 +121,12 @@ const TYPE_CONFIG: Record<string, { color: string; label: string }> = {
   deadline: { color: "bg-red-100 text-red-700 border-red-200", label: "Deadline" },
 }
 
+const PRIORITY_CONFIG: Record<PlanningPriority, string> = {
+  low: "Basse",
+  medium: "Moyenne",
+  high: "Haute",
+}
+
 function parseDate(value: string | null | undefined): Date | null {
   if (!value) {
     return null
@@ -104,6 +144,19 @@ function formatDate(value: string | null | undefined): string {
 function formatDateTime(value: string | null | undefined): string {
   const parsed = parseDate(value)
   return parsed ? DATE_TIME_FORMATTER.format(parsed) : "-"
+}
+
+function toDateTimeLocalValue(value: string | Date | null | undefined): string {
+  const parsed = value instanceof Date ? value : parseDate(value)
+  if (!parsed) {
+    return ""
+  }
+  const year = parsed.getFullYear()
+  const month = String(parsed.getMonth() + 1).padStart(2, "0")
+  const day = String(parsed.getDate()).padStart(2, "0")
+  const hours = String(parsed.getHours()).padStart(2, "0")
+  const minutes = String(parsed.getMinutes()).padStart(2, "0")
+  return `${year}-${month}-${day}T${hours}:${minutes}`
 }
 
 function toDayKey(value: string | null | undefined): string | null {
@@ -132,15 +185,51 @@ function getTypeMeta(type: string) {
   return TYPE_CONFIG[type] || TYPE_CONFIG.meeting
 }
 
+function fullName(prenom: string | null | undefined, nom: string | null | undefined): string {
+  return `${prenom || ""} ${nom || ""}`.trim()
+}
+
+function roundToNextHour(source: Date): Date {
+  const value = new Date(source)
+  value.setMinutes(0, 0, 0)
+  value.setHours(value.getHours() + 1)
+  return value
+}
+
+function buildInitialCreateForm(referenceDate?: Date): PlanningCreateFormState {
+  const start = roundToNextHour(referenceDate || new Date())
+  const end = new Date(start)
+  end.setHours(end.getHours() + 1)
+
+  return {
+    title: "",
+    description: "",
+    event_type: "meeting",
+    priority: "medium",
+    attendee_name: "",
+    location: "",
+    start_at: toDateTimeLocalValue(start),
+    end_at: toDateTimeLocalValue(end),
+    stagiaire_id: "",
+  }
+}
+
 export default function EncadrantPlanningPage() {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { navItems, userName, userRole, sidebarWarning, refreshSidebar } = useEncadrantSidebar()
 
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [pageError, setPageError] = useState("")
   const [dataWarning, setDataWarning] = useState("")
+  const [actionSuccess, setActionSuccess] = useState("")
   const [planning, setPlanning] = useState<PlanningWeekOverview | null>(null)
+  const [stagiaires, setStagiaires] = useState<StagiaireRead[]>([])
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [isCreatingEvent, setIsCreatingEvent] = useState(false)
+  const [createError, setCreateError] = useState("")
+  const [createForm, setCreateForm] = useState<PlanningCreateFormState>(buildInitialCreateForm())
 
   const loadPlanning = useCallback(
     async (options?: { silent?: boolean }) => {
@@ -166,13 +255,14 @@ export default function EncadrantPlanningPage() {
       }
 
       try {
-        const [planningResult, sidebarResult] = await Promise.allSettled([
+        const [planningResult, stagiairesResult, sidebarResult] = await Promise.allSettled([
           requestAuthJson<PlanningWeekOverview>("/planning/overview"),
+          requestAuthJson<StagiaireRead[]>("/encadreur/me/stagiaires"),
           refreshSidebar({ silent: true }),
         ] as const)
 
         if (
-          [planningResult, sidebarResult].some(
+          [planningResult, stagiairesResult, sidebarResult].some(
             (result) => result.status === "rejected" && isApiErrorStatus(result.reason, 401),
           )
         ) {
@@ -184,6 +274,12 @@ export default function EncadrantPlanningPage() {
         }
 
         const warnings: string[] = []
+        if (stagiairesResult.status === "fulfilled") {
+          setStagiaires(stagiairesResult.value)
+        } else {
+          setStagiaires([])
+          warnings.push(`Stagiaires: ${asErrorMessage(stagiairesResult.reason, "indisponibles")}`)
+        }
         if (sidebarResult.status === "rejected") {
           warnings.push(`Menu: ${asErrorMessage(sidebarResult.reason, "indisponible")}`)
         }
@@ -211,6 +307,134 @@ export default function EncadrantPlanningPage() {
   useEffect(() => {
     void loadPlanning()
   }, [loadPlanning])
+
+  const stagiaireById = useMemo<Record<number, StagiaireRead>>(() => {
+    const next: Record<number, StagiaireRead> = {}
+    for (const stagiaire of stagiaires) {
+      next[stagiaire.id] = stagiaire
+    }
+    return next
+  }, [stagiaires])
+
+  const resetCreateDialog = useCallback(() => {
+    setCreateError("")
+    setCreateForm(buildInitialCreateForm())
+    setIsCreateDialogOpen(false)
+  }, [])
+
+  const openCreateDialog = useCallback(() => {
+    setActionSuccess("")
+    setCreateError("")
+    setCreateForm((previous) => ({
+      ...buildInitialCreateForm(),
+      stagiaire_id: previous.stagiaire_id || "",
+    }))
+    setIsCreateDialogOpen(true)
+  }, [])
+
+  const selectedCreateStagiaire = useMemo(() => {
+    if (!createForm.stagiaire_id) {
+      return null
+    }
+    const id = Number(createForm.stagiaire_id)
+    return Number.isFinite(id) ? stagiaireById[id] || null : null
+  }, [createForm.stagiaire_id, stagiaireById])
+
+  useEffect(() => {
+    if (searchParams.get("create") !== "1" || isLoading) {
+      return
+    }
+
+    openCreateDialog()
+
+    const next = new URLSearchParams(searchParams)
+    next.delete("create")
+    setSearchParams(next, { replace: true })
+  }, [isLoading, openCreateDialog, searchParams, setSearchParams])
+
+  const handleCreateEvent = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault()
+
+      const title = createForm.title.trim()
+      const startAt = createForm.start_at ? new Date(createForm.start_at) : null
+      const endAt = createForm.end_at ? new Date(createForm.end_at) : null
+      const location = createForm.location.trim()
+      const description = createForm.description.trim()
+      const attendeeName = createForm.attendee_name.trim() || fullName(selectedCreateStagiaire?.prenom, selectedCreateStagiaire?.nom)
+      const stagiaireId = createForm.stagiaire_id ? Number(createForm.stagiaire_id) : null
+
+      if (!title) {
+        setCreateError("Le titre est obligatoire.")
+        return
+      }
+
+      if (!startAt || Number.isNaN(startAt.getTime())) {
+        setCreateError("La date de debut est obligatoire.")
+        return
+      }
+
+      if (endAt && Number.isNaN(endAt.getTime())) {
+        setCreateError("La date de fin est invalide.")
+        return
+      }
+
+      if (endAt && endAt.getTime() <= startAt.getTime()) {
+        setCreateError("La date de fin doit etre apres la date de debut.")
+        return
+      }
+
+      setCreateError("")
+      setActionSuccess("")
+      setIsCreatingEvent(true)
+
+      try {
+        const created = await requestAuthJson<PlanningEventRead>("/planning/events", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            description: description || null,
+            event_type: createForm.event_type,
+            priority: createForm.priority,
+            attendee_name: attendeeName || null,
+            location: location || null,
+            start_at: startAt.toISOString(),
+            end_at: endAt ? endAt.toISOString() : null,
+            stagiaire_id: stagiaireId,
+          }),
+        })
+
+        const eventStart = parseDate(created.start_at)
+        const weekStart = parseDate(planning?.week_start)
+        const weekEnd = parseDate(planning?.week_end)
+        const isVisibleThisWeek =
+          Boolean(eventStart && weekStart && weekEnd) &&
+          eventStart!.getTime() >= weekStart!.getTime() &&
+          eventStart!.getTime() <= weekEnd!.getTime() + (24 * 60 * 60 * 1000 - 1)
+
+        resetCreateDialog()
+        await loadPlanning({ silent: true })
+        setActionSuccess(
+          isVisibleThisWeek
+            ? "Planification ajoutee avec succes."
+            : "Planification ajoutee avec succes. Elle n apparaitra pas dans la semaine actuellement affichee.",
+        )
+      } catch (error) {
+        if (isApiErrorStatus(error, 401)) {
+          clearAuthSession()
+          navigate("/connexion", { replace: true })
+          return
+        }
+        setCreateError(asErrorMessage(error, "Creation de la planification impossible pour le moment."))
+      } finally {
+        setIsCreatingEvent(false)
+      }
+    },
+    [createForm, loadPlanning, navigate, planning?.week_end, planning?.week_start, resetCreateDialog, selectedCreateStagiaire?.nom, selectedCreateStagiaire?.prenom],
+  )
 
   const weekDays = useMemo(() => {
     const start = parseDate(planning?.week_start)
@@ -313,9 +537,9 @@ export default function EncadrantPlanningPage() {
                 {isRefreshing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
                 Actualiser
               </Button>
-              <Button size="sm" className="h-9 gap-1.5 text-xs" disabled title="Creation d evenement a connecter selon votre workflow">
+              <Button size="sm" className="h-9 gap-1.5 text-xs" onClick={openCreateDialog}>
                 <Plus className="h-3.5 w-3.5" />
-                Ajouter
+                Ajouter planification
               </Button>
             </div>
           )}
@@ -336,6 +560,12 @@ export default function EncadrantPlanningPage() {
         {dataWarning && (
           <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700">
             {dataWarning}
+          </div>
+        )}
+
+        {actionSuccess && (
+          <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            {actionSuccess}
           </div>
         )}
 
@@ -458,6 +688,188 @@ export default function EncadrantPlanningPage() {
             </div>
           </div>
         )}
+
+        <Dialog
+          open={isCreateDialogOpen}
+          onOpenChange={(open) => {
+            if (!open) {
+              resetCreateDialog()
+              return
+            }
+            setIsCreateDialogOpen(true)
+          }}
+        >
+          <DialogContent className="sm:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Ajouter une planification</DialogTitle>
+              <DialogDescription>
+                Programmez une reunion, une review ou une visite avec vos stagiaires depuis cette vue.
+              </DialogDescription>
+            </DialogHeader>
+
+            <form className="space-y-4" onSubmit={handleCreateEvent}>
+              {createError && (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+                  {createError}
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="planning_title">Titre</Label>
+                <Input
+                  id="planning_title"
+                  value={createForm.title}
+                  onChange={(event) => setCreateForm((previous) => ({ ...previous, title: event.target.value }))}
+                  placeholder="Ex: Review hebdomadaire du sprint"
+                  required
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="planning_type">Type</Label>
+                  <Select
+                    value={createForm.event_type}
+                    onValueChange={(value) => setCreateForm((previous) => ({ ...previous, event_type: value as PlanningEventType }))}
+                  >
+                    <SelectTrigger id="planning_type" className="w-full">
+                      <SelectValue placeholder="Selectionner un type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(TYPE_CONFIG).map(([key, meta]) => (
+                        <SelectItem key={key} value={key}>
+                          {meta.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="planning_priority">Priorite</Label>
+                  <Select
+                    value={createForm.priority}
+                    onValueChange={(value) => setCreateForm((previous) => ({ ...previous, priority: value as PlanningPriority }))}
+                  >
+                    <SelectTrigger id="planning_priority" className="w-full">
+                      <SelectValue placeholder="Selectionner une priorite" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(PRIORITY_CONFIG).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="planning_stagiaire">Stagiaire lie</Label>
+                  <Select
+                    value={createForm.stagiaire_id || "__none__"}
+                    onValueChange={(value) => setCreateForm((previous) => ({
+                      ...previous,
+                      stagiaire_id: value === "__none__" ? "" : value,
+                    }))}
+                  >
+                    <SelectTrigger id="planning_stagiaire" className="w-full">
+                      <SelectValue placeholder="Selectionner un stagiaire" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">Aucun stagiaire</SelectItem>
+                      {stagiaires.map((stagiaire) => (
+                        <SelectItem key={stagiaire.id} value={String(stagiaire.id)}>
+                          {fullName(stagiaire.prenom, stagiaire.nom)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {selectedCreateStagiaire ? (
+                    <p className="text-[11px] text-muted-foreground">
+                      {selectedCreateStagiaire.email}
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="planning_attendee">Participant / contact</Label>
+                  <Input
+                    id="planning_attendee"
+                    value={createForm.attendee_name}
+                    onChange={(event) => setCreateForm((previous) => ({ ...previous, attendee_name: event.target.value }))}
+                    placeholder={selectedCreateStagiaire ? fullName(selectedCreateStagiaire.prenom, selectedCreateStagiaire.nom) : "Nom du participant"}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="planning_location">Lieu ou canal</Label>
+                <Input
+                  id="planning_location"
+                  value={createForm.location}
+                  onChange={(event) => setCreateForm((previous) => ({ ...previous, location: event.target.value }))}
+                  placeholder="Salle A, Teams, Meet..."
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="planning_start">Debut</Label>
+                  <Input
+                    id="planning_start"
+                    type="datetime-local"
+                    value={createForm.start_at}
+                    onChange={(event) => setCreateForm((previous) => ({ ...previous, start_at: event.target.value }))}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="planning_end">Fin</Label>
+                  <Input
+                    id="planning_end"
+                    type="datetime-local"
+                    value={createForm.end_at}
+                    onChange={(event) => setCreateForm((previous) => ({ ...previous, end_at: event.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="planning_description">Description</Label>
+                <Textarea
+                  id="planning_description"
+                  value={createForm.description}
+                  onChange={(event) => setCreateForm((previous) => ({ ...previous, description: event.target.value }))}
+                  rows={4}
+                  placeholder="Objectif de la reunion, points a revoir, livrables attendus..."
+                />
+              </div>
+
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={resetCreateDialog} disabled={isCreatingEvent}>
+                  Annuler
+                </Button>
+                <Button type="submit" disabled={isCreatingEvent}>
+                  {isCreatingEvent ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Creation...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4" />
+                      Ajouter planification
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardShell>
   )

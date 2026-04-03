@@ -337,6 +337,12 @@ export default function EncadrantStagiaireDetailsPage() {
                   Message
                 </Link>
               </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link to={`/dashboard/encadrant/taches?stagiaire=${numericId}`}>
+                  <ClipboardList className="h-3.5 w-3.5" />
+                  Taches
+                </Link>
+              </Button>
             </div>
           )}
         />

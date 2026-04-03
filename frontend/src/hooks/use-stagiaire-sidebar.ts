@@ -81,9 +81,8 @@ function buildStagiaireNavItems(documentsCount: number, unreadCount: number): Na
       badge: documentsCount > 0 ? String(documentsCount) : undefined,
     },
     {
-      id: "calendar",
-      label: "Calendrier",
-      href: "/dashboard/stagiaire/calendar",
+      label: "Planification",
+      href: "/dashboard/stagiaire/planning",
       icon: CalendarDays,
     },
     { label: "Journal de bord", href: "/dashboard/stagiaire/journal", icon: BookOpen },
