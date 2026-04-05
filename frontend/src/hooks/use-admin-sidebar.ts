@@ -3,6 +3,7 @@ import {
   BarChart3,
   Briefcase,
   ClipboardList,
+  FileCheck2,
   LayoutDashboard,
   Settings,
   UserPlus,
@@ -10,7 +11,7 @@ import {
 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import type { NavItem } from "@/components/dashboard/dashboard-shell"
-import { ApiError, clearAuthSession, requestAuthJson } from "@/lib/api"
+import { ApiError, authApi, clearAuthSession, statisticsApi } from "@/api"
 
 interface CurrentUserResponse {
   id: number
@@ -87,6 +88,7 @@ function buildAdminNavItems(pendingDemandesCount: number): NavItem[] {
     { label: "Stagiaires", href: "/dashboard/admin/stagiaires", icon: Users },
     { label: "Encadrants", href: "/dashboard/admin/encadrants", icon: UserPlus },
     { label: "Projets", href: "/dashboard/admin/projets", icon: Briefcase },
+    { label: "Attestations", href: "/dashboard/admin/attestations", icon: FileCheck2 },
     { label: "Statistiques", href: "/dashboard/admin/stats", icon: BarChart3 },
     { label: "Parametres", href: "/dashboard/admin/settings", icon: Settings },
   ]
@@ -116,8 +118,8 @@ export function useAdminSidebar(): UseAdminSidebarResult {
 
       try {
         const [meResult, statsResult] = await Promise.allSettled([
-          requestAuthJson<CurrentUserResponse>("/auth/me"),
-          requestAuthJson<DashboardStatsRead>("/statistiques/dashboard"),
+          authApi.me<CurrentUserResponse>(),
+          statisticsApi.dashboard<DashboardStatsRead>(),
         ] as const)
 
         if (

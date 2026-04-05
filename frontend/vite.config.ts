@@ -4,11 +4,21 @@ import react from "@vitejs/plugin-react"
 
 export default defineConfig({
   plugins: [react()],
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
   },
+
+  server: {
+    host: true,
+    // autorise le host externe pour ton dev
+    allowedHosts: [
+      "websites-physics-include-binding.trycloudflare.com"
+    ],
+  },
+
   build: {
     rollupOptions: {
       output: {

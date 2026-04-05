@@ -7,6 +7,7 @@ import {
   CalendarDays,
   CheckCircle2,
   Clock3,
+  Download,
   FileText,
   KanbanSquare,
   LayoutDashboard,
@@ -17,6 +18,7 @@ import {
   RefreshCw,
   SendHorizontal,
   Settings,
+  Star,
   Target,
   UploadCloud,
   UserRound,
@@ -137,6 +139,29 @@ interface EncadreurResponse {
   departement: string | null
   actif_encadrement: boolean
   max_stagiaires: number
+}
+
+interface EvaluationRead {
+  id: number
+  stagiaire_id: number
+  projet_id: number
+  encadreur_id: number
+  note: number
+  commentaire: string | null
+  created_at: string
+  updated_at: string
+}
+
+interface AttestationRead {
+  id: number
+  stagiaire_id: number
+  stage_id: number
+  numero_attestation: string
+  date_debut_stage: string
+  date_fin_stage: string
+  description: string | null
+  created_at: string
+  updated_at: string
 }
 
 interface NormalizedTask extends Omit<TaskRead, "status" | "priority"> {
@@ -311,6 +336,8 @@ export default function StagiaireDashboardPage() {
   const [progress, setProgress] = useState<StagiaireProgressResponse | null>(null)
   const [tasks, setTasks] = useState<TaskRead[]>([])
   const [documents, setDocuments] = useState<DocumentRead[]>([])
+  const [evaluations, setEvaluations] = useState<EvaluationRead[]>([])
+  const [attestations, setAttestations] = useState<AttestationRead[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
 
   const [taskActionId, setTaskActionId] = useState<number | null>(null)
@@ -489,6 +516,8 @@ export default function StagiaireDashboardPage() {
           tasksResult,
           documentsResult,
           unreadCountResult,
+          evaluationsResult,
+          attestationsResult,
         ] = await Promise.allSettled([
           requestAuthJson<CurrentUserResponse>("/auth/me"),
           requestAuthJson<StagiaireProfileResponse>("/stagiaires/me/profile"),
@@ -496,6 +525,8 @@ export default function StagiaireDashboardPage() {
           requestAuthJson<TaskRead[]>("/tasks/my-tasks"),
           requestAuthJson<DocumentRead[]>("/documents/me"),
           requestAuthJson<NotificationUnreadCount>("/notifications/me/unread-count"),
+          requestAuthJson<EvaluationRead[]>("/evaluations/my"),
+          requestAuthJson<AttestationRead[]>("/attestations/my"),
         ] as const)
 
         const initialResults = [
@@ -505,6 +536,8 @@ export default function StagiaireDashboardPage() {
           tasksResult,
           documentsResult,
           unreadCountResult,
+          evaluationsResult,
+          attestationsResult,
         ]
 
         if (
@@ -542,6 +575,16 @@ export default function StagiaireDashboardPage() {
         const nextDocuments = documentsResult.status === "fulfilled" ? documentsResult.value : []
         if (documentsResult.status === "rejected") {
           warnings.push(`Documents: ${asErrorMessage(documentsResult.reason, "indisponibles")}`)
+        }
+
+        const nextEvaluations = evaluationsResult.status === "fulfilled" ? evaluationsResult.value : []
+        if (evaluationsResult.status === "rejected") {
+          warnings.push(`Evaluations: ${asErrorMessage(evaluationsResult.reason, "indisponibles")}`)
+        }
+
+        const nextAttestations = attestationsResult.status === "fulfilled" ? attestationsResult.value : []
+        if (attestationsResult.status === "rejected") {
+          warnings.push(`Attestations: ${asErrorMessage(attestationsResult.reason, "indisponibles")}`)
         }
 
         const nextUnreadCount = unreadCountResult.status === "fulfilled" ? unreadCountResult.value.unread_count : 0
@@ -602,6 +645,8 @@ export default function StagiaireDashboardPage() {
         setStage(nextStage)
         setTasks(nextTasks)
         setDocuments(nextDocuments)
+        setEvaluations(nextEvaluations)
+        setAttestations(nextAttestations)
         setUnreadCount(nextUnreadCount)
         setProgress(nextProgress)
         setProject(nextProject)
@@ -965,6 +1010,113 @@ export default function StagiaireDashboardPage() {
                 </Card>
               </div>
             </div>
+
+            {evaluations.length > 0 && (
+              <Card className="border-indigo-100 bg-white/95 shadow-sm">
+                <CardHeader>
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-lg">
+                        Mes Evaluations
+                      </CardTitle>
+                      <CardDescription className="mt-1">
+                        {evaluations.length} evaluation(s) recue(s)
+                      </CardDescription>
+                    </div>
+                    <Badge className="border-indigo-200 bg-indigo-50 text-indigo-700">
+                      Moy: {evaluations.length > 0 ? (evaluations.reduce((sum, e) => sum + e.note, 0) / evaluations.length).toFixed(2) : "-"}/20
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {evaluations.map((evaluation) => (
+                      <div key={evaluation.id} className="flex items-start justify-between gap-4 rounded-lg border border-indigo-100 bg-indigo-50/50 p-4">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold text-foreground">
+                              Evaluation #{evaluation.id}
+                            </span>
+                            <Badge className="border-indigo-300 bg-indigo-100 text-indigo-800">
+                              {formatDateTime(evaluation.created_at)}
+                            </Badge>
+                          </div>
+                          {evaluation.commentaire && (
+                            <p className="mt-2 text-sm text-muted-foreground">
+                              {evaluation.commentaire}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex flex-col items-end gap-2">
+                          <div className="flex items-center gap-2">
+                            <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                            <span className="text-2xl font-bold text-foreground">{evaluation.note}</span>
+                            <span className="text-xs text-muted-foreground">/20</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {attestations.length > 0 && (
+              <Card className="border-emerald-100 bg-white/95 shadow-sm">
+                <CardHeader>
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-lg">
+                        Mes Attestations
+                      </CardTitle>
+                      <CardDescription className="mt-1">
+                        {attestations.length} attestation(s) disponible(s)
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {attestations.map((attestation) => (
+                      <div key={attestation.id} className="flex items-start justify-between gap-4 rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <FileText className="h-5 w-5 text-emerald-600" />
+                            <span className="font-mono text-sm font-semibold text-foreground">
+                              {attestation.numero_attestation}
+                            </span>
+                          </div>
+                          <p className="mt-2 text-xs text-muted-foreground">
+                            Du {formatDate(attestation.date_debut_stage)} au {formatDate(attestation.date_fin_stage)}
+                          </p>
+                          {attestation.description && (
+                            <p className="mt-2 text-sm text-muted-foreground">
+                              {attestation.description}
+                            </p>
+                          )}
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const a = document.createElement("a")
+                            a.href = `/attestations/${attestation.id}/download`
+                            a.download = `${attestation.numero_attestation}.pdf`
+                            document.body.appendChild(a)
+                            a.click()
+                            document.body.removeChild(a)
+                          }}
+                          className="gap-2"
+                        >
+                          <Download className="h-4 w-4" />
+                          Télécharger
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             
           </>

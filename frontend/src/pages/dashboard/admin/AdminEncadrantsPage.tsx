@@ -4,6 +4,7 @@ import {
   Loader2,
   Mail,
   Phone,
+  Plus,
   RefreshCw,
   Search,
   Users,
@@ -17,6 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { ApiError, clearAuthSession, requestAuthJson } from "@/lib/api"
 import { useAdminSidebar } from "@/hooks/use-admin-sidebar"
+import { EncadreurCreateDialog } from "@/components/dashboard/encadreur-create-dialog"
 
 interface EncadreurRead {
   id: number
@@ -66,6 +68,7 @@ export default function AdminEncadrantsPage() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [pageError, setPageError] = useState("")
   const [dataWarning, setDataWarning] = useState("")
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   const [searchQuery, setSearchQuery] = useState("")
   const [encadreurs, setEncadreurs] = useState<EncadreurRead[]>([])
@@ -204,16 +207,26 @@ export default function AdminEncadrantsPage() {
           title="Encadrants"
           subtitle="Gestion des encadrants et capacite d encadrement en temps reel"
           actions={(
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-9 gap-1.5 text-xs"
-              onClick={() => void loadEncadreurs({ silent: true })}
-              disabled={isLoading || isRefreshing}
-            >
-              {isRefreshing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
-              Actualiser
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                className="h-9 gap-1.5 text-xs"
+                onClick={() => setIsCreateDialogOpen(true)}
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Ajouter encadreur
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9 gap-1.5 text-xs"
+                onClick={() => void loadEncadreurs({ silent: true })}
+                disabled={isLoading || isRefreshing}
+              >
+                {isRefreshing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+                Actualiser
+              </Button>
+            </div>
           )}
         />
 
@@ -360,6 +373,12 @@ export default function AdminEncadrantsPage() {
           </div>
         )}
       </div>
+
+      <EncadreurCreateDialog
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        onSuccess={() => void loadEncadreurs({ silent: false })}
+      />
     </DashboardShell>
   )
 }

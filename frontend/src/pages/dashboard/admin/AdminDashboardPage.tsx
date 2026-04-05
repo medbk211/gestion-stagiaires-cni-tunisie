@@ -267,6 +267,7 @@ export default function AdminDashboardPage() {
       { label: "Stagiaires", href: "/dashboard/admin/stagiaires", icon: Users },
       { label: "Encadrants", href: "/dashboard/admin/encadrants", icon: UserPlus },
       { label: "Projets", href: "/dashboard/admin/projets", icon: Briefcase },
+      { label: "Attestations", href: "/dashboard/admin/attestations", icon: FileCheck2 },
       { label: "Statistiques", href: "/dashboard/admin/stats", icon: BarChart3 },
       { label: "Parametres", href: "/dashboard/admin/settings", icon: Settings },
     ],

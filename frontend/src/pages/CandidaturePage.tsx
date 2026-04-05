@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { ApiError, requestJson } from "@/lib/api"
+import { ApiError, demandesApi } from "@/api"
 import { CniBrand } from "@/components/brand/cni-brand"
 
 interface DemandeFormOptions {
@@ -163,9 +163,7 @@ export default function CandidaturePage() {
       setIsLoadingOptions(true)
       setOptionsError("")
       try {
-        const payload = await requestJson<DemandeFormOptions>("/projets-stage/demandes-stage/options", {
-          signal: controller.signal,
-        })
+        const payload = await demandesApi.options<DemandeFormOptions>({ signal: controller.signal })
         setOptions(payload)
       } catch (err) {
         if (controller.signal.aborted) {
@@ -418,10 +416,7 @@ export default function CandidaturePage() {
       if (files.convention) payload.append("convention", files.convention)
       if (files.lettre) payload.append("lettre", files.lettre)
 
-      const response = await requestJson<DemandeCreateResponse>("/projets-stage/demandes-stage", {
-        method: "POST",
-        body: payload,
-      })
+      const response = await demandesApi.create<DemandeCreateResponse>(payload)
 
       setSubmittedDemandeId(response.id)
       setForm(INITIAL_FORM)

@@ -9,7 +9,7 @@ from app.modules.evaluation.schemas import EvaluationCreate, EvaluationUpdate
 from app.modules.notifications.service import create_notification
 from app.modules.stage.models import Stage
 from app.modules.tasks.models import Task
-from app.shared.enums import taskStatusEnum
+from app.shared.enums import StatutStageEnum, taskStatusEnum
 
 
 class EvaluationService:
@@ -111,14 +111,7 @@ class EvaluationService:
         db: Session,
         stage: Stage,
     ) -> None:
-        task_statuses = [
-            task_status
-            for (task_status,) in (
-                db.query(Task.status)
-                .filter(Task.stage_id == stage.id)
-                .all()
-            )
-        ]
+        task_statuses = EvaluationService._get_stage_task_statuses(db, stage)
 
         if not task_statuses:
             raise HTTPException(
@@ -126,8 +119,7 @@ class EvaluationService:
                 detail="Le stagiaire doit avoir au moins une tache avant l'evaluation",
             )
 
-        completed_statuses = {taskStatusEnum.DONE, taskStatusEnum.VALIDATED}
-        completed_count = sum(1 for task_status in task_statuses if task_status in completed_statuses)
+        completed_count = EvaluationService._count_completed_task_statuses(task_statuses)
         if completed_count != len(task_statuses):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -136,6 +128,46 @@ class EvaluationService:
                     f"({completed_count}/{len(task_statuses)})"
                 ),
             )
+
+    @staticmethod
+    def _get_stage_task_statuses(
+        db: Session,
+        stage: Stage,
+    ) -> list[taskStatusEnum]:
+        return [
+            task_status
+            for (task_status,) in (
+                db.query(Task.status)
+                .filter(Task.stage_id == stage.id)
+                .all()
+            )
+        ]
+
+    @staticmethod
+    def _count_completed_task_statuses(task_statuses: list[taskStatusEnum]) -> int:
+        completed_statuses = {taskStatusEnum.DONE, taskStatusEnum.VALIDATED}
+        return sum(1 for task_status in task_statuses if task_status in completed_statuses)
+
+    @staticmethod
+    def _mark_stage_as_completed(stage: Stage | None) -> None:
+        if not stage:
+            return
+
+        stage.statut_stage = StatutStageEnum.TERMINE
+        if stage.stagiaire:
+            stage.stagiaire.statut_stage = StatutStageEnum.TERMINE
+
+    @staticmethod
+    def _mark_stage_as_completed_if_ready(
+        db: Session,
+        stage: Stage | None,
+    ) -> None:
+        if not stage:
+            return
+
+        task_statuses = EvaluationService._get_stage_task_statuses(db, stage)
+        if task_statuses and EvaluationService._count_completed_task_statuses(task_statuses) == len(task_statuses):
+            EvaluationService._mark_stage_as_completed(stage)
 
     @staticmethod
     def get_all_evaluations(
@@ -257,6 +289,7 @@ class EvaluationService:
         if stage.stagiaire:
             stage.stagiaire.note_finale = payload.note
             stage.stagiaire.date_validation = EvaluationService._utcnow_naive()
+        EvaluationService._mark_stage_as_completed(stage)
 
         db.commit()
         db.refresh(evaluation)
@@ -303,11 +336,23 @@ class EvaluationService:
         for field, value in update_data.items():
             setattr(evaluation, field, value)
 
+        stage = (
+            db.query(Stage)
+            .filter(
+                Stage.stagiaire_id == evaluation.stagiaire_id,
+                Stage.projet_id == evaluation.projet_id,
+                Stage.encadreur_id == evaluation.encadreur_id,
+            )
+            .first()
+        )
+
         if evaluation.stagiaire:
             if "note" in update_data:
                 evaluation.stagiaire.note_finale = update_data["note"]
             if update_data:
                 evaluation.stagiaire.date_validation = EvaluationService._utcnow_naive()
+        if update_data:
+            EvaluationService._mark_stage_as_completed_if_ready(db, stage)
 
         db.commit()
         db.refresh(evaluation)

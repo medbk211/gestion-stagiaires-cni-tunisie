@@ -29,3 +29,4 @@ class Stage(Base):
 
    
     tasks = relationship("Task", back_populates="stage", cascade="all, delete-orphan")
+    attestations = relationship("Attestation", back_populates="stage", cascade="all, delete-orphan")

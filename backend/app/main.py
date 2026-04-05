@@ -19,6 +19,7 @@ from app.modules.evaluation.router import router as evaluation_router
 from app.modules.planning.router import router as planning_router
 from app.modules.statistiques.router import router as statistiques_router
 from app.modules.notifications.router import router as notifications_router
+from app.modules.attestation.router import router as attestation_router
 
 
 app = FastAPI(title="Gestion des Stagiaires - CNI")
@@ -41,6 +42,7 @@ app.include_router(evaluation_router, tags=["Evaluations"], prefix="/evaluations
 app.include_router(planning_router, tags=["Planning"], prefix="/planning")
 app.include_router(statistiques_router, tags=["Statistiques"], prefix="/statistiques")
 app.include_router(notifications_router)
+app.include_router(attestation_router, tags=["Attestations"], prefix="/attestations")
 
 
 

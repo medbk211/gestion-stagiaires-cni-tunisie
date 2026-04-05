@@ -35,6 +35,11 @@ class Stagiaire(Utilisateur):
         back_populates="stagiaire",
         cascade="all, delete-orphan",
     )
+    attestations = relationship(
+        "Attestation",
+        back_populates="stagiaire",
+        cascade="all, delete-orphan",
+    )
 
     date_validation = Column(DateTime, nullable=True)
     note_finale = Column(Integer, nullable=True)

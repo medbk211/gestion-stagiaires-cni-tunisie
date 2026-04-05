@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ApiError, requestJson } from "@/lib/api";
+import { ApiError, authApi } from "@/api";
 
 type BackendRole = "ADMIN" | "ENCADREUR" | "STAGIAIRE";
 
@@ -119,21 +119,14 @@ export default function ConnexionPage() {
     setIsLoading(true);
 
     try {
-      const body = new URLSearchParams();
-      body.set("username", normalizedEmail);
-      body.set("password", password);
-
-      const session = await requestJson<LoginResponse>("/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
+      const session = await authApi.login<LoginResponse>({
+        username: normalizedEmail,
+        password,
       });
 
       let currentUser: CurrentUserResponse | null = null;
       try {
-        currentUser = await requestJson<CurrentUserResponse>("/auth/me", {
-          headers: { Authorization: `Bearer ${session.access_token}` },
-        });
+        currentUser = await authApi.me<CurrentUserResponse>(session.access_token);
       } catch {
         currentUser = null;
       }
@@ -183,10 +176,8 @@ export default function ConnexionPage() {
 
     try {
       setIsForgotPasswordLoading(true);
-      const response = await requestJson<ForgotPasswordResponse>("/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: normalizedEmail }),
+      const response = await authApi.forgotPassword<ForgotPasswordResponse>({
+        email: normalizedEmail,
       });
       setForgotPasswordFeedback(
         response.message || "Si votre compte existe, un email de réinitialisation a été envoyé."

@@ -15,6 +15,7 @@ const AdminProjectsPage = lazy(() => import("@/pages/dashboard/admin/AdminProjec
 const AdminProjectDetailsPage = lazy(() => import("@/pages/dashboard/admin/AdminProjectDetailsPage"))
 const AdminStagiairesPage = lazy(() => import("@/pages/dashboard/admin/AdminStagiairesPage"))
 const AdminStagiaireDetailsPage = lazy(() => import("@/pages/dashboard/admin/AdminStagiaireDetailsPage"))
+const AdminAttestationsPage = lazy(() => import("@/pages/dashboard/admin/AdminAttestationsPage"))
 const AdminStatsPage = lazy(() => import("@/pages/dashboard/admin/AdminStatsPage"))
 const AdminSettingsPage = lazy(() => import("@/pages/dashboard/admin/AdminSettingsPage"))
 
@@ -34,6 +35,7 @@ const StagiaireDocumentsPage = lazy(() => import("@/pages/dashboard/stagiaire/St
 const StagiaireCalendarPage = lazy(() => import("@/pages/dashboard/stagiaire/StagiaireCalendarPage"))
 const StagiaireJournalPage = lazy(() => import("@/pages/dashboard/stagiaire/StagiaireJournalPage"))
 const StagiaireMessagesPage = lazy(() => import("@/pages/dashboard/stagiaire/StagiaireMessagesPage"))
+const StagiaireAttestationsPage = lazy(() => import("@/pages/dashboard/stagiaire/StagiaireAttestationsPage"))
 const StagiaireSettingsPage = lazy(() => import("@/pages/dashboard/stagiaire/StagiaireSettingsPage"))
 
 function AppRouteFallback() {
@@ -59,11 +61,13 @@ export function App() {
 
         <Route path="/dashboard/admin" element={<AdminDashboardPage />} />
         <Route path="/dashboard/admin/candidatures" element={<AdminCandidaturesPage />} />
+        <Route path="/dashboard/admin/candidatures/:demandeId" element={<AdminCandidaturesPage />} />
         <Route path="/dashboard/admin/encadrants" element={<AdminEncadrantsPage />} />
         <Route path="/dashboard/admin/projets" element={<AdminProjectsPage />} />
         <Route path="/dashboard/admin/projets/:projetId" element={<AdminProjectDetailsPage />} />
         <Route path="/dashboard/admin/stagiaires" element={<AdminStagiairesPage />} />
         <Route path="/dashboard/admin/stagiaires/:stagiaireId" element={<AdminStagiaireDetailsPage />} />
+        <Route path="/dashboard/admin/attestations" element={<AdminAttestationsPage />} />
         <Route path="/dashboard/admin/stats" element={<AdminStatsPage />} />
         <Route path="/dashboard/admin/settings" element={<AdminSettingsPage />} />
 
@@ -87,6 +91,7 @@ export function App() {
         <Route path="/dashboard/stagiaire/calendar" element={<Navigate to="/dashboard/stagiaire/planning" replace />} />
         <Route path="/dashboard/stagiaire/journal" element={<StagiaireJournalPage />} />
         <Route path="/dashboard/stagiaire/messages" element={<StagiaireMessagesPage />} />
+        <Route path="/dashboard/stagiaire/attestations" element={<StagiaireAttestationsPage />} />
         <Route path="/dashboard/stagiaire/settings" element={<StagiaireSettingsPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />

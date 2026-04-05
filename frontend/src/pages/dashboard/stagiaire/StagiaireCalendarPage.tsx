@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   CalendarDays,
   Clock3,
@@ -266,7 +266,7 @@ export default function StagiaireCalendarPage() {
       <div className="flex flex-col gap-6">
         <DashboardPageHeader
           title="Planification"
-          subtitle="مواعيد • Deadlines • Réunions"
+          subtitle="Rendez-vous • Dates limites • Reunions"
           actions={(
             <Button
               variant="outline"
@@ -312,7 +312,7 @@ export default function StagiaireCalendarPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <CalendarDays className="h-4 w-4 text-indigo-600" />
-                  مواعيد
+                  Rendez-vous
                 </CardTitle>
                 <CardDescription>Rendez-vous principaux du stage</CardDescription>
               </CardHeader>
@@ -337,7 +337,7 @@ export default function StagiaireCalendarPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Clock3 className="h-4 w-4 text-amber-600" />
-                  Deadlines
+                  Dates limites
                 </CardTitle>
                 <CardDescription>Dates limites de vos taches</CardDescription>
               </CardHeader>
@@ -370,7 +370,7 @@ export default function StagiaireCalendarPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Users className="h-4 w-4 text-blue-600" />
-                  Réunions
+                  RÃ©unions
                 </CardTitle>
                 <CardDescription>Messages et alertes de type reunion</CardDescription>
               </CardHeader>

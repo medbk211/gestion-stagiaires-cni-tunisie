@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   Download,
   Eye,
@@ -17,14 +17,7 @@ import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-heade
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import {
-  ApiError,
-  buildApiUrl,
-  buildAuthHeaders,
-  clearAuthSession,
-  extractErrorMessage,
-  requestAuthJson,
-} from "@/lib/api"
+import { ApiError, clearAuthSession, documentsApi } from "@/api"
 import { useStagiaireSidebar } from "@/hooks/use-stagiaire-sidebar"
 
 interface DocumentRead {
@@ -182,7 +175,7 @@ export default function StagiaireDocumentsPage() {
 
       try {
         const [documentsResult, sidebarResult] = await Promise.allSettled([
-          requestAuthJson<DocumentRead[]>("/documents/me?limit=300"),
+          documentsApi.listMine<DocumentRead[]>({ limit: 300 }),
           refreshSidebar({ silent: true }),
         ] as const)
 
@@ -233,30 +226,8 @@ export default function StagiaireDocumentsPage() {
     void loadDocuments()
   }, [loadDocuments])
 
-  const fetchDocumentBlob = useCallback(async (documentId: number): Promise<Blob> => {
-    const response = await fetch(buildApiUrl(`/documents/download/${documentId}`), {
-      method: "GET",
-      headers: buildAuthHeaders(),
-    })
-
-    if (!response.ok) {
-      const contentType = response.headers.get("content-type") || ""
-      const payload = contentType.includes("application/json")
-        ? await response.json()
-        : await response.text()
-
-      if (response.status === 401) {
-        throw new ApiError("Session expiree. Veuillez vous reconnecter.", 401, payload)
-      }
-
-      throw new ApiError(
-        extractErrorMessage(payload) || `Erreur HTTP ${response.status}`,
-        response.status,
-        payload,
-      )
-    }
-
-    return response.blob()
+  const fetchDocumentBlob = useCallback((documentId: number): Promise<Blob> => {
+    return documentsApi.download(documentId)
   }, [])
 
   const downloadDocument = useCallback(
@@ -323,30 +294,7 @@ export default function StagiaireDocumentsPage() {
           throw new Error("Le rapport doit etre au format PDF.")
         }
 
-        const formData = new FormData()
-        formData.append("file", file)
-
-        const response = await fetch(buildApiUrl("/documents/me/upload-rapport"), {
-          method: "POST",
-          headers: buildAuthHeaders(),
-          body: formData,
-        })
-
-        const contentType = response.headers.get("content-type") || ""
-        const payload = contentType.includes("application/json")
-          ? await response.json()
-          : await response.text()
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new ApiError("Session expiree. Veuillez vous reconnecter.", 401, payload)
-          }
-          throw new ApiError(
-            extractErrorMessage(payload) || `Erreur HTTP ${response.status}`,
-            response.status,
-            payload,
-          )
-        }
+        await documentsApi.uploadMyReport<DocumentRead>(file)
 
         setActionSuccess("Rapport televerse avec succes.")
         await loadDocuments({ silent: true })
@@ -388,7 +336,7 @@ export default function StagiaireDocumentsPage() {
       <div className="flex flex-col gap-6">
         <DashboardPageHeader
           title="Documents"
-          subtitle="رفع rapport / تحميل convention / تحميل attestation / fichiers personnels"
+          subtitle="Televerser le rapport / telecharger la convention / telecharger l'attestation / fichiers personnels"
           actions={(
             <Button
               variant="outline"
@@ -450,7 +398,7 @@ export default function StagiaireDocumentsPage() {
         <div className="grid gap-4 md:grid-cols-3">
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">رفع rapport</CardTitle>
+              <CardTitle className="text-base">Televerser le rapport</CardTitle>
               <CardDescription>Televerser votre rapport final (PDF)</CardDescription>
             </CardHeader>
             <CardContent>
@@ -467,7 +415,7 @@ export default function StagiaireDocumentsPage() {
 
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">تحميل convention</CardTitle>
+              <CardTitle className="text-base">Telecharger la convention</CardTitle>
               <CardDescription>
                 {conventionDoc ? `Disponible depuis ${formatDate(conventionDoc.created_at)}` : "Convention non disponible"}
               </CardDescription>
@@ -487,7 +435,7 @@ export default function StagiaireDocumentsPage() {
 
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">تحميل attestation</CardTitle>
+              <CardTitle className="text-base">Telecharger l'attestation</CardTitle>
               <CardDescription>
                 {attestationDoc ? `Disponible depuis ${formatDate(attestationDoc.created_at)}` : "Attestation non disponible"}
               </CardDescription>

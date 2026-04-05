@@ -1,6 +1,7 @@
 from datetime import date
 
 from app.core.security import hash_password
+from app.modules.evaluation.models import Evaluation
 from app.modules.stage.models import Stage
 from app.modules.stagiaires.models import Stagiaire
 from app.modules.tasks.models import Task
@@ -213,5 +214,96 @@ def test_encadreur_can_create_evaluation_when_all_tasks_are_completed(
     assert payload["note"] == 18
 
     db_session.refresh(stagiaire)
+    db_session.refresh(stage)
     assert stagiaire.note_finale == 18
     assert stagiaire.date_validation is not None
+    assert stagiaire.statut_stage == StatutStageEnum.TERMINE
+    assert stage.statut_stage == StatutStageEnum.TERMINE
+
+
+def test_admin_update_evaluation_marks_stage_as_termine_when_tasks_are_validated(
+    client,
+    db_session,
+    auth_as,
+    make_user,
+    make_encadreur,
+    make_demande,
+    make_projet,
+):
+    admin = make_user(
+        db_session,
+        email="admin.eval.update@example.com",
+        role=RoleEnum.ADMIN,
+    )
+    encadreur = make_encadreur(db_session, email="enc.eval.admin@example.com")
+    demande = make_demande(
+        db_session,
+        email="demande.eval.admin@example.com",
+        encadreur_id=encadreur.id,
+    )
+    projet = make_projet(db_session, code_projet="PRJ-EVAL-ADMIN")
+    stagiaire = create_stagiaire(
+        db_session,
+        email="stagiaire.eval.admin@example.com",
+        encadreur_id=encadreur.id,
+    )
+    stage = create_stage(
+        db_session,
+        demande_id=demande.id,
+        stagiaire_id=stagiaire.id,
+        encadreur_id=encadreur.id,
+        projet_id=projet.id,
+    )
+
+    create_task(
+        db_session,
+        stage_id=stage.id,
+        projet_id=projet.id,
+        encadreur_id=encadreur.id,
+        title="Tache finale 1",
+        status=taskStatusEnum.VALIDATED,
+    )
+    create_task(
+        db_session,
+        stage_id=stage.id,
+        projet_id=projet.id,
+        encadreur_id=encadreur.id,
+        title="Tache finale 2",
+        status=taskStatusEnum.VALIDATED,
+    )
+
+    evaluation = Evaluation(
+        stagiaire_id=stagiaire.id,
+        projet_id=projet.id,
+        encadreur_id=encadreur.id,
+        note=14,
+        commentaire="Premiere evaluation",
+    )
+    db_session.add(evaluation)
+    db_session.commit()
+    db_session.refresh(evaluation)
+
+    stage.statut_stage = StatutStageEnum.EN_COURS
+    stagiaire.statut_stage = StatutStageEnum.EN_COURS
+    db_session.commit()
+
+    with auth_as(admin):
+        response = client.put(
+            f"/evaluations/{evaluation.id}",
+            json={
+                "note": 17,
+                "commentaire": "Evaluation validee par admin",
+            },
+        )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["note"] == 17
+
+    db_session.refresh(stagiaire)
+    db_session.refresh(stage)
+    db_session.refresh(evaluation)
+    assert evaluation.note == 17
+    assert stagiaire.note_finale == 17
+    assert stagiaire.statut_stage == StatutStageEnum.TERMINE
+    assert stage.statut_stage == StatutStageEnum.TERMINE

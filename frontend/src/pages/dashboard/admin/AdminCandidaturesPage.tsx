@@ -21,7 +21,7 @@ import {
   UserCheck,
   XCircle,
 } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
 import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -327,6 +327,7 @@ function DocumentStatusBadge({ status }: { status: string | null | undefined }) 
 
 export default function AdminCandidaturesPage() {
   const navigate = useNavigate()
+  const { demandeId } = useParams()
   const { navItems, userName, userRole, sidebarWarning, refreshSidebar } = useAdminSidebar()
 
   const [isLoading, setIsLoading] = useState(true)
@@ -346,12 +347,20 @@ export default function AdminCandidaturesPage() {
 
   const [searchQuery, setSearchQuery] = useState("")
   const [filterStatus, setFilterStatus] = useState<FilterStatus>("ALL")
-  const [selectedDemandeId, setSelectedDemandeId] = useState<number | null>(null)
   const [selectedEncadreurId, setSelectedEncadreurId] = useState("")
   const [statusReason, setStatusReason] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
 
   const pageSize = 10
+  const hasDetailRoute = typeof demandeId === "string"
+  const selectedDemandeId = useMemo(() => {
+    if (!demandeId) {
+      return null
+    }
+
+    const parsed = Number(demandeId)
+    return Number.isFinite(parsed) ? parsed : null
+  }, [demandeId])
 
   const loadDemandes = useCallback(
     async (options?: { silent?: boolean }) => {
@@ -453,13 +462,6 @@ export default function AdminCandidaturesPage() {
         setAffectations(nextAffectations)
         setDataWarning(warnings[0] || "")
 
-        setSelectedDemandeId((previous) => {
-          if (previous && nextDemandes.some((item) => item.id === previous)) {
-            return previous
-          }
-          return nextDemandes[0]?.id ?? null
-        })
-
         setSelectedEncadreurId((previous) => {
           if (previous && nextEncadreurs.some((item) => String(item.id) === previous)) {
             return previous
@@ -538,6 +540,17 @@ export default function AdminCandidaturesPage() {
     () => demandes.find((demande) => demande.id === selectedDemandeId) || null,
     [demandes, selectedDemandeId],
   )
+
+  const openDemandeDetails = useCallback(
+    (demandeIdToOpen: number) => {
+      navigate(`/dashboard/admin/candidatures/${demandeIdToOpen}`)
+    },
+    [navigate],
+  )
+
+  const backToList = useCallback(() => {
+    navigate("/dashboard/admin/candidatures")
+  }, [navigate])
 
   const flowMetaByDemande = useMemo(() => {
     const grouped = new Map<number, PropositionProjetRead[]>()
@@ -903,12 +916,31 @@ export default function AdminCandidaturesPage() {
       <div className="relative flex flex-col gap-6">
         <div className="pointer-events-none absolute inset-x-0 -top-8 -z-10 h-72 bg-[radial-gradient(circle_at_top,rgba(14,165,233,0.10),transparent_58%),radial-gradient(circle_at_80%_20%,rgba(99,102,241,0.12),transparent_40%)]" />
         <DashboardPageHeader
-          title="Candidatures"
-          subtitle="Pilotez le pipeline complet: proposition, choix projet, affectation et validation finale."
+          title={
+            hasDetailRoute
+              ? (selectedDemande ? `Affectation - ${fullName(selectedDemande.prenom, selectedDemande.nom)}` : "Affectation candidature")
+              : "Candidatures"
+          }
+          subtitle={
+            hasDetailRoute
+              ? "Consultez le dossier, proposez un projet et affectez un encadreur sur une page dediee."
+              : "Pilotez le pipeline complet: proposition, choix projet, affectation et validation finale."
+          }
           kicker="Operations admin"
           className="rounded-2xl border border-slate-200/80 bg-white/90 px-5 py-4 shadow-sm backdrop-blur sm:px-6"
           actions={(
             <div className="flex items-center gap-2">
+              {hasDetailRoute && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-9 gap-1.5 border-slate-300 bg-white text-xs"
+                  onClick={backToList}
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                  Retour a la liste
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -919,16 +951,18 @@ export default function AdminCandidaturesPage() {
                 {isRefreshing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
                 Actualiser
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-9 gap-1.5 border-slate-300 bg-white text-xs"
-                onClick={exportCsv}
-                disabled={isLoading || filteredDemandes.length === 0}
-              >
-                <Download className="h-3.5 w-3.5" />
-                Export CSV
-              </Button>
+              {!hasDetailRoute && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-9 gap-1.5 border-slate-300 bg-white text-xs"
+                  onClick={exportCsv}
+                  disabled={isLoading || filteredDemandes.length === 0}
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  Export CSV
+                </Button>
+              )}
             </div>
           )}
         />
@@ -963,25 +997,27 @@ export default function AdminCandidaturesPage() {
           </div>
         )}
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-          {dashboardKpis.map((kpi) => (
-            <Card key={kpi.key} className="border-slate-200/80 bg-white/90 shadow-sm backdrop-blur">
-              <CardContent className="flex items-center justify-between p-4">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{kpi.label}</p>
-                  <p className={`mt-1 text-2xl font-bold leading-none ${kpi.valueClassName}`}>{kpi.value}</p>
-                  <p className="mt-2 text-[11px] text-slate-500">{kpi.helper}</p>
-                </div>
-                <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${kpi.iconClassName}`}>
-                  <kpi.icon className="h-4 w-4" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {!hasDetailRoute && (
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            {dashboardKpis.map((kpi) => (
+              <Card key={kpi.key} className="border-slate-200/80 bg-white/90 shadow-sm backdrop-blur">
+                <CardContent className="flex items-center justify-between p-4">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{kpi.label}</p>
+                    <p className={`mt-1 text-2xl font-bold leading-none ${kpi.valueClassName}`}>{kpi.value}</p>
+                    <p className="mt-2 text-[11px] text-slate-500">{kpi.helper}</p>
+                  </div>
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${kpi.iconClassName}`}>
+                    <kpi.icon className="h-4 w-4" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]">
-          <div className={selectedDemande ? "xl:col-span-1" : "xl:col-span-2"}>
+        <div className={hasDetailRoute ? "w-full" : "grid gap-6 xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]"}>
+          <div className={hasDetailRoute ? "hidden" : "xl:col-span-2"}>
             <Card className="overflow-hidden border-slate-200/80 bg-white/90 shadow-sm backdrop-blur">
               <CardHeader className="gap-4 border-b border-slate-100/90 bg-slate-50/70 pb-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -1060,7 +1096,7 @@ export default function AdminCandidaturesPage() {
                               className={`cursor-pointer border-b border-slate-100 transition-colors last:border-0 ${
                                 selectedDemandeId === demande.id ? "bg-indigo-50/70" : "hover:bg-slate-50/80"
                               }`}
-                              onClick={() => setSelectedDemandeId(demande.id)}
+                              onClick={() => openDemandeDetails(demande.id)}
                             >
                               <td className="px-3 py-3">
                                 <p className="font-medium text-slate-900">{fullName(demande.prenom, demande.nom)}</p>
@@ -1085,7 +1121,7 @@ export default function AdminCandidaturesPage() {
                                   className="h-8 w-8 p-0 text-slate-600 hover:bg-slate-100"
                                   onClick={(event) => {
                                     event.stopPropagation()
-                                    setSelectedDemandeId(demande.id)
+                                    openDemandeDetails(demande.id)
                                   }}
                                 >
                                   <Eye className="h-3.5 w-3.5" />
@@ -1128,8 +1164,8 @@ export default function AdminCandidaturesPage() {
             </Card>
           </div>
 
-          {selectedDemande && (
-            <Card className="overflow-hidden border-slate-200/80 bg-white/95 shadow-sm backdrop-blur xl:sticky xl:top-6 xl:max-h-[calc(100vh-6.5rem)] xl:overflow-y-auto">
+          {hasDetailRoute && selectedDemande && (
+            <Card className="w-full overflow-hidden border-slate-200/80 bg-white/95 shadow-sm backdrop-blur">
               <CardHeader className="border-b border-slate-100 bg-gradient-to-br from-white via-slate-50 to-sky-50">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -1380,13 +1416,16 @@ export default function AdminCandidaturesPage() {
             </Card>
           )}
 
-          {!selectedDemande && (
+          {hasDetailRoute && !selectedDemande && (
             <Card className="border-dashed border-slate-300 bg-slate-50/70 shadow-none">
               <CardContent className="flex min-h-[220px] flex-col items-center justify-center gap-2 px-4 text-center">
-                <p className="text-sm font-medium text-slate-700">Aucune candidature selectionnee</p>
+                <p className="text-sm font-medium text-slate-700">Candidature introuvable</p>
                 <p className="max-w-xs text-xs text-slate-500">
-                  Selectionnez une ligne dans le tableau pour afficher les informations detaillees et les actions de workflow.
+                  Retournez a la liste puis ouvrez une candidature valide pour afficher le detail et les actions de workflow.
                 </p>
+                <Button variant="outline" size="sm" className="mt-2" onClick={backToList}>
+                  Retour a la liste
+                </Button>
               </CardContent>
             </Card>
           )}
