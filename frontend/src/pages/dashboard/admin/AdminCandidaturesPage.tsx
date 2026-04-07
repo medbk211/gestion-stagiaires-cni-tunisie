@@ -24,6 +24,15 @@ import {
 import { useNavigate, useParams } from "react-router-dom"
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
 import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-header"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -130,10 +139,21 @@ interface DemandeFlowMeta {
   latestExpiration: string | null
 }
 
+interface ProposedProjet {
+  projet_id: number
+  code_projet: string
+  intitule: string
+  departement: string
+  type_stage?: string
+  score: number
+}
+
 interface ProposerProjectsResponse {
   message: string
   token: string
   count_propositions: number
+  projets?: ProposedProjet[]
+  date_expiration?: string
 }
 
 type FilterStatus = "ALL" | "EN_ATTENTE" | "EN_COURS" | "ACCEPTEE" | "REFUSEE"
@@ -350,6 +370,8 @@ export default function AdminCandidaturesPage() {
   const [selectedEncadreurId, setSelectedEncadreurId] = useState("")
   const [statusReason, setStatusReason] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
+  const [showProposalConfirmation, setShowProposalConfirmation] = useState(false)
+  const [proposedProjects, setProposedProjects] = useState<ProposedProjet[]>([])
 
   const pageSize = 10
   const hasDetailRoute = typeof demandeId === "string"
@@ -647,8 +669,15 @@ export default function AdminCandidaturesPage() {
           `/propositions_projets_router/demande/${demandeId}/proposer-projets`,
           { method: "POST" },
         )
-        setActionSuccess(response.message || `Propositions envoyees pour la demande #${demandeId}.`)
-        await loadDemandes({ silent: true })
+        
+        // Show confirmation dialog with proposed projects
+        if (response.projets && response.projets.length > 0) {
+          setProposedProjects(response.projets)
+          setShowProposalConfirmation(true)
+        } else {
+          setActionSuccess(response.message || `Propositions envoyees pour la demande #${demandeId}.`)
+          await loadDemandes({ silent: true })
+        }
       } catch (error) {
         if (isApiErrorStatus(error, 401)) {
           clearAuthSession()
@@ -662,6 +691,15 @@ export default function AdminCandidaturesPage() {
     },
     [loadDemandes, navigate],
   )
+
+  const handleConfirmProposal = useCallback(async () => {
+    setShowProposalConfirmation(false)
+    setActionSuccess(proposedProjects.length > 0 
+      ? `${proposedProjects.length} projet(s) propose(s) avec succes!`
+      : "Propositions envoyees avec succes!")
+    await loadDemandes({ silent: true })
+    setProposedProjects([])
+  }, [proposedProjects, loadDemandes])
 
   const runAffectationAction = useCallback(
     async (demande: DemandeStageRead, projetId: number) => {
@@ -1431,6 +1469,67 @@ export default function AdminCandidaturesPage() {
           )}
         </div>
       </div>
+
+      {/* Confirmation Dialog for Proposed Projects */}
+      <AlertDialog open={showProposalConfirmation} onOpenChange={setShowProposalConfirmation}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmer les propositions de projets</AlertDialogTitle>
+            <AlertDialogDescription>
+              {proposedProjects.length} projet(s) proposé(s) au stagiaire. Vérifiez la sélection avant de confirmer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          {proposedProjects.length > 0 && (
+            <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg border border-slate-200 bg-slate-50 p-3">
+              {proposedProjects.map((projet) => (
+                <div key={projet.projet_id} className="rounded-lg border border-slate-200 bg-white p-2.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-xs font-semibold text-slate-900">
+                        {projet.code_projet}
+                      </p>
+                      <p className="mt-0.5 line-clamp-2 text-[11px] text-slate-600">
+                        {projet.intitule}
+                      </p>
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {projet.departement && (
+                          <span className="inline-flex rounded-full bg-indigo-50 px-1.5 py-0.5 text-[10px] font-medium text-indigo-700">
+                            {projet.departement}
+                          </span>
+                        )}
+                        {projet.score !== undefined && (
+                          <span className="inline-flex rounded-full bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
+                            Score: {(projet.score * 100).toFixed(0)}%
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-2">
+            <AlertDialogCancel 
+              onClick={() => {
+                setShowProposalConfirmation(false)
+                setProposedProjects([])
+              }}
+              className="text-xs"
+            >
+              Annuler
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => void handleConfirmProposal()}
+              className="text-xs"
+            >
+              Confirmer
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </DashboardShell>
   )
 }
