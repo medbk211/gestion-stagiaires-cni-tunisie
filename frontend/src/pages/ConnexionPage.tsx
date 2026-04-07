@@ -279,6 +279,8 @@ export default function ConnexionPage() {
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
+                
+                
                 </div>
                 {fieldErrors.password && <p className="text-xs text-red-600">{fieldErrors.password}</p>}
               </div>
