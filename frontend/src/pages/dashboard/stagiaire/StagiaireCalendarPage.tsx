@@ -147,7 +147,7 @@ export default function StagiaireCalendarPage() {
       setPageError("")
       setDataWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Calendar,
   CheckCircle2,
@@ -245,7 +245,7 @@ export default function EncadrantDashboardPage() {
       setPageError("")
       setDataWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)
@@ -322,9 +322,9 @@ export default function EncadrantDashboardPage() {
         })
 
         if (nextMe) {
-          localStorage.setItem("cni_user_name", `${nextMe.prenom} ${nextMe.nom}`.trim())
-          localStorage.setItem("cni_user_email", nextMe.email)
-          localStorage.setItem("cni_user_role", nextMe.role)
+          localStorage.setItem("stages_user_name", `${nextMe.prenom} ${nextMe.nom}`.trim())
+          localStorage.setItem("stages_user_email", nextMe.email)
+          localStorage.setItem("stages_user_role", nextMe.role)
         }
 
         setCurrentUser(nextMe)
@@ -591,7 +591,7 @@ export default function EncadrantDashboardPage() {
                             <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
                               <span>
                                 {formatDate(item.stage?.date_debut)} - {formatDate(item.stage?.date_fin)}
-                                {daysRemaining !== null ? ` · ${daysRemaining >= 0 ? `${daysRemaining}j restants` : `${Math.abs(daysRemaining)}j depasse`}` : ""}
+                                {daysRemaining !== null ? ` Â· ${daysRemaining >= 0 ? `${daysRemaining}j restants` : `${Math.abs(daysRemaining)}j depasse`}` : ""}
                               </span>
                               <span>{item.tasksDone}/{item.tasksTotal} taches terminees</span>
                             </div>

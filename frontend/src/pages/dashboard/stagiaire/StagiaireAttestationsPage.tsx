@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import { Download, FileText, Loader2, RefreshCw } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
@@ -90,13 +90,13 @@ export default function StagiaireAttestationsPage() {
     () => [
       { label: "Tableau de bord", href: "/dashboard/stagiaire", icon: FileText },
       { label: "Mon stage", href: "/dashboard/stagiaire/stage", icon: FileText },
-      { label: "Tâches", href: "/dashboard/stagiaire/taches", icon: FileText },
+      { label: "TÃ¢ches", href: "/dashboard/stagiaire/taches", icon: FileText },
       { label: "Documents", href: "/dashboard/stagiaire/documents", icon: FileText },
       { label: "Planning", href: "/dashboard/stagiaire/planning", icon: FileText },
       { label: "Journal", href: "/dashboard/stagiaire/journal", icon: FileText },
       { label: "Messages", href: "/dashboard/stagiaire/messages", icon: FileText },
       { label: "Attestations", href: "/dashboard/stagiaire/attestations", icon: FileText },
-      { label: "Paramètres", href: "/dashboard/stagiaire/settings", icon: FileText },
+      { label: "ParamÃ¨tres", href: "/dashboard/stagiaire/settings", icon: FileText },
     ],
     [],
   )
@@ -106,12 +106,12 @@ export default function StagiaireAttestationsPage() {
     if (fromUser) {
       return fromUser
     }
-    const fromStorage = localStorage.getItem("cni_user_name") || ""
+    const fromStorage = localStorage.getItem("stages_user_name") || ""
     return fromStorage.trim() || "Stagiaire"
   }, [currentUser])
 
   const userRole = useMemo(() => {
-    const fromRole = enumToLabel(currentUser?.role || localStorage.getItem("cni_user_role"))
+    const fromRole = enumToLabel(currentUser?.role || localStorage.getItem("stages_user_role"))
     return fromRole !== "-" ? fromRole : "Stagiaire"
   }, [currentUser?.role])
 
@@ -122,7 +122,7 @@ export default function StagiaireAttestationsPage() {
 
       setPageError("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (!silent) setIsLoading(false)
         else setIsRefreshing(false)
@@ -191,7 +191,7 @@ export default function StagiaireAttestationsPage() {
       <div className="flex flex-col gap-6">
         <DashboardPageHeader
           title="Mes Attestations"
-          subtitle="Consulter et télécharger mes attestations de stage"
+          subtitle="Consulter et tÃ©lÃ©charger mes attestations de stage"
           actions={(
             <Button
               variant="outline"
@@ -202,12 +202,12 @@ export default function StagiaireAttestationsPage() {
               {isRefreshing ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Rafraîchissement...
+                  RafraÃ®chissement...
                 </>
               ) : (
                 <>
                   <RefreshCw className="h-4 w-4" />
-                  Rafraîchir
+                  RafraÃ®chir
                 </>
               )}
             </Button>
@@ -223,7 +223,7 @@ export default function StagiaireAttestationsPage() {
                 className="border-red-200 bg-white text-red-700 hover:bg-red-50"
                 onClick={() => void loadData()}
               >
-                Réessayer
+                RÃ©essayer
               </Button>
             </CardContent>
           </Card>
@@ -249,20 +249,20 @@ export default function StagiaireAttestationsPage() {
                 <CardContent className="p-4">
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <div>
-                      <p className="text-xs font-medium text-muted-foreground">Numéro</p>
+                      <p className="text-xs font-medium text-muted-foreground">NumÃ©ro</p>
                       <p className="font-mono font-semibold text-foreground">
                         {attestation.numero_attestation}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-muted-foreground">Période</p>
+                      <p className="text-xs font-medium text-muted-foreground">PÃ©riode</p>
                       <p className="text-sm text-foreground">
                         {formatDate(attestation.date_debut_stage)} au{" "}
                         {formatDate(attestation.date_fin_stage)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-muted-foreground">Date Création</p>
+                      <p className="text-xs font-medium text-muted-foreground">Date CrÃ©ation</p>
                       <p className="text-sm text-foreground">{formatDateTime(attestation.created_at)}</p>
                     </div>
                     {attestation.description && (
@@ -280,7 +280,7 @@ export default function StagiaireAttestationsPage() {
                         className="gap-2"
                       >
                         <Download className="h-4 w-4" />
-                        Télécharger
+                        TÃ©lÃ©charger
                       </Button>
                     </div>
                   </div>

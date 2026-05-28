@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   BookOpen,
   Briefcase,
@@ -107,7 +107,7 @@ function resolveUserName(currentUser: CurrentUserResponse | null, profile: Stagi
     return fromUser
   }
 
-  const fromStorage = localStorage.getItem("cni_user_name") || ""
+  const fromStorage = localStorage.getItem("stages_user_name") || ""
   return fromStorage.trim() || "Stagiaire"
 }
 
@@ -117,7 +117,7 @@ function resolveUserRole(currentUser: CurrentUserResponse | null, profile: Stagi
     return `Stagiaire ${studyLevel}`
   }
 
-  const roleValue = profile?.role || currentUser?.role || localStorage.getItem("cni_user_role")
+  const roleValue = profile?.role || currentUser?.role || localStorage.getItem("stages_user_role")
   const roleLabel = enumToLabel(roleValue)
   return roleLabel !== "-" ? roleLabel : "Stagiaire"
 }
@@ -125,9 +125,9 @@ function resolveUserRole(currentUser: CurrentUserResponse | null, profile: Stagi
 export function useStagiaireSidebar(): UseStagiaireSidebarResult {
   const navigate = useNavigate()
 
-  const [userName, setUserName] = useState(() => (localStorage.getItem("cni_user_name") || "").trim() || "Stagiaire")
+  const [userName, setUserName] = useState(() => (localStorage.getItem("stages_user_name") || "").trim() || "Stagiaire")
   const [userRole, setUserRole] = useState(() => {
-    const roleFromStorage = localStorage.getItem("cni_user_role")
+    const roleFromStorage = localStorage.getItem("stages_user_role")
     const roleLabel = enumToLabel(roleFromStorage)
     return roleLabel !== "-" ? roleLabel : "Stagiaire"
   })
@@ -145,7 +145,7 @@ export function useStagiaireSidebar(): UseStagiaireSidebarResult {
       }
       setSidebarWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         clearAuthSession()
         setIsSidebarLoading(false)
@@ -192,14 +192,14 @@ export function useStagiaireSidebar(): UseStagiaireSidebarResult {
         }
 
         if (nextCurrentUser) {
-          localStorage.setItem("cni_user_email", nextCurrentUser.email)
-          localStorage.setItem("cni_user_name", `${nextCurrentUser.prenom} ${nextCurrentUser.nom}`.trim())
+          localStorage.setItem("stages_user_email", nextCurrentUser.email)
+          localStorage.setItem("stages_user_name", `${nextCurrentUser.prenom} ${nextCurrentUser.nom}`.trim())
         }
 
         if (nextProfile?.role) {
-          localStorage.setItem("cni_user_role", nextProfile.role)
+          localStorage.setItem("stages_user_role", nextProfile.role)
         } else if (nextCurrentUser?.role) {
-          localStorage.setItem("cni_user_role", nextCurrentUser.role)
+          localStorage.setItem("stages_user_role", nextCurrentUser.role)
         }
 
         setUserName(resolveUserName(nextCurrentUser, nextProfile))

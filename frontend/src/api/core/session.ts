@@ -1,11 +1,11 @@
-export const SESSION_STORAGE_KEYS = {
-  accessToken: "cni_access_token",
-  refreshToken: "cni_refresh_token",
-  tokenType: "cni_token_type",
-  userRoleBackend: "cni_user_role_backend",
-  userRole: "cni_user_role",
-  userEmail: "cni_user_email",
-  userName: "cni_user_name",
+﻿export const SESSION_STORAGE_KEYS = {
+  accessToken: "stages_access_token",
+  refreshToken: "stages_refresh_token",
+  tokenType: "stages_token_type",
+  userRoleBackend: "stages_user_role_backend",
+  userRole: "stages_user_role",
+  userEmail: "stages_user_email",
+  userName: "stages_user_name",
 } as const
 
 export function headersToObject(headers?: HeadersInit): Record<string, string> {

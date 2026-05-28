@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   AlertCircle,
   Loader2,
@@ -173,7 +173,7 @@ export function MessagesWorkspace({ title, subtitle, sidebarWarning = "" }: Mess
       }
       setPageError("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)

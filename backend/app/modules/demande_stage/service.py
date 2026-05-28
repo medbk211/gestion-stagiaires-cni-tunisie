@@ -220,7 +220,7 @@ async def create_demande_with_upload(
 
     email_result = await send_email_with_template(
         emails=[email],
-        subject='Confirmation de votre demande de stage - CNI',
+        subject='Confirmation de votre demande de stage',
         template_name='demande_created.html',
         body={
             'prenom': prenom,
@@ -345,7 +345,7 @@ async def changer_statut_demande(
 
     await send_email_with_template(
         emails=[demande.email],
-        subject='Mise a jour de votre demande de stage - CNI',
+        subject='Mise a jour de votre demande de stage',
         template_name='demande_status_updated.html',
         body={
             'prenom': demande.prenom,

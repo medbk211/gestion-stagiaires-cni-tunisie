@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1380" viewBox="0 0 2200 1380">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569"/>
+    </marker>
+    <marker id="triangle" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L10,6 L0,12 z" fill="#ffffff" stroke="#2563eb" stroke-width="1.8"/>
+    </marker>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { font: 700 30px Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 15px Arial, sans-serif; fill: #475569; }
+      .package-title { font: 700 18px Arial, sans-serif; fill: #334155; }
+      .class-box { fill: #ffffff; stroke: #94a3b8; stroke-width: 1.5; filter: drop-shadow(0 2px 3px rgb(15 23 42 / 0.12)); }
+      .class-head { fill: #0f766e; }
+      .class-name { font: 700 16px Arial, sans-serif; fill: #ffffff; text-anchor: middle; }
+      .attr { font: 13px Consolas, "Courier New", monospace; fill: #0f172a; }
+      .rel { fill: none; stroke: #475569; stroke-width: 1.6; marker-end: url(#arrow); }
+      .inherit { fill: none; stroke: #2563eb; stroke-width: 2; marker-end: url(#triangle); }
+      .rel-label { font: 12px Arial, sans-serif; fill: #334155; text-anchor: middle; paint-order: stroke; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round; }
+    </style>
+  </defs>
+  <rect width="2200" height="1380" class="bg"/>
+  <text x="40" y="40" class="title">Diagramme de classes detaille</text>
+  <text x="40" y="62" class="subtitle">Plateforme de Gestion des Stages - entites SQLAlchemy principales et relations metier</text>
+  
+    <g>
+      <rect x="40" y="70" width="380" height="940" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="58" y="100" class="package-title">Utilisateurs</text>
+    </g>
+
+    <g>
+      <rect x="470" y="70" width="380" height="940" rx="12" fill="#f7fee7" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="488" y="100" class="package-title">Candidatures et documents</text>
+    </g>
+
+    <g>
+      <rect x="900" y="70" width="380" height="940" rx="12" fill="#eff6ff" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="918" y="100" class="package-title">Propositions et affectations</text>
+    </g>
+
+    <g>
+      <rect x="1330" y="70" width="380" height="990" rx="12" fill="#fff7ed" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="1348" y="100" class="package-title">Suivi stage</text>
+    </g>
+
+    <g>
+      <rect x="1760" y="70" width="380" height="1250" rx="12" fill="#fdf2f8" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="1778" y="100" class="package-title">Communication, planning, reporting</text>
+    </g>
+  <g opacity="0.96">
+    <path d="M 230 322 C 230 341, 230 341, 230 360" class="inherit"/>
+    <text x="230" y="333" class="rel-label">heritage</text>
+
+    <path d="M 230 322 C 230 456, 230 456, 230 590" class="inherit"/>
+    <text x="230" y="448" class="rel-label">heritage</text>
+
+    <path d="M 230 322 C 230 571, 230 571, 230 820" class="rel"/>
+    <text x="230" y="563" class="rel-label">1 -&gt; 0..*</text>
+
+    <path d="M 390 221 C 445 221, 445 451, 500 451" class="rel"/>
+    <text x="445" y="328" class="rel-label">possede</text>
+
+    <path d="M 390 221 C 1090 221, 1090 756, 1790 756" class="rel"/>
+    <text x="1090" y="480.5" class="rel-label">envoie/recoit</text>
+
+    <path d="M 390 221 C 1090 221, 1090 981, 1790 981" class="rel"/>
+    <text x="1090" y="593" class="rel-label">recoit</text>
+
+    <path d="M 390 221 C 1090 221, 1090 501, 1790 501" class="rel"/>
+    <text x="1090" y="353" class="rel-label">cree</text>
+
+    <path d="M 390 451 C 445 451, 445 201, 500 201" class="rel"/>
+    <text x="445" y="318" class="rel-label">traite</text>
+
+    <path d="M 390 451 C 660 451, 660 196, 930 196" class="rel"/>
+    <text x="660" y="315.5" class="rel-label">propose</text>
+
+    <path d="M 390 451 C 875 451, 875 216, 1360 216" class="rel"/>
+    <text x="875" y="325.5" class="rel-label">supervise</text>
+
+    <path d="M 390 451 C 875 451, 875 491, 1360 491" class="rel"/>
+    <text x="875" y="463" class="rel-label">cree</text>
+
+    <path d="M 390 681 C 875 681, 875 216, 1360 216" class="rel"/>
+    <text x="875" y="440.5" class="rel-label">realise</text>
+
+    <path d="M 390 681 C 875 681, 875 746, 1360 746" class="rel"/>
+    <text x="875" y="705.5" class="rel-label">soumet</text>
+
+    <path d="M 390 681 C 875 681, 875 961, 1360 961" class="rel"/>
+    <text x="875" y="813" class="rel-label">est evalue</text>
+
+    <path d="M 820 201 C 660 201, 660 451, 500 451" class="rel"/>
+    <text x="660" y="318" class="rel-label">1 -&gt; 0..*</text>
+
+    <path d="M 820 451 C 660 451, 660 666, 500 666" class="rel"/>
+    <text x="660" y="550.5" class="rel-label">1 -&gt; 0..*</text>
+
+    <path d="M 660 302 C 660 551, 660 551, 660 800" class="rel"/>
+    <text x="660" y="543" class="rel-label">historique</text>
+
+    <path d="M 820 201 C 875 201, 875 451, 930 451" class="rel"/>
+    <text x="875" y="318" class="rel-label">genere</text>
+
+    <path d="M 820 201 C 875 201, 875 656, 930 656" class="rel"/>
+    <text x="875" y="420.5" class="rel-label">choix</text>
+
+    <path d="M 820 201 C 875 201, 875 871, 930 871" class="rel"/>
+    <text x="875" y="528" class="rel-label">affecte</text>
+
+    <path d="M 820 201 C 1090 201, 1090 216, 1360 216" class="rel"/>
+    <text x="1090" y="200.5" class="rel-label">devient</text>
+
+    <path d="M 1250 196 C 1090 196, 1090 451, 930 451" class="rel"/>
+    <text x="1090" y="315.5" class="rel-label">propose</text>
+
+    <path d="M 1250 451 C 1090 451, 1090 656, 930 656" class="rel"/>
+    <text x="1090" y="545.5" class="rel-label">token choisi</text>
+
+    <path d="M 1250 656 C 1090 656, 1090 871, 930 871" class="rel"/>
+    <text x="1090" y="755.5" class="rel-label">declenche</text>
+
+    <path d="M 1250 871 C 1305 871, 1305 216, 1360 216" class="rel"/>
+    <text x="1305" y="535.5" class="rel-label">cree stage</text>
+
+    <path d="M 1250 196 C 1305 196, 1305 491, 1360 491" class="rel"/>
+    <text x="1305" y="335.5" class="rel-label">contient</text>
+
+    <path d="M 1250 196 C 1305 196, 1305 961, 1360 961" class="rel"/>
+    <text x="1305" y="570.5" class="rel-label">evalue</text>
+
+    <path d="M 1520 317 C 1520 353.5, 1520 353.5, 1520 390" class="rel"/>
+    <text x="1520" y="345.5" class="rel-label">1 -&gt; 0..*</text>
+
+    <path d="M 1520 592 C 1520 628.5, 1520 628.5, 1520 665" class="rel"/>
+    <text x="1520" y="620.5" class="rel-label">1 -&gt; 0..*</text>
+
+    <path d="M 1680 216 C 1735 216, 1735 501, 1790 501" class="rel"/>
+    <text x="1735" y="350.5" class="rel-label">genere</text>
+
+    <path d="M 390 451 C 1090 451, 1090 236, 1790 236" class="rel"/>
+    <text x="1090" y="335.5" class="rel-label">planifie</text>
+
+    <path d="M 390 681 C 1090 681, 1090 236, 1790 236" class="rel"/>
+    <text x="1090" y="450.5" class="rel-label">participe</text></g>
+  
+      <g id="class-Utilisateur">
+        <rect x="70" y="120" width="320" height="202" rx="8" class="class-box"/>
+        <rect x="70" y="120" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 70 146 H 390 V 154 H 70 Z" class="class-head"/>
+        <text x="230" y="143" class="class-name">Utilisateur</text>
+        <text x="84" y="183" class="attr">+ id: int</text>
+<text x="84" y="203" class="attr">+ nom, prenom: String</text>
+<text x="84" y="223" class="attr">+ email: String</text>
+<text x="84" y="243" class="attr">+ motDePasse: String</text>
+<text x="84" y="263" class="attr">+ role: RoleEnum</text>
+<text x="84" y="283" class="attr">+ actif, emailVerifie: Boolean</text>
+<text x="84" y="303" class="attr">+ dernierLogin: DateTime</text>
+      </g>
+
+      <g id="class-Encadreur">
+        <rect x="70" y="360" width="320" height="182" rx="8" class="class-box"/>
+        <rect x="70" y="360" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 70 386 H 390 V 394 H 70 Z" class="class-head"/>
+        <text x="230" y="383" class="class-name">Encadreur</text>
+        <text x="84" y="423" class="attr">+ matricule: String</text>
+<text x="84" y="443" class="attr">+ grade: GradeEnum</text>
+<text x="84" y="463" class="attr">+ departement: DepartementEnum</text>
+<text x="84" y="483" class="attr">+ actif_encadrement: Boolean</text>
+<text x="84" y="503" class="attr">+ max_stagiaires: int</text>
+<text x="84" y="523" class="attr">+ peut_prendre_stagiaire(): bool</text>
+      </g>
+
+      <g id="class-Stagiaire">
+        <rect x="70" y="590" width="320" height="182" rx="8" class="class-box"/>
+        <rect x="70" y="590" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 70 616 H 390 V 624 H 70 Z" class="class-head"/>
+        <text x="230" y="613" class="class-name">Stagiaire</text>
+        <text x="84" y="653" class="attr">+ matricule: String</text>
+<text x="84" y="673" class="attr">+ type_stage: TypeStageEnum</text>
+<text x="84" y="693" class="attr">+ statut_stage: StatutStageEnum</text>
+<text x="84" y="713" class="attr">+ dates stage: Date</text>
+<text x="84" y="733" class="attr">+ etablissement: String</text>
+<text x="84" y="753" class="attr">+ note_finale: int</text>
+      </g>
+
+      <g id="class-ResetMotDePasse">
+        <rect x="70" y="820" width="320" height="142" rx="8" class="class-box"/>
+        <rect x="70" y="820" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 70 846 H 390 V 854 H 70 Z" class="class-head"/>
+        <text x="230" y="843" class="class-name">ResetMotDePasse</text>
+        <text x="84" y="883" class="attr">+ token: String</text>
+<text x="84" y="903" class="attr">+ date_creation: DateTime</text>
+<text x="84" y="923" class="attr">+ date_expiration: Date</text>
+<text x="84" y="943" class="attr">+ utilisee: Boolean</text>
+      </g>
+
+      <g id="class-DemandeStage">
+        <rect x="500" y="100" width="320" height="202" rx="8" class="class-box"/>
+        <rect x="500" y="100" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 500 126 H 820 V 134 H 500 Z" class="class-head"/>
+        <text x="660" y="123" class="class-name">DemandeStage</text>
+        <text x="514" y="163" class="attr">+ identite candidat</text>
+<text x="514" y="183" class="attr">+ email, telephone</text>
+<text x="514" y="203" class="attr">+ etablissement</text>
+<text x="514" y="223" class="attr">+ departement_souhaite</text>
+<text x="514" y="243" class="attr">+ dates souhaitees</text>
+<text x="514" y="263" class="attr">+ competences, tags: JSON</text>
+<text x="514" y="283" class="attr">+ statut: StatutDemandeEnum</text>
+      </g>
+
+      <g id="class-Document">
+        <rect x="500" y="370" width="320" height="162" rx="8" class="class-box"/>
+        <rect x="500" y="370" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 500 396 H 820 V 404 H 500 Z" class="class-head"/>
+        <text x="660" y="393" class="class-name">Document</text>
+        <text x="514" y="433" class="attr">+ demande_id: int</text>
+<text x="514" y="453" class="attr">+ user_id: int</text>
+<text x="514" y="473" class="attr">+ type: DocumentTypeEnum</text>
+<text x="514" y="493" class="attr">+ file_path: String</text>
+<text x="514" y="513" class="attr">+ created_at: DateTime</text>
+      </g>
+
+      <g id="class-DocumentReview">
+        <rect x="500" y="585" width="320" height="162" rx="8" class="class-box"/>
+        <rect x="500" y="585" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 500 611 H 820 V 619 H 500 Z" class="class-head"/>
+        <text x="660" y="608" class="class-name">DocumentReview</text>
+        <text x="514" y="648" class="attr">+ document_id: int</text>
+<text x="514" y="668" class="attr">+ status: String</text>
+<text x="514" y="688" class="attr">+ comment: Text</text>
+<text x="514" y="708" class="attr">+ reviewed_by: int</text>
+<text x="514" y="728" class="attr">+ reviewed_at: DateTime</text>
+      </g>
+
+      <g id="class-DemandeStageStatusHistory">
+        <rect x="500" y="800" width="320" height="162" rx="8" class="class-box"/>
+        <rect x="500" y="800" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 500 826 H 820 V 834 H 500 Z" class="class-head"/>
+        <text x="660" y="823" class="class-name">DemandeStageStatusHistory</text>
+        <text x="514" y="863" class="attr">+ demande_id: int</text>
+<text x="514" y="883" class="attr">+ previous_status: String</text>
+<text x="514" y="903" class="attr">+ new_status: String</text>
+<text x="514" y="923" class="attr">+ reason: Text</text>
+<text x="514" y="943" class="attr">+ changed_by: int</text>
+      </g>
+
+      <g id="class-Projet">
+        <rect x="930" y="95" width="320" height="202" rx="8" class="class-box"/>
+        <rect x="930" y="95" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 930 121 H 1250 V 129 H 930 Z" class="class-head"/>
+        <text x="1090" y="118" class="class-name">Projet</text>
+        <text x="944" y="158" class="attr">+ code_projet: String</text>
+<text x="944" y="178" class="attr">+ intitule: String</text>
+<text x="944" y="198" class="attr">+ departement: DepartementEnum</text>
+<text x="944" y="218" class="attr">+ type_stage: TypeStageEnum</text>
+<text x="944" y="238" class="attr">+ objectifs, livrables: Text</text>
+<text x="944" y="258" class="attr">+ competences, tags: JSON</text>
+<text x="944" y="278" class="attr">+ status: ProjetStatusEnum</text>
+      </g>
+
+      <g id="class-PropositionProjet">
+        <rect x="930" y="370" width="320" height="162" rx="8" class="class-box"/>
+        <rect x="930" y="370" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 930 396 H 1250 V 404 H 930 Z" class="class-head"/>
+        <text x="1090" y="393" class="class-name">PropositionProjet</text>
+        <text x="944" y="433" class="attr">+ demande_id: int</text>
+<text x="944" y="453" class="attr">+ projet_id: int</text>
+<text x="944" y="473" class="attr">+ token: String</text>
+<text x="944" y="493" class="attr">+ date_expiration: DateTime</text>
+<text x="944" y="513" class="attr">+ statut: StatutPropositionEnum</text>
+      </g>
+
+      <g id="class-ChoixProjet">
+        <rect x="930" y="585" width="320" height="142" rx="8" class="class-box"/>
+        <rect x="930" y="585" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 930 611 H 1250 V 619 H 930 Z" class="class-head"/>
+        <text x="1090" y="608" class="class-name">ChoixProjet</text>
+        <text x="944" y="648" class="attr">+ demande_id: int</text>
+<text x="944" y="668" class="attr">+ projet_id: int</text>
+<text x="944" y="688" class="attr">+ date_choix: DateTime</text>
+<text x="944" y="708" class="attr">+ created_at: DateTime</text>
+      </g>
+
+      <g id="class-Affectation">
+        <rect x="930" y="780" width="320" height="182" rx="8" class="class-box"/>
+        <rect x="930" y="780" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 930 806 H 1250 V 814 H 930 Z" class="class-head"/>
+        <text x="1090" y="803" class="class-name">Affectation</text>
+        <text x="944" y="843" class="attr">+ demande_id: int</text>
+<text x="944" y="863" class="attr">+ projet_id: int</text>
+<text x="944" y="883" class="attr">+ encadreur_id: int</text>
+<text x="944" y="903" class="attr">+ stagiaire_id: int?</text>
+<text x="944" y="923" class="attr">+ statut: StatutAffectationEnum</text>
+<text x="944" y="943" class="attr">+ dates prevues: DateTime</text>
+      </g>
+
+      <g id="class-Stage">
+        <rect x="1360" y="115" width="320" height="202" rx="8" class="class-box"/>
+        <rect x="1360" y="115" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 1360 141 H 1680 V 149 H 1360 Z" class="class-head"/>
+        <text x="1520" y="138" class="class-name">Stage</text>
+        <text x="1374" y="178" class="attr">+ demandestage_id: int</text>
+<text x="1374" y="198" class="attr">+ stagiaire_id: int</text>
+<text x="1374" y="218" class="attr">+ encadreur_id: int</text>
+<text x="1374" y="238" class="attr">+ projet_id: int</text>
+<text x="1374" y="258" class="attr">+ date_debut, date_fin: Date</text>
+<text x="1374" y="278" class="attr">+ statut_stage: StatutStageEnum</text>
+<text x="1374" y="298" class="attr">+ texte_objectif: String</text>
+      </g>
+
+      <g id="class-Task">
+        <rect x="1360" y="390" width="320" height="202" rx="8" class="class-box"/>
+        <rect x="1360" y="390" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 1360 416 H 1680 V 424 H 1360 Z" class="class-head"/>
+        <text x="1520" y="413" class="class-name">Task</text>
+        <text x="1374" y="453" class="attr">+ stage_id: int</text>
+<text x="1374" y="473" class="attr">+ projet_id: int</text>
+<text x="1374" y="493" class="attr">+ created_by: int</text>
+<text x="1374" y="513" class="attr">+ title: String</text>
+<text x="1374" y="533" class="attr">+ status: taskStatusEnum</text>
+<text x="1374" y="553" class="attr">+ priority: taskPriorityEnum</text>
+<text x="1374" y="573" class="attr">+ deadline: DateTime</text>
+      </g>
+
+      <g id="class-Task_submission">
+        <rect x="1360" y="665" width="320" height="162" rx="8" class="class-box"/>
+        <rect x="1360" y="665" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 1360 691 H 1680 V 699 H 1360 Z" class="class-head"/>
+        <text x="1520" y="688" class="class-name">Task_submission</text>
+        <text x="1374" y="728" class="attr">+ task_id: int</text>
+<text x="1374" y="748" class="attr">+ stagiaire_id: int</text>
+<text x="1374" y="768" class="attr">+ content: Text</text>
+<text x="1374" y="788" class="attr">+ file_url: String</text>
+<text x="1374" y="808" class="attr">+ submitted_at: DateTime</text>
+      </g>
+
+      <g id="class-Evaluation">
+        <rect x="1360" y="880" width="320" height="162" rx="8" class="class-box"/>
+        <rect x="1360" y="880" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 1360 906 H 1680 V 914 H 1360 Z" class="class-head"/>
+        <text x="1520" y="903" class="class-name">Evaluation</text>
+        <text x="1374" y="943" class="attr">+ stagiaire_id: int</text>
+<text x="1374" y="963" class="attr">+ projet_id: int</text>
+<text x="1374" y="983" class="attr">+ encadreur_id: int</text>
+<text x="1374" y="1003" class="attr">+ note: int (0..20)</text>
+<text x="1374" y="1023" class="attr">+ commentaire: Text</text>
+      </g>
+
+      <g id="class-PlanningEvent">
+        <rect x="1790" y="145" width="320" height="182" rx="8" class="class-box"/>
+        <rect x="1790" y="145" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 1790 171 H 2110 V 179 H 1790 Z" class="class-head"/>
+        <text x="1950" y="168" class="class-name">PlanningEvent</text>
+        <text x="1804" y="208" class="attr">+ encadreur_id: int</text>
+<text x="1804" y="228" class="attr">+ stagiaire_id: int?</text>
+<text x="1804" y="248" class="attr">+ title: String</text>
+<text x="1804" y="268" class="attr">+ event_type: planningEventTypeEnum</text>
+<text x="1804" y="288" class="attr">+ priority: taskPriorityEnum</text>
+<text x="1804" y="308" class="attr">+ start_at, end_at: DateTime</text>
+      </g>
+
+      <g id="class-Attestation">
+        <rect x="1790" y="410" width="320" height="182" rx="8" class="class-box"/>
+        <rect x="1790" y="410" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 1790 436 H 2110 V 444 H 1790 Z" class="class-head"/>
+        <text x="1950" y="433" class="class-name">Attestation</text>
+        <text x="1804" y="473" class="attr">+ stagiaire_id: int</text>
+<text x="1804" y="493" class="attr">+ stage_id: int</text>
+<text x="1804" y="513" class="attr">+ created_by: int</text>
+<text x="1804" y="533" class="attr">+ numero_attestation: String</text>
+<text x="1804" y="553" class="attr">+ file_path: String</text>
+<text x="1804" y="573" class="attr">+ dates stage: DateTime</text>
+      </g>
+
+      <g id="class-MessageInterne">
+        <rect x="1790" y="675" width="320" height="162" rx="8" class="class-box"/>
+        <rect x="1790" y="675" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 1790 701 H 2110 V 709 H 1790 Z" class="class-head"/>
+        <text x="1950" y="698" class="class-name">MessageInterne</text>
+        <text x="1804" y="738" class="attr">+ id_expediteur: int</text>
+<text x="1804" y="758" class="attr">+ id_destinataire: int</text>
+<text x="1804" y="778" class="attr">+ sujet: String</text>
+<text x="1804" y="798" class="attr">+ contenu: String</text>
+<text x="1804" y="818" class="attr">+ lu: Boolean</text>
+      </g>
+
+      <g id="class-Notification">
+        <rect x="1790" y="890" width="320" height="182" rx="8" class="class-box"/>
+        <rect x="1790" y="890" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 1790 916 H 2110 V 924 H 1790 Z" class="class-head"/>
+        <text x="1950" y="913" class="class-name">Notification</text>
+        <text x="1804" y="953" class="attr">+ user_id: int</text>
+<text x="1804" y="973" class="attr">+ title: String</text>
+<text x="1804" y="993" class="attr">+ message: Text</text>
+<text x="1804" y="1013" class="attr">+ category: String</text>
+<text x="1804" y="1033" class="attr">+ payload: Text</text>
+<text x="1804" y="1053" class="attr">+ read_at: DateTime</text>
+      </g>
+
+      <g id="class-Statistiques">
+        <rect x="1790" y="1130" width="320" height="162" rx="8" class="class-box"/>
+        <rect x="1790" y="1130" width="320" height="34" rx="8" class="class-head"/>
+        <path d="M 1790 1156 H 2110 V 1164 H 1790 Z" class="class-head"/>
+        <text x="1950" y="1153" class="class-name">Statistiques</text>
+        <text x="1804" y="1193" class="attr">+ periode: String</text>
+<text x="1804" y="1213" class="attr">+ nombreDemandes: int</text>
+<text x="1804" y="1233" class="attr">+ nbrStagesvalides: int</text>
+<text x="1804" y="1253" class="attr">+ nbrStagesencours: int</text>
+<text x="1804" y="1273" class="attr">+ taxeReussite: float</text>
+      </g>
+</svg>

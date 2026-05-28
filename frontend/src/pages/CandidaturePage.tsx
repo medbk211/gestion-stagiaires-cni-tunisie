@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+﻿import { useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import {
   ArrowLeft,
@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, demandesApi } from "@/api"
-import { CniBrand } from "@/components/brand/cni-brand"
+import { AppBrand } from "@/components/brand/app-brand"
 
 interface DemandeFormOptions {
   departements: string[]
@@ -64,7 +64,7 @@ const STEPS = [
 ] as const
 
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024
-const DRAFT_STORAGE_KEY = "cni_candidature_draft_v1"
+const DRAFT_STORAGE_KEY = "stages_candidature_draft_v1"
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 type CandidatureFieldKey = keyof CandidatureFormState | "cv" | "lettre"
@@ -470,7 +470,7 @@ export default function CandidaturePage() {
       <header className="sticky top-0 z-40 border-b border-indigo-100/80 bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link to="/" className="inline-flex items-center gap-3">
-            <CniBrand subtitle="Depot de candidature" />
+            <AppBrand subtitle="Depot de candidature" />
           </Link>
 
           <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900">

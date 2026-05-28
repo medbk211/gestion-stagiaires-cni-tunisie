@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import { AlertCircle, Loader2 } from "lucide-react"
 import {
   Dialog,
@@ -75,7 +75,7 @@ export function EncadreurCreateDialog({
       setIsSubmitting(true)
       setErrorMessage("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         setErrorMessage("Session expiree. Veuillez vous reconnecter.")
         return

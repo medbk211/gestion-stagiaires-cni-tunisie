@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Calendar,
   ChevronRight,
@@ -156,7 +156,7 @@ export default function AdminStagiairesPage() {
       setPageError("")
       setDataWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)

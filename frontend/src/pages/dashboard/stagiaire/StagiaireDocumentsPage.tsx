@@ -162,7 +162,7 @@ export default function StagiaireDocumentsPage() {
       setPageError("")
       setDataWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)
@@ -523,7 +523,7 @@ export default function StagiaireDocumentsPage() {
           <CardContent>
             <p className="flex items-center gap-2 text-xs text-muted-foreground">
               <Mail className="h-3.5 w-3.5" />
-              En cas de document manquant: support.cni@cni.tn
+              En cas de document manquant: support@entreprise.com
             </p>
           </CardContent>
         </Card>

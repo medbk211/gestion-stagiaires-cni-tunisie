@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Calendar,
   ClipboardList,
@@ -101,12 +101,12 @@ function resolveUserName(currentUser: CurrentUserResponse | null): string {
   if (fromUser) {
     return fromUser
   }
-  const fromStorage = localStorage.getItem("cni_user_name") || ""
+  const fromStorage = localStorage.getItem("stages_user_name") || ""
   return fromStorage.trim() || "Encadrant"
 }
 
 function resolveUserRole(currentUser: CurrentUserResponse | null): string {
-  const roleLabel = enumToLabel(currentUser?.role || localStorage.getItem("cni_user_role"))
+  const roleLabel = enumToLabel(currentUser?.role || localStorage.getItem("stages_user_role"))
   return roleLabel !== "-" ? roleLabel : "Encadrant"
 }
 
@@ -116,9 +116,9 @@ export function useEncadrantSidebar(): UseEncadrantSidebarResult {
   const [unreadCount, setUnreadCount] = useState(0)
   const [internsCount, setInternsCount] = useState(0)
   const [tasksInReviewCount, setTasksInReviewCount] = useState(0)
-  const [userName, setUserName] = useState(() => (localStorage.getItem("cni_user_name") || "").trim() || "Encadrant")
+  const [userName, setUserName] = useState(() => (localStorage.getItem("stages_user_name") || "").trim() || "Encadrant")
   const [userRole, setUserRole] = useState(() => {
-    const roleFromStorage = localStorage.getItem("cni_user_role")
+    const roleFromStorage = localStorage.getItem("stages_user_role")
     const roleLabel = enumToLabel(roleFromStorage)
     return roleLabel !== "-" ? roleLabel : "Encadrant"
   })
@@ -128,7 +128,7 @@ export function useEncadrantSidebar(): UseEncadrantSidebarResult {
     async (_options?: { silent?: boolean }) => {
       setSidebarWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         clearAuthSession()
         navigate("/connexion", { replace: true })
@@ -176,10 +176,10 @@ export function useEncadrantSidebar(): UseEncadrantSidebarResult {
         }
 
         if (nextCurrentUser) {
-          localStorage.setItem("cni_user_email", nextCurrentUser.email)
-          localStorage.setItem("cni_user_name", `${nextCurrentUser.prenom} ${nextCurrentUser.nom}`.trim())
+          localStorage.setItem("stages_user_email", nextCurrentUser.email)
+          localStorage.setItem("stages_user_name", `${nextCurrentUser.prenom} ${nextCurrentUser.nom}`.trim())
           if (nextCurrentUser.role) {
-            localStorage.setItem("cni_user_role", nextCurrentUser.role)
+            localStorage.setItem("stages_user_role", nextCurrentUser.role)
           }
         }
 

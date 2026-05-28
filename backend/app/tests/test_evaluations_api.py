@@ -1,4 +1,4 @@
-from datetime import date
+﻿from datetime import date
 
 from app.core.security import hash_password
 from app.modules.evaluation.models import Evaluation
@@ -235,16 +235,16 @@ def test_admin_update_evaluation_marks_stage_as_termine_when_tasks_are_validated
         email="admin.eval.update@example.com",
         role=RoleEnum.ADMIN,
     )
-    encadreur = make_encadreur(db_session, email="enc.eval.admin@example.com")
+    encadreur = make_encadreur(db_session, email="enc.eval.admin@entreprise.com")
     demande = make_demande(
         db_session,
-        email="demande.eval.admin@example.com",
+        email="demande.eval.admin@entreprise.com",
         encadreur_id=encadreur.id,
     )
     projet = make_projet(db_session, code_projet="PRJ-EVAL-ADMIN")
     stagiaire = create_stagiaire(
         db_session,
-        email="stagiaire.eval.admin@example.com",
+        email="stagiaire.eval.admin@entreprise.com",
         encadreur_id=encadreur.id,
     )
     stage = create_stage(

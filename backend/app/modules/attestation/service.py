@@ -79,7 +79,7 @@ class AttestationService:
 
         # Add footer
         c.setFont("Helvetica", 9)
-        c.drawString(1 * inch, 0.75 * inch, "Certification de stage - CNI Tunisie")
+        c.drawString(1 * inch, 0.75 * inch, "Certification de stage - Plateforme de Gestion des Stages")
         c.drawString(width - 2 * inch, 0.75 * inch, f"Généré le: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
 
         c.save()

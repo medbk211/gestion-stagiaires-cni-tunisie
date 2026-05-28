@@ -20,7 +20,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Ben Salem",
             prenom="Aymen",
-            email="aymen.bensalem@cni.tn",
+            email="aymen.bensalem@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC001",
@@ -31,7 +31,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Trabelsi",
             prenom="Sana",
-            email="sana.trabelsi@cni.tn",
+            email="sana.trabelsi@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC002",
@@ -42,7 +42,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Gharbi",
             prenom="Mohamed",
-            email="mohamed.gharbi@cni.tn",
+            email="mohamed.gharbi@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC003",
@@ -53,7 +53,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Khemiri",
             prenom="Ines",
-            email="ines.khemiri@cni.tn",
+            email="ines.khemiri@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC004",
@@ -64,7 +64,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Bouaziz",
             prenom="Youssef",
-            email="youssef.bouaziz@cni.tn",
+            email="youssef.bouaziz@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC005",
@@ -75,7 +75,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Haddad",
             prenom="Rim",
-            email="rim.haddad@cni.tn",
+            email="rim.haddad@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC006",
@@ -86,7 +86,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Jlassi",
             prenom="Wael",
-            email="wael.jlassi@cni.tn",
+            email="wael.jlassi@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC007",
@@ -97,7 +97,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Saidi",
             prenom="Amira",
-            email="amira.saidi@cni.tn",
+            email="amira.saidi@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC008",
@@ -108,7 +108,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Bouzid",
             prenom="Ahmed",
-            email="ahmed.bouzid@cni.tn",
+            email="ahmed.bouzid@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC009",
@@ -119,7 +119,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Chaabane",
             prenom="Sarra",
-            email="sarra.chaabane@cni.tn",
+            email="sarra.chaabane@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC010",
@@ -130,7 +130,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Mansour",
             prenom="Nour",
-            email="nour.mansour@cni.tn",
+            email="nour.mansour@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC011",
@@ -141,7 +141,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Kammoun",
             prenom="Houssem",
-            email="houssem.kammoun@cni.tn",
+            email="houssem.kammoun@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC012",
@@ -152,7 +152,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Mejri",
             prenom="Fares",
-            email="fares.mejri@cni.tn",
+            email="fares.mejri@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC013",
@@ -163,7 +163,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Baccouche",
             prenom="Hajar",
-            email="hajar.baccouche@cni.tn",
+            email="hajar.baccouche@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC014",
@@ -174,7 +174,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Sassi",
             prenom="Malek",
-            email="malek.sassi@cni.tn",
+            email="malek.sassi@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC015",
@@ -185,7 +185,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Ferjani",
             prenom="Yassine",
-            email="yassine.ferjani@cni.tn",
+            email="yassine.ferjani@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC016",
@@ -196,7 +196,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Zouari",
             prenom="Asma",
-            email="asma.zouari@cni.tn",
+            email="asma.zouari@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC017",
@@ -207,7 +207,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Ben Youssef",
             prenom="Karim",
-            email="karim.benyoussef@cni.tn",
+            email="karim.benyoussef@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC018",
@@ -218,7 +218,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Ayari",
             prenom="Mariem",
-            email="mariem.ayari@cni.tn",
+            email="mariem.ayari@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC019",
@@ -229,7 +229,7 @@ def seed_encadreurs():
         Encadreur(
             nom="Hamdi",
             prenom="Slim",
-            email="slim.hamdi@cni.tn",
+            email="slim.hamdi@example.com",
             motDePasse=hash_password(default_password),
             role=RoleEnum.ENCADREUR,
             matricule="ENC020",

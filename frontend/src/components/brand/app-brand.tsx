@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 
-interface CniBrandProps {
+interface AppBrandProps {
   className?: string
   logoClassName?: string
   titleClassName?: string
@@ -8,22 +8,21 @@ interface CniBrandProps {
   subtitle?: string
 }
 
-export function CniBrand({
+export function AppBrand({
   className,
   logoClassName,
   titleClassName,
   subtitleClassName,
   subtitle = "Gestion des Stagiaires",
-}: CniBrandProps) {
+}: AppBrandProps) {
   return (
     <div className={cn("flex items-center gap-3", className)}>
       <img
-        src="/cni-logo.svg"
-        alt="Logo CNI"
+        src="/stage-logo.svg"
+        alt="Plateforme de gestion des stages"
         className={cn("h-11 w-11 rounded-md object-contain", logoClassName)}
       />
       <div className="leading-tight">
-        <p className={cn("text-sm font-semibold tracking-wide text-indigo-700", titleClassName)}>CNI Tunisia</p>
         <p className={cn("text-xs text-muted-foreground", subtitleClassName)}>{subtitle}</p>
       </div>
     </div>

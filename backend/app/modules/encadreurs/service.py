@@ -42,7 +42,7 @@ async def create_encadreur_by_admin(
             "email": data.email,
             "password": plain_password,
         },
-        subject="Votre compte Encadreur - CNI",
+        subject="Votre compte Encadreur",
         template_name="encadreur_created.html",
     )
 

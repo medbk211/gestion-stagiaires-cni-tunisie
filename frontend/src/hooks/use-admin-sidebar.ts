@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   BarChart3,
   Briefcase,
@@ -97,9 +97,9 @@ function buildAdminNavItems(pendingDemandesCount: number): NavItem[] {
 export function useAdminSidebar(): UseAdminSidebarResult {
   const navigate = useNavigate()
 
-  const [userName, setUserName] = useState(() => (localStorage.getItem("cni_user_name") || "").trim() || "Administrateur")
+  const [userName, setUserName] = useState(() => (localStorage.getItem("stages_user_name") || "").trim() || "Administrateur")
   const [userRole, setUserRole] = useState(() => {
-    const roleLabel = enumToLabel(localStorage.getItem("cni_user_role"))
+    const roleLabel = enumToLabel(localStorage.getItem("stages_user_role"))
     return roleLabel !== "-" ? roleLabel : "Administrateur"
   })
   const [pendingDemandesCount, setPendingDemandesCount] = useState(0)
@@ -109,7 +109,7 @@ export function useAdminSidebar(): UseAdminSidebarResult {
     async (_options?: { silent?: boolean }) => {
       setSidebarWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         clearAuthSession()
         navigate("/connexion", { replace: true })
@@ -145,9 +145,9 @@ export function useAdminSidebar(): UseAdminSidebarResult {
         }
 
         if (nextCurrentUser) {
-          localStorage.setItem("cni_user_email", nextCurrentUser.email)
-          localStorage.setItem("cni_user_name", `${nextCurrentUser.prenom} ${nextCurrentUser.nom}`.trim())
-          localStorage.setItem("cni_user_role", nextCurrentUser.role)
+          localStorage.setItem("stages_user_email", nextCurrentUser.email)
+          localStorage.setItem("stages_user_name", `${nextCurrentUser.prenom} ${nextCurrentUser.nom}`.trim())
+          localStorage.setItem("stages_user_role", nextCurrentUser.role)
           setUserName(`${nextCurrentUser.prenom} ${nextCurrentUser.nom}`.trim() || "Administrateur")
           const roleLabel = enumToLabel(nextCurrentUser.role)
           setUserRole(roleLabel !== "-" ? roleLabel : "Administrateur")

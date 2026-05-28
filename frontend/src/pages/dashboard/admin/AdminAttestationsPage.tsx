@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import { Download, FileText, Loader2, RefreshCw, Search, Trash2 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
@@ -186,7 +186,7 @@ export default function AdminAttestationsPage() {
 
       setPageError("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (!silent) setIsLoading(false)
         else setIsRefreshing(false)
@@ -213,7 +213,7 @@ export default function AdminAttestationsPage() {
   )
 
   const loadOptions = useCallback(async () => {
-    const accessToken = localStorage.getItem("cni_access_token")
+    const accessToken = localStorage.getItem("stages_access_token")
     if (!accessToken) {
       navigate("/connexion", { replace: true })
       return
@@ -291,7 +291,7 @@ export default function AdminAttestationsPage() {
       setDialogError("")
 
       if (!stagiaireId || !stageId || !dateDebut || !dateFin) {
-        setDialogError("Tous les champs obligatoires doivent être remplis")
+        setDialogError("Tous les champs obligatoires doivent Ãªtre remplis")
         return
       }
 
@@ -324,18 +324,18 @@ export default function AdminAttestationsPage() {
           return
         }
         if (isApiErrorStatus(error, 404)) {
-          setDialogError("Stagiaire ou stage non trouvé")
+          setDialogError("Stagiaire ou stage non trouvÃ©")
           return
         }
         if (isApiErrorStatus(error, 409)) {
-          setDialogError("Une attestation existe déjà pour ce stage")
+          setDialogError("Une attestation existe dÃ©jÃ  pour ce stage")
           return
         }
         if (isApiErrorStatus(error, 400)) {
-          setDialogError("La stage doit être terminée pour générer une attestation")
+          setDialogError("La stage doit Ãªtre terminÃ©e pour gÃ©nÃ©rer une attestation")
           return
         }
-        setDialogError(asErrorMessage(error, "Impossible de créer l'attestation"))
+        setDialogError(asErrorMessage(error, "Impossible de crÃ©er l'attestation"))
       } finally {
         setIsCreating(false)
       }
@@ -345,7 +345,7 @@ export default function AdminAttestationsPage() {
 
   const handleDeleteAttestation = useCallback(
     async (id: number) => {
-      if (!confirm("Êtes-vous sûr de vouloir supprimer cette attestation ?")) return
+      if (!confirm("ÃŠtes-vous sÃ»r de vouloir supprimer cette attestation ?")) return
 
       try {
         await requestAuthJson(`/attestations/${id}`, { method: "DELETE" })
@@ -377,7 +377,7 @@ export default function AdminAttestationsPage() {
       <div className="flex flex-col gap-6">
         <DashboardPageHeader
           title="Gestion des Attestations"
-          subtitle="Créer et gérer les attestations de stage pour les stagiaires"
+          subtitle="CrÃ©er et gÃ©rer les attestations de stage pour les stagiaires"
           actions={(
             <div className="flex gap-2">
               <Button
@@ -389,12 +389,12 @@ export default function AdminAttestationsPage() {
                 {isRefreshing ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Rafraîchissement...
+                    RafraÃ®chissement...
                   </>
                 ) : (
                   <>
                     <RefreshCw className="h-4 w-4" />
-                    Rafraîchir
+                    RafraÃ®chir
                   </>
                 )}
               </Button>
@@ -415,7 +415,7 @@ export default function AdminAttestationsPage() {
                 className="border-red-200 bg-white text-red-700 hover:bg-red-50"
                 onClick={() => void loadAttestations()}
               >
-                Réessayer
+                RÃ©essayer
               </Button>
             </CardContent>
           </Card>
@@ -435,7 +435,7 @@ export default function AdminAttestationsPage() {
                 <div className="flex flex-wrap items-center gap-3">
                   <Search className="h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Rechercher par numéro d'attestation ou ID stagiaire..."
+                    placeholder="Rechercher par numÃ©ro d'attestation ou ID stagiaire..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="flex-1"
@@ -447,7 +447,7 @@ export default function AdminAttestationsPage() {
             {filteredAttestations.length === 0 ? (
               <Card className="border-dashed">
                 <CardContent className="flex min-h-64 items-center justify-center text-sm text-muted-foreground">
-                  Aucune attestation trouvée
+                  Aucune attestation trouvÃ©e
                 </CardContent>
               </Card>
             ) : (
@@ -457,7 +457,7 @@ export default function AdminAttestationsPage() {
                     <CardContent className="p-4">
                       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <div>
-                          <p className="text-xs font-medium text-muted-foreground">Numéro</p>
+                          <p className="text-xs font-medium text-muted-foreground">NumÃ©ro</p>
                           <p className="font-mono font-semibold text-foreground">
                             {attestation.numero_attestation}
                           </p>
@@ -475,7 +475,7 @@ export default function AdminAttestationsPage() {
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs font-medium text-muted-foreground">Date Création</p>
+                          <p className="text-xs font-medium text-muted-foreground">Date CrÃ©ation</p>
                           <p className="text-sm text-foreground">{formatDateTime(attestation.created_at)}</p>
                         </div>
                         {attestation.description && (
@@ -492,7 +492,7 @@ export default function AdminAttestationsPage() {
                             className="gap-2"
                           >
                             <Download className="h-4 w-4" />
-                            Télécharger
+                            TÃ©lÃ©charger
                           </Button>
                           <Button
                             size="sm"
@@ -516,9 +516,9 @@ export default function AdminAttestationsPage() {
         <Dialog open={createDialogOpen} onOpenChange={handleDialogOpenChange}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Créer une Attestation</DialogTitle>
+              <DialogTitle>CrÃ©er une Attestation</DialogTitle>
               <DialogDescription>
-                Générer une nouvelle attestation de stage pour un stagiaire
+                GÃ©nÃ©rer une nouvelle attestation de stage pour un stagiaire
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleCreateAttestation} className="space-y-4">
@@ -536,7 +536,7 @@ export default function AdminAttestationsPage() {
                 <Label htmlFor="stagiaire-id">Stagiaire *</Label>
                 <Select value={stagiaireId} onValueChange={handleStagiaireChange}>
                   <SelectTrigger id="stagiaire-id" disabled={isLoadingOptions}>
-                    <SelectValue placeholder="Sélectionner un stagiaire..." />
+                    <SelectValue placeholder="SÃ©lectionner un stagiaire..." />
                   </SelectTrigger>
                   <SelectContent>
                     {availableStagiaires.length === 0 ? (
@@ -554,12 +554,12 @@ export default function AdminAttestationsPage() {
                 </Select>
                 {!isLoadingOptions && !optionsError && availableStagiaires.length === 0 && (
                   <p className="mt-2 text-xs text-muted-foreground">
-                    Aucun stagiaire avec un stage disponible n&apos;est prêt pour une nouvelle attestation.
+                    Aucun stagiaire avec un stage disponible n&apos;est prÃªt pour une nouvelle attestation.
                   </p>
                 )}
               </div>
               <div>
-                <Label htmlFor="date-debut">Date Début Stage *</Label>
+                <Label htmlFor="date-debut">Date DÃ©but Stage *</Label>
                 <Input
                   id="date-debut"
                   type="datetime-local"
@@ -586,7 +586,7 @@ export default function AdminAttestationsPage() {
                   id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Notes ou détails supplémentaires..."
+                  placeholder="Notes ou dÃ©tails supplÃ©mentaires..."
                   className="h-24"
                 />
               </div>
@@ -605,7 +605,7 @@ export default function AdminAttestationsPage() {
                   className="gap-2"
                 >
                   {isCreating && <Loader2 className="h-4 w-4 animate-spin" />}
-                  Créer Attestation
+                  CrÃ©er Attestation
                 </Button>
               </DialogFooter>
             </form>

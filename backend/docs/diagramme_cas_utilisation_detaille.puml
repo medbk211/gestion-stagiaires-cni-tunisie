@@ -1,0 +1,183 @@
+@startuml
+title Diagramme de cas d'utilisation detaille - Plateforme de Gestion des Stages
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Candidat externe" as Candidat
+actor "Administrateur" as Admin
+actor "Encadreur" as Encadreur
+actor "Stagiaire" as Stagiaire
+actor "Service email" as Email
+actor "Notifications internes" as Notifications
+
+rectangle "Plateforme de Gestion des Stages" {
+  package "Espace public" {
+    usecase "Consulter accueil" as UC_Landing
+    usecase "Consulter options candidature" as UC_Options
+    usecase "Soumettre candidature" as UC_Candidature
+    usecase "Joindre CV et lettre" as UC_UploadInit
+    usecase "Ouvrir lien tokenise" as UC_Selection
+    usecase "Choisir projet propose" as UC_Choix
+  }
+
+  package "Authentification" {
+    usecase "Se connecter" as UC_Login
+    usecase "Consulter session courante" as UC_Me
+    usecase "Renouveler token" as UC_Refresh
+    usecase "Se deconnecter" as UC_Logout
+    usecase "Demander reset mot de passe" as UC_Forgot
+    usecase "Reinitialiser mot de passe" as UC_Reset
+    usecase "Changer mot de passe" as UC_ChangePwd
+  }
+
+  package "Back-office administrateur" {
+    usecase "Consulter dashboard global" as UC_AdminDash
+    usecase "Gerer utilisateurs" as UC_Users
+    usecase "Activer/desactiver compte" as UC_UserStatus
+    usecase "Gerer candidatures" as UC_Demandes
+    usecase "Accepter candidature" as UC_Accept
+    usecase "Refuser candidature" as UC_Refuse
+    usecase "Mettre en attente" as UC_Hold
+    usecase "Rouvrir demande" as UC_Reopen
+    usecase "Consulter historique demande" as UC_History
+    usecase "Gerer encadreurs" as UC_Encadreurs
+    usecase "Gerer projets de stage" as UC_Projects
+    usecase "Gerer fiche PDF projet" as UC_ProjectPdf
+    usecase "Proposer top projets" as UC_Proposals
+    usecase "Gerer affectations" as UC_Affectations
+    usecase "Assigner encadreur" as UC_AssignEnc
+    usecase "Gerer stages" as UC_Stages
+    usecase "Gerer stagiaires" as UC_Stagiaires
+    usecase "Lister/valider documents" as UC_DocReview
+    usecase "Generer attestations" as UC_Attestations
+    usecase "Consulter statistiques" as UC_Stats
+  }
+
+  package "Espace encadreur" {
+    usecase "Consulter overview encadreur" as UC_EncDash
+    usecase "Voir stagiaires encadres" as UC_MyInterns
+    usecase "Voir stages encadres" as UC_MyStages
+    usecase "Creer tache" as UC_CreateTask
+    usecase "Suivre taches" as UC_TaskFollow
+    usecase "Reviser soumission" as UC_ReviewTask
+    usecase "Valider tache" as UC_ValidateTask
+    usecase "Gerer planning" as UC_Planning
+    usecase "Evaluer stagiaire" as UC_Evaluate
+    usecase "Consulter documents" as UC_EncDocs
+    usecase "Messagerie encadreur" as UC_EncMsg
+  }
+
+  package "Espace stagiaire" {
+    usecase "Consulter/modifier profil" as UC_Profile
+    usecase "Consulter stage et projet" as UC_MyStage
+    usecase "Voir mes taches" as UC_MyTasks
+    usecase "Mettre a jour statut tache" as UC_UpdateTask
+    usecase "Soumettre travail" as UC_SubmitTask
+    usecase "Gerer mes documents" as UC_MyDocs
+    usecase "Deposer rapport final" as UC_Report
+    usecase "Consulter planning" as UC_MyPlanning
+    usecase "Consulter evaluations" as UC_MyEval
+    usecase "Consulter/telecharger attestations" as UC_MyAtt
+    usecase "Messagerie stagiaire" as UC_StagMsg
+  }
+
+  package "Transverse" {
+    usecase "Consulter notifications" as UC_Notifs
+    usecase "Marquer notifications lues" as UC_ReadNotifs
+    usecase "Telecharger fichiers" as UC_Download
+  }
+}
+
+Candidat --> UC_Landing
+Candidat --> UC_Options
+Candidat --> UC_Candidature
+Candidat --> UC_Selection
+Candidat --> UC_Choix
+UC_Candidature .> UC_UploadInit : <<include>>
+UC_Selection .> UC_Choix : <<extend>>
+
+Admin --> UC_Login
+Encadreur --> UC_Login
+Stagiaire --> UC_Login
+Admin --> UC_Me
+Encadreur --> UC_Me
+Stagiaire --> UC_Me
+Admin --> UC_Refresh
+Encadreur --> UC_Refresh
+Stagiaire --> UC_Refresh
+Admin --> UC_Logout
+Encadreur --> UC_Logout
+Stagiaire --> UC_Logout
+Admin --> UC_ChangePwd
+Encadreur --> UC_ChangePwd
+Stagiaire --> UC_ChangePwd
+Candidat --> UC_Forgot
+Candidat --> UC_Reset
+
+Admin --> UC_AdminDash
+Admin --> UC_Users
+UC_Users .> UC_UserStatus : <<include>>
+Admin --> UC_Demandes
+UC_Demandes .> UC_Accept : <<extend>>
+UC_Demandes .> UC_Refuse : <<extend>>
+UC_Demandes .> UC_Hold : <<extend>>
+UC_Demandes .> UC_Reopen : <<extend>>
+UC_Demandes .> UC_History : <<include>>
+Admin --> UC_Encadreurs
+Admin --> UC_Projects
+UC_Projects .> UC_ProjectPdf : <<include>>
+Admin --> UC_Proposals
+UC_Proposals .> UC_Selection : <<include>>
+Admin --> UC_Affectations
+UC_Affectations .> UC_AssignEnc : <<include>>
+Admin --> UC_Stages
+Admin --> UC_Stagiaires
+Admin --> UC_DocReview
+Admin --> UC_Attestations
+Admin --> UC_Stats
+
+Encadreur --> UC_EncDash
+Encadreur --> UC_MyInterns
+Encadreur --> UC_MyStages
+Encadreur --> UC_CreateTask
+Encadreur --> UC_TaskFollow
+UC_TaskFollow .> UC_ReviewTask : <<extend>>
+UC_TaskFollow .> UC_ValidateTask : <<extend>>
+Encadreur --> UC_Planning
+Encadreur --> UC_Evaluate
+Encadreur --> UC_EncDocs
+Encadreur --> UC_EncMsg
+
+Stagiaire --> UC_Profile
+Stagiaire --> UC_MyStage
+Stagiaire --> UC_MyTasks
+UC_MyTasks .> UC_UpdateTask : <<extend>>
+UC_MyTasks .> UC_SubmitTask : <<extend>>
+Stagiaire --> UC_MyDocs
+UC_MyDocs .> UC_Report : <<extend>>
+Stagiaire --> UC_MyPlanning
+Stagiaire --> UC_MyEval
+Stagiaire --> UC_MyAtt
+Stagiaire --> UC_StagMsg
+
+Admin --> UC_Notifs
+Encadreur --> UC_Notifs
+Stagiaire --> UC_Notifs
+UC_Notifs .> UC_ReadNotifs : <<include>>
+Admin --> UC_Download
+Encadreur --> UC_Download
+Stagiaire --> UC_Download
+
+UC_Candidature --> Email
+UC_Accept --> Email
+UC_Refuse --> Email
+UC_Proposals --> Email
+UC_Forgot --> Email
+UC_AssignEnc --> Notifications
+UC_CreateTask --> Notifications
+UC_SubmitTask --> Notifications
+UC_ReviewTask --> Notifications
+UC_Evaluate --> Notifications
+UC_Choix --> Notifications
+
+@enduml

@@ -1,0 +1,155 @@
+flowchart LR
+  Candidat([Candidat externe])
+  Admin([Administrateur])
+  Encadreur([Encadreur])
+  Stagiaire([Stagiaire])
+  Email([Service email])
+  Notif([Notifications internes])
+
+  subgraph Public["Espace public"]
+    UC_Landing((Consulter accueil))
+    UC_Options((Consulter options candidature))
+    UC_Candidature((Soumettre candidature))
+    UC_UploadInit((Joindre CV et lettre))
+    UC_Selection((Ouvrir lien tokenise))
+    UC_Choix((Choisir projet propose))
+  end
+
+  subgraph Auth["Authentification"]
+    UC_Login((Se connecter))
+    UC_Me((Consulter session))
+    UC_Refresh((Renouveler token))
+    UC_Logout((Se deconnecter))
+    UC_Forgot((Demander reset mot de passe))
+    UC_Reset((Reinitialiser mot de passe))
+    UC_ChangePwd((Changer mot de passe))
+  end
+
+  subgraph AdminSpace["Back-office administrateur"]
+    UC_AdminDash((Consulter dashboard global))
+    UC_Users((Gerer utilisateurs))
+    UC_Demandes((Gerer candidatures))
+    UC_DemandeStatus((Accepter refuser attendre rouvrir))
+    UC_History((Consulter historique demande))
+    UC_Encadreurs((Gerer encadreurs))
+    UC_Projects((Gerer projets de stage))
+    UC_ProjectPdf((Gerer fiche PDF projet))
+    UC_Proposals((Proposer top projets))
+    UC_Affectations((Gerer affectations))
+    UC_Stages((Gerer stages))
+    UC_Stagiaires((Gerer stagiaires))
+    UC_DocReview((Lister valider documents))
+    UC_Attestations((Generer attestations))
+    UC_Stats((Consulter statistiques))
+  end
+
+  subgraph EncSpace["Espace encadreur"]
+    UC_EncDash((Consulter overview encadreur))
+    UC_MyInterns((Voir stagiaires encadres))
+    UC_MyStages((Voir stages encadres))
+    UC_CreateTask((Creer tache))
+    UC_TaskFollow((Suivre taches))
+    UC_ReviewTask((Reviser soumission))
+    UC_ValidateTask((Valider tache))
+    UC_Planning((Gerer planning))
+    UC_Evaluate((Evaluer stagiaire))
+    UC_EncDocs((Consulter documents))
+    UC_EncMsg((Messagerie))
+  end
+
+  subgraph StagSpace["Espace stagiaire"]
+    UC_Profile((Consulter modifier profil))
+    UC_MyStage((Consulter stage et projet))
+    UC_MyTasks((Voir mes taches))
+    UC_UpdateTask((Mettre a jour statut tache))
+    UC_SubmitTask((Soumettre travail))
+    UC_MyDocs((Gerer mes documents))
+    UC_Report((Deposer rapport final))
+    UC_MyPlanning((Consulter planning))
+    UC_MyEval((Consulter evaluations))
+    UC_MyAtt((Consulter telecharger attestations))
+    UC_StagMsg((Messagerie))
+  end
+
+  subgraph Cross["Transverse"]
+    UC_Notifs((Consulter notifications))
+    UC_ReadNotifs((Marquer notifications lues))
+    UC_Download((Telecharger fichiers))
+  end
+
+  Candidat --> UC_Landing
+  Candidat --> UC_Options
+  Candidat --> UC_Candidature
+  UC_Candidature --> UC_UploadInit
+  Candidat --> UC_Selection
+  UC_Selection --> UC_Choix
+
+  Admin --> UC_Login
+  Encadreur --> UC_Login
+  Stagiaire --> UC_Login
+  Admin --> UC_ChangePwd
+  Encadreur --> UC_ChangePwd
+  Stagiaire --> UC_ChangePwd
+  Candidat --> UC_Forgot
+  Admin --> UC_Logout
+  Encadreur --> UC_Logout
+  Stagiaire --> UC_Logout
+
+  Admin --> UC_AdminDash
+  Admin --> UC_Users
+  Admin --> UC_Demandes
+  UC_Demandes --> UC_DemandeStatus
+  UC_Demandes --> UC_History
+  Admin --> UC_Encadreurs
+  Admin --> UC_Projects
+  UC_Projects --> UC_ProjectPdf
+  Admin --> UC_Proposals
+  UC_Proposals --> UC_Selection
+  Admin --> UC_Affectations
+  Admin --> UC_Stages
+  Admin --> UC_Stagiaires
+  Admin --> UC_DocReview
+  Admin --> UC_Attestations
+  Admin --> UC_Stats
+
+  Encadreur --> UC_EncDash
+  Encadreur --> UC_MyInterns
+  Encadreur --> UC_MyStages
+  Encadreur --> UC_CreateTask
+  Encadreur --> UC_TaskFollow
+  UC_TaskFollow --> UC_ReviewTask
+  UC_TaskFollow --> UC_ValidateTask
+  Encadreur --> UC_Planning
+  Encadreur --> UC_Evaluate
+  Encadreur --> UC_EncDocs
+  Encadreur --> UC_EncMsg
+
+  Stagiaire --> UC_Profile
+  Stagiaire --> UC_MyStage
+  Stagiaire --> UC_MyTasks
+  UC_MyTasks --> UC_UpdateTask
+  UC_MyTasks --> UC_SubmitTask
+  Stagiaire --> UC_MyDocs
+  UC_MyDocs --> UC_Report
+  Stagiaire --> UC_MyPlanning
+  Stagiaire --> UC_MyEval
+  Stagiaire --> UC_MyAtt
+  Stagiaire --> UC_StagMsg
+
+  Admin --> UC_Notifs
+  Encadreur --> UC_Notifs
+  Stagiaire --> UC_Notifs
+  UC_Notifs --> UC_ReadNotifs
+  Admin --> UC_Download
+  Encadreur --> UC_Download
+  Stagiaire --> UC_Download
+
+  UC_Candidature --> Email
+  UC_DemandeStatus --> Email
+  UC_Proposals --> Email
+  UC_Affectations --> Notif
+  UC_CreateTask --> Notif
+  UC_SubmitTask --> Notif
+  UC_ReviewTask --> Notif
+  UC_Evaluate --> Notif
+  UC_Choix --> Notif

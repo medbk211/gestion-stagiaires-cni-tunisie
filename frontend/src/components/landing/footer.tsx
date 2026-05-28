@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom"
+﻿import { Link } from "react-router-dom"
 import { Mail, MapPin, Phone } from "lucide-react"
-import { CniBrand } from "@/components/brand/cni-brand"
+import { AppBrand } from "@/components/brand/app-brand"
 
 const navigation = [
   { label: "Plateforme", href: "#plateforme" },
@@ -16,7 +16,7 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_1fr]">
           <div>
             <Link to="/" className="inline-flex items-center gap-3">
-              <CniBrand />
+              <AppBrand />
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-600">
               Portail institutionnel de gestion des stages pour la coordination entre etablissements, encadreurs et
@@ -45,11 +45,11 @@ export function Footer() {
             <ul className="mt-4 space-y-3 text-sm text-slate-600">
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600" />
-                Centre National de l Informatique, Tunis
+                Organisation cliente
               </li>
               <li className="flex items-start gap-2">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600" />
-                stages@cni.tn
+                contact@entreprise.com
               </li>
               <li className="flex items-start gap-2">
                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600" />
@@ -60,7 +60,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col gap-2 border-t border-indigo-100 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>(c) 2026 CNI Tunisia. Tous droits reserves.</p>
+          <p>(c) 2026 Plateforme de Gestion des Stages. Tous droits reserves.</p>
           <div className="flex gap-5">
             <a href="#" className="transition-colors hover:text-slate-700">
               Mentions legales

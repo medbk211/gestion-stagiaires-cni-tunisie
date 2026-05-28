@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
+﻿import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
 import {
   AlertCircle,
   CalendarDays,
@@ -237,7 +237,7 @@ export default function StagiaireTachesKanbanPage() {
       setDataWarning("")
       setTaskActionError("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)

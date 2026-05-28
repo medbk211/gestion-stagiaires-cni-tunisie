@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   ArrowLeft,
   Briefcase,
@@ -213,7 +213,7 @@ export default function EncadrantStagiaireDetailsPage() {
     setPageError("")
     setDataWarning("")
 
-    const accessToken = localStorage.getItem("cni_access_token")
+    const accessToken = localStorage.getItem("stages_access_token")
     if (!accessToken) {
       setIsLoading(false)
       navigate("/connexion", { replace: true })
@@ -456,7 +456,7 @@ export default function EncadrantStagiaireDetailsPage() {
                           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Code projet</p>
                           <p className="mt-1 text-sm font-semibold text-foreground">{project.code_projet}</p>
                           <p className="mt-1 text-xs text-muted-foreground">
-                            {enumToLabel(project.departement)} · {enumToLabel(project.type_stage)}
+                            {enumToLabel(project.departement)} Â· {enumToLabel(project.type_stage)}
                           </p>
                         </div>
                         <div className="rounded-lg border border-border bg-background p-3">

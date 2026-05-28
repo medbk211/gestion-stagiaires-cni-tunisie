@@ -1,4 +1,4 @@
-
+﻿
 import { useState } from "react"
 import {
   Save,
@@ -52,17 +52,17 @@ export default function AdminSettingsPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="orgName" className="text-sm">{"Nom de l\u2019organisme"}</Label>
-                <Input id="orgName" defaultValue="Centre National de l'Informatique" className="text-sm" />
+                <Input id="orgName" defaultValue="Organisation cliente" className="text-sm" />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="orgAbbr" className="text-sm">{"Abr\u00e9viation"}</Label>
-                <Input id="orgAbbr" defaultValue="CNI" className="text-sm" />
+                <Input id="orgAbbr" defaultValue="STG" className="text-sm" />
               </div>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="adminEmail" className="text-sm">Email administrateur</Label>
-                <Input id="adminEmail" defaultValue="admin@cni.tn" type="email" className="text-sm" />
+                <Input id="adminEmail" defaultValue="admin@entreprise.com" type="email" className="text-sm" />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="adminTel" className="text-sm">{"T\u00e9l\u00e9phone"}</Label>

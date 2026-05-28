@@ -97,7 +97,7 @@ async def proposer_top3_projets(demande_id: int, db: Session):
 
     email_result = await send_email_with_template(
         emails=[demande.email],
-        subject="Selectionnez votre projet de stage - CNI",
+        subject="Selectionnez votre projet de stage",
         template_name="selection_projets.html",
         body={
             "prenom": demande.prenom,

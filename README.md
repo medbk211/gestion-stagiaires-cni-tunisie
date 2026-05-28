@@ -1,4 +1,4 @@
-# Gestion Stagiaires CNI Tunisie
+# Plateforme de Gestion des Stages
 
 Plateforme complete de gestion des candidatures de stage, affectations, suivi stagiaires et communication interne.
 
@@ -33,7 +33,7 @@ Le projet est organise en 2 parties:
 ## 4) Structure du repository
 
 ```text
-gestion-stagiaires-cni-tunisie/
+gestion-stagiaires/
 |-- backend/
 |   |-- app/
 |   |-- migrations/

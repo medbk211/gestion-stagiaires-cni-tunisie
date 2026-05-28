@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Eye, EyeOff, Lock, Mail, CheckCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -73,7 +73,7 @@ export default function ConnexionPage() {
   const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
 
   useEffect(() => {
-    const rememberedEmail = localStorage.getItem("cni_remember_email");
+    const rememberedEmail = localStorage.getItem("stages_remember_email");
     if (rememberedEmail) {
       setEmail(rememberedEmail);
       setRememberMe(true);
@@ -89,7 +89,7 @@ export default function ConnexionPage() {
 
   function validatePassword(value: string) {
     if (!value) return "Le mot de passe est obligatoire.";
-    if (value.length < 6) return "Le mot de passe doit contenir au moins 6 caractères.";
+    if (value.length < 6) return "Le mot de passe doit contenir au moins 6 caractÃ¨res.";
     return undefined;
   }
 
@@ -109,7 +109,7 @@ export default function ConnexionPage() {
     setFieldErrors(nextFieldErrors);
 
     if (nextFieldErrors.email || nextFieldErrors.password) {
-      setError("Vérifiez les informations saisies.");
+      setError("VÃ©rifiez les informations saisies.");
       return;
     }
 
@@ -136,25 +136,25 @@ export default function ConnexionPage() {
 
       if (!backendRole) throw new Error("Role utilisateur introuvable. Contactez l'administrateur.");
 
-      localStorage.setItem("cni_access_token", session.access_token);
-      localStorage.setItem("cni_refresh_token", session.refresh_token);
-      localStorage.setItem("cni_token_type", session.token_type);
-      localStorage.setItem("cni_user_role_backend", backendRole);
-      localStorage.setItem("cni_user_role", ROLE_ROUTE_SEGMENTS[backendRole]);
-      localStorage.setItem("cni_user_email", currentUser?.email || normalizedEmail);
+      localStorage.setItem("stages_access_token", session.access_token);
+      localStorage.setItem("stages_refresh_token", session.refresh_token);
+      localStorage.setItem("stages_token_type", session.token_type);
+      localStorage.setItem("stages_user_role_backend", backendRole);
+      localStorage.setItem("stages_user_role", ROLE_ROUTE_SEGMENTS[backendRole]);
+      localStorage.setItem("stages_user_email", currentUser?.email || normalizedEmail);
       localStorage.setItem(
-        "cni_user_name",
+        "stages_user_name",
         `${currentUser?.prenom || ""} ${currentUser?.nom || ""}`.trim()
       );
-      if (rememberMe) localStorage.setItem("cni_remember_email", normalizedEmail);
-      else localStorage.removeItem("cni_remember_email");
+      if (rememberMe) localStorage.setItem("stages_remember_email", normalizedEmail);
+      else localStorage.removeItem("stages_remember_email");
 
       navigate(`/dashboard/${ROLE_ROUTE_SEGMENTS[backendRole]}`);
     } catch (err) {
       localStorage.clear();
       if (err instanceof ApiError) setError(err.message);
       else if (err instanceof Error) setError(err.message);
-      else setError("Connexion impossible pour le moment. Réessayez plus tard.");
+      else setError("Connexion impossible pour le moment. RÃ©essayez plus tard.");
     } finally {
       setIsLoading(false);
     }
@@ -169,7 +169,7 @@ export default function ConnexionPage() {
     if (emailError) {
       setFieldErrors((prev) => ({ ...prev, email: emailError }));
       setForgotPasswordError(
-        "Saisissez une adresse email valide pour réinitialiser le mot de passe."
+        "Saisissez une adresse email valide pour rÃ©initialiser le mot de passe."
       );
       return;
     }
@@ -180,11 +180,11 @@ export default function ConnexionPage() {
         email: normalizedEmail,
       });
       setForgotPasswordFeedback(
-        response.message || "Si votre compte existe, un email de réinitialisation a été envoyé."
+        response.message || "Si votre compte existe, un email de rÃ©initialisation a Ã©tÃ© envoyÃ©."
       );
     } catch (err) {
       if (err instanceof ApiError) setForgotPasswordError(err.message);
-      else setForgotPasswordError("Impossible d'envoyer la demande de réinitialisation.");
+      else setForgotPasswordError("Impossible d'envoyer la demande de rÃ©initialisation.");
     } finally {
       setIsForgotPasswordLoading(false);
     }
@@ -198,14 +198,14 @@ export default function ConnexionPage() {
           className="mb-6 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900"
         >
           <ArrowLeft className="h-4 w-4" />
-          Retour à l'accueil
+          Retour Ã  l'accueil
         </Link>
 
         <Card className="border-indigo-100 bg-white/95 shadow-xl shadow-indigo-100/60">
           <CardHeader className="space-y-2 pb-4">
             <CardTitle className="text-2xl text-slate-900">Connexion</CardTitle>
             <CardDescription className="text-slate-600">
-              Entrez vos identifiants pour accéder à votre tableau de bord.
+              Entrez vos identifiants pour accÃ©der Ã  votre tableau de bord.
             </CardDescription>
           </CardHeader>
 
@@ -233,7 +233,7 @@ export default function ConnexionPage() {
                       if (fieldErrors.email) updateFieldError("email", nextValue.trim().toLowerCase());
                     }}
                     onBlur={(e) => updateFieldError("email", e.target.value.trim().toLowerCase())}
-                    placeholder="prenom.nom@cni.tn"
+                    placeholder="prenom.nom@entreprise.com"
                     className={`h-11 pl-10 focus-visible:ring-2 ${
                       fieldErrors.email
                         ? "border-red-400 focus-visible:ring-red-400/50"
@@ -301,7 +301,7 @@ export default function ConnexionPage() {
                   className="text-sm font-medium text-indigo-700 hover:text-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isForgotPasswordLoading}
                 >
-                  {isForgotPasswordLoading ? "Envoi..." : "Mot de passe oublié ?"}
+                  {isForgotPasswordLoading ? "Envoi..." : "Mot de passe oubliÃ© ?"}
                 </button>
               </div>
 
@@ -337,7 +337,7 @@ export default function ConnexionPage() {
         <p className="mt-6 text-center text-sm text-slate-600">
           Vous n'avez pas encore de compte ?{" "}
           <Link to="/candidature" className="font-semibold text-indigo-700 hover:text-indigo-800">
-            Déposer une candidature
+            DÃ©poser une candidature
           </Link>
         </p>
       </div>

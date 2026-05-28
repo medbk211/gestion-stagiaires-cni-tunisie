@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   ArrowLeft,
   Briefcase,
@@ -243,7 +243,7 @@ export default function AdminStagiaireDetailsPage() {
     setDataWarning("")
     setActionError("")
 
-    const accessToken = localStorage.getItem("cni_access_token")
+    const accessToken = localStorage.getItem("stages_access_token")
     if (!accessToken) {
       setIsLoading(false)
       navigate("/connexion", { replace: true })
@@ -661,7 +661,7 @@ export default function AdminStagiaireDetailsPage() {
                   type="email"
                   value={editForm.email}
                   onChange={(event) => setEditForm((prev) => ({ ...prev, email: event.target.value }))}
-                  placeholder="email@cni.tn"
+                  placeholder="email@entreprise.com"
                 />
               </div>
 

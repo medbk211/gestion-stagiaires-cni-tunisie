@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   ArrowLeft,
   Briefcase,
@@ -196,7 +196,7 @@ export default function AdminProjectDetailsPage() {
     setPageError("")
     setDataWarning("")
 
-    const accessToken = localStorage.getItem("cni_access_token")
+    const accessToken = localStorage.getItem("stages_access_token")
     if (!accessToken) {
       setIsLoading(false)
       navigate("/connexion", { replace: true })

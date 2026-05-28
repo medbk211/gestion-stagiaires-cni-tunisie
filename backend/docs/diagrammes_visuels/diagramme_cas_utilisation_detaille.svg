@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1770" viewBox="0 0 2200 1770">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569"/>
+    </marker>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { font: 700 30px Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 15px Arial, sans-serif; fill: #475569; }
+      .package-title { font: 700 18px Arial, sans-serif; fill: #334155; }
+      .uc { fill: #ffffff; stroke: #0f766e; stroke-width: 1.8; filter: drop-shadow(0 2px 3px rgb(15 23 42 / 0.10)); }
+      .uc-text { font: 14px Arial, sans-serif; fill: #0f172a; text-anchor: middle; dominant-baseline: middle; }
+      .actor-label { font: 700 15px Arial, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .uc-rel { fill: none; stroke: #475569; stroke-width: 1.55; marker-end: url(#arrow); opacity: 0.8; }
+      .dashed { stroke-dasharray: 7 5; }
+      .rel-label { font: 12px Arial, sans-serif; fill: #334155; text-anchor: middle; paint-order: stroke; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round; }
+    </style>
+  </defs>
+  <rect width="2200" height="1770" class="bg"/>
+  <text x="40" y="40" class="title">Diagramme de cas d'utilisation detaille</text>
+  <text x="40" y="62" class="subtitle">Plateforme de Gestion des Stages - acteurs, espaces fonctionnels et services transverses</text>
+
+  
+    <g>
+      <circle cx="130" cy="170" r="16" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+      <path d="M 130 186 V 238 M 100 205 H 160 M 130 238 L 104 280 M 130 238 L 156 280" stroke="#0f172a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <text x="130" y="312" class="actor-label">Candidat externe</text>
+    </g>
+  
+    <g>
+      <circle cx="130" cy="735" r="16" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+      <path d="M 130 751 V 803 M 100 770 H 160 M 130 803 L 104 845 M 130 803 L 156 845" stroke="#0f172a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <text x="130" y="877" class="actor-label">Administrateur</text>
+    </g>
+  
+    <g>
+      <circle cx="130" cy="1095" r="16" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+      <path d="M 130 1111 V 1163 M 100 1130 H 160 M 130 1163 L 104 1205 M 130 1163 L 156 1205" stroke="#0f172a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <text x="130" y="1237" class="actor-label">Encadreur</text>
+    </g>
+  
+    <g>
+      <circle cx="130" cy="1325" r="16" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+      <path d="M 130 1341 V 1393 M 100 1360 H 160 M 130 1393 L 104 1435 M 130 1393 L 156 1435" stroke="#0f172a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <text x="130" y="1467" class="actor-label">Stagiaire</text>
+    </g>
+  
+    <g>
+      <circle cx="1970" cy="170" r="16" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+      <path d="M 1970 186 V 238 M 1940 205 H 2000 M 1970 238 L 1944 280 M 1970 238 L 1996 280" stroke="#0f172a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <text x="1970" y="312" class="actor-label">Service email</text>
+    </g>
+  
+    <g>
+      <circle cx="1970" cy="1120" r="16" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+      <path d="M 1970 1136 V 1188 M 1940 1155 H 2000 M 1970 1188 L 1944 1230 M 1970 1188 L 1996 1230" stroke="#0f172a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <text x="1970" y="1262" class="actor-label">Notifications internes</text>
+    </g>
+
+  
+    <g>
+      <rect x="380" y="105" width="610" height="305" rx="14" fill="#f7fee7" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="398" y="135" class="package-title">Espace public</text>
+    </g>
+  
+    <g>
+      <rect x="380" y="480" width="910" height="170" rx="14" fill="#eff6ff" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="398" y="510" class="package-title">Authentification</text>
+    </g>
+  
+    <g>
+      <rect x="380" y="725" width="1480" height="300" rx="14" fill="#fff7ed" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="398" y="755" class="package-title">Back-office administrateur</text>
+    </g>
+  
+    <g>
+      <rect x="380" y="1110" width="1480" height="170" rx="14" fill="#fdf2f8" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="398" y="1140" class="package-title">Espace encadreur</text>
+    </g>
+  
+    <g>
+      <rect x="380" y="1340" width="1480" height="230" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="398" y="1370" class="package-title">Espace stagiaire</text>
+    </g>
+  
+    <g>
+      <rect x="380" y="1610" width="910" height="100" rx="14" fill="#eef2ff" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="398" y="1640" class="package-title">Transverse</text>
+    </g>
+
+  <g opacity="0.95">
+    <path d="M 170 250 C 295 250, 295 170, 420 170" class="uc-rel"/>
+    
+
+    <path d="M 170 250 C 295 250, 295 300, 420 300" class="uc-rel"/>
+    
+
+    <path d="M 170 250 C 295 250, 295 365, 420 365" class="uc-rel"/>
+    
+
+    <path d="M 680 299 C 695 299, 695 299, 710 299" class="uc-rel dashed"/>
+    <text x="695" y="291" class="rel-label">&lt;&lt;include&gt;&gt;</text>
+
+    <path d="M 680 364 C 695 364, 695 364, 710 364" class="uc-rel dashed"/>
+    <text x="695" y="356" class="rel-label">&lt;&lt;extend&gt;&gt;</text>
+
+    <path d="M 170 815 C 295 815, 295 545, 420 545" class="uc-rel"/>
+    
+
+    <path d="M 170 815 C 295 815, 295 790, 420 790" class="uc-rel"/>
+    
+
+    <path d="M 170 815 C 295 815, 295 855, 420 855" class="uc-rel"/>
+    
+
+    <path d="M 170 815 C 295 815, 295 920, 420 920" class="uc-rel"/>
+    
+
+    <path d="M 170 815 C 440 815, 440 985, 710 985" class="uc-rel"/>
+    
+
+    <path d="M 170 1175 C 295 1175, 295 1175, 420 1175" class="uc-rel"/>
+    
+
+    <path d="M 170 1175 C 440 1175, 440 1175, 710 1175" class="uc-rel"/>
+    
+
+    <path d="M 170 1175 C 730 1175, 730 1175, 1290 1175" class="uc-rel"/>
+    
+
+    <path d="M 170 1175 C 585 1175, 585 1240, 1000 1240" class="uc-rel"/>
+    
+
+    <path d="M 170 1175 C 875 1175, 875 1240, 1580 1240" class="uc-rel"/>
+    
+
+    <path d="M 170 1405 C 295 1405, 295 1405, 420 1405" class="uc-rel"/>
+    
+
+    <path d="M 170 1405 C 440 1405, 440 1405, 710 1405" class="uc-rel"/>
+    
+
+    <path d="M 170 1405 C 585 1405, 585 1405, 1000 1405" class="uc-rel"/>
+    
+
+    <path d="M 170 1405 C 295 1405, 295 1470, 420 1470" class="uc-rel"/>
+    
+
+    <path d="M 170 1405 C 875 1405, 875 1470, 1580 1470" class="uc-rel"/>
+    
+
+    <path d="M 680 1674 C 695 1674, 695 1674, 710 1674" class="uc-rel dashed"/>
+    <text x="695" y="1666" class="rel-label">&lt;&lt;include&gt;&gt;</text>
+
+    <path d="M 1970 250 C 1850 250, 1850 855, 1730 855" class="uc-rel"/>
+    
+
+    <path d="M 1970 250 C 1850 250, 1850 790, 1730 790" class="uc-rel"/>
+    
+
+    <path d="M 1970 250 C 1850 250, 1850 610, 1730 610" class="uc-rel"/>
+    
+
+    <path d="M 1970 1200 C 1850 1200, 1850 1175, 1730 1175" class="uc-rel"/>
+    
+
+    <path d="M 1970 1200 C 1850 1200, 1850 1240, 1730 1240" class="uc-rel"/>
+    
+
+    <path d="M 1970 1200 C 1850 1200, 1850 364, 1730 364" class="uc-rel"/>
+    
+
+    <path d="M 1970 1200 C 1325 1200, 1325 1674, 680 1674" class="uc-rel"/>
+    </g>
+  
+    <g>
+      <rect x="420" y="145" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="174" class="uc-text">Consulter accueil</text>
+    </g>
+
+    <g>
+      <rect x="420" y="210" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="239" class="uc-text">Consulter options candidature</text>
+    </g>
+
+    <g>
+      <rect x="420" y="275" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="304" class="uc-text">Soumettre candidature</text>
+    </g>
+
+    <g>
+      <rect x="710" y="275" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="304" class="uc-text">Joindre CV et lettre</text>
+    </g>
+
+    <g>
+      <rect x="420" y="340" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="369" class="uc-text">Ouvrir lien tokenise</text>
+    </g>
+
+    <g>
+      <rect x="710" y="340" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="369" class="uc-text">Choisir projet propose</text>
+    </g>
+
+    <g>
+      <rect x="420" y="520" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="549" class="uc-text">Se connecter</text>
+    </g>
+
+    <g>
+      <rect x="710" y="520" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="549" class="uc-text">Consulter session</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="520" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="549" class="uc-text">Renouveler token</text>
+    </g>
+
+    <g>
+      <rect x="420" y="585" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="614" class="uc-text">Se deconnecter</text>
+    </g>
+
+    <g>
+      <rect x="710" y="585" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="614" class="uc-text">Reset mot de passe</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="585" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="614" class="uc-text">Changer mot de passe</text>
+    </g>
+
+    <g>
+      <rect x="420" y="765" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="794" class="uc-text">Dashboard global</text>
+    </g>
+
+    <g>
+      <rect x="710" y="765" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="794" class="uc-text">Gerer utilisateurs</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="765" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="794" class="uc-text">Gerer candidatures</text>
+    </g>
+
+    <g>
+      <rect x="1290" y="765" width="260" height="48" rx="24" class="uc"/>
+      <text x="1420" y="794" class="uc-text">Changer statut demande</text>
+    </g>
+
+    <g>
+      <rect x="1580" y="765" width="260" height="48" rx="24" class="uc"/>
+      <text x="1710" y="794" class="uc-text">Historique demande</text>
+    </g>
+
+    <g>
+      <rect x="420" y="830" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="859" class="uc-text">Gerer encadreurs</text>
+    </g>
+
+    <g>
+      <rect x="710" y="830" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="859" class="uc-text">Gerer projets</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="830" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="859" class="uc-text">Gerer fiche PDF projet</text>
+    </g>
+
+    <g>
+      <rect x="1290" y="830" width="260" height="48" rx="24" class="uc"/>
+      <text x="1420" y="859" class="uc-text">Proposer top projets</text>
+    </g>
+
+    <g>
+      <rect x="1580" y="830" width="260" height="48" rx="24" class="uc"/>
+      <text x="1710" y="859" class="uc-text">Gerer affectations</text>
+    </g>
+
+    <g>
+      <rect x="420" y="895" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="924" class="uc-text">Assigner encadreur</text>
+    </g>
+
+    <g>
+      <rect x="710" y="895" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="924" class="uc-text">Gerer stages</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="895" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="924" class="uc-text">Gerer stagiaires</text>
+    </g>
+
+    <g>
+      <rect x="1290" y="895" width="260" height="48" rx="24" class="uc"/>
+      <text x="1420" y="924" class="uc-text">Valider documents</text>
+    </g>
+
+    <g>
+      <rect x="1580" y="895" width="260" height="48" rx="24" class="uc"/>
+      <text x="1710" y="924" class="uc-text">Generer attestations</text>
+    </g>
+
+    <g>
+      <rect x="710" y="960" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="989" class="uc-text">Consulter statistiques</text>
+    </g>
+
+    <g>
+      <rect x="420" y="1150" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="1179" class="uc-text">Overview encadreur</text>
+    </g>
+
+    <g>
+      <rect x="710" y="1150" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="1179" class="uc-text">Voir stagiaires encadres</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="1150" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="1179" class="uc-text">Voir stages encadres</text>
+    </g>
+
+    <g>
+      <rect x="1290" y="1150" width="260" height="48" rx="24" class="uc"/>
+      <text x="1420" y="1179" class="uc-text">Creer tache</text>
+    </g>
+
+    <g>
+      <rect x="1580" y="1150" width="260" height="48" rx="24" class="uc"/>
+      <text x="1710" y="1179" class="uc-text">Suivre taches</text>
+    </g>
+
+    <g>
+      <rect x="420" y="1215" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="1244" class="uc-text">Reviser soumission</text>
+    </g>
+
+    <g>
+      <rect x="710" y="1215" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="1244" class="uc-text">Valider tache</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="1215" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="1244" class="uc-text">Gerer planning</text>
+    </g>
+
+    <g>
+      <rect x="1290" y="1215" width="260" height="48" rx="24" class="uc"/>
+      <text x="1420" y="1244" class="uc-text">Evaluer stagiaire</text>
+    </g>
+
+    <g>
+      <rect x="1580" y="1215" width="260" height="48" rx="24" class="uc"/>
+      <text x="1710" y="1244" class="uc-text">Messagerie</text>
+    </g>
+
+    <g>
+      <rect x="420" y="1380" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="1409" class="uc-text">Profil</text>
+    </g>
+
+    <g>
+      <rect x="710" y="1380" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="1409" class="uc-text">Consulter stage/projet</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="1380" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="1409" class="uc-text">Voir mes taches</text>
+    </g>
+
+    <g>
+      <rect x="1290" y="1380" width="260" height="48" rx="24" class="uc"/>
+      <text x="1420" y="1409" class="uc-text">Statut tache</text>
+    </g>
+
+    <g>
+      <rect x="1580" y="1380" width="260" height="48" rx="24" class="uc"/>
+      <text x="1710" y="1409" class="uc-text">Soumettre travail</text>
+    </g>
+
+    <g>
+      <rect x="420" y="1445" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="1474" class="uc-text">Mes documents</text>
+    </g>
+
+    <g>
+      <rect x="710" y="1445" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="1474" class="uc-text">Deposer rapport final</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="1445" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="1474" class="uc-text">Planning</text>
+    </g>
+
+    <g>
+      <rect x="1290" y="1445" width="260" height="48" rx="24" class="uc"/>
+      <text x="1420" y="1474" class="uc-text">Evaluations</text>
+    </g>
+
+    <g>
+      <rect x="1580" y="1445" width="260" height="48" rx="24" class="uc"/>
+      <text x="1710" y="1474" class="uc-text">Attestations</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="1510" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="1539" class="uc-text">Messagerie</text>
+    </g>
+
+    <g>
+      <rect x="420" y="1650" width="260" height="48" rx="24" class="uc"/>
+      <text x="550" y="1679" class="uc-text">Notifications</text>
+    </g>
+
+    <g>
+      <rect x="710" y="1650" width="260" height="48" rx="24" class="uc"/>
+      <text x="840" y="1679" class="uc-text">Marquer comme lues</text>
+    </g>
+
+    <g>
+      <rect x="1000" y="1650" width="260" height="48" rx="24" class="uc"/>
+      <text x="1130" y="1679" class="uc-text">Telecharger fichiers</text>
+    </g>
+</svg>

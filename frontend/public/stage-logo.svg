@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-labelledby="title desc">
+  <title id="title">Plateforme de Gestion des Stages</title>
+  <desc id="desc">Symbole generique de gestion des stages</desc>
+  <defs>
+    <linearGradient id="bg" x1="24" x2="156" y1="22" y2="158" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#14b8a6"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" rx="36" fill="url(#bg)"/>
+  <path d="M47 58h86c5.5 0 10 4.5 10 10v55c0 5.5-4.5 10-10 10H47c-5.5 0-10-4.5-10-10V68c0-5.5 4.5-10 10-10Z" fill="#fff" opacity=".95"/>
+  <path d="M68 58v-8c0-5.5 4.5-10 10-10h24c5.5 0 10 4.5 10 10v8" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+  <path d="M57 86h66M57 105h48M57 124h30" stroke="#0f172a" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="128" cy="119" r="19" fill="#facc15"/>
+  <path d="m119 119 6 6 12-14" fill="none" stroke="#0f172a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

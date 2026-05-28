@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+﻿import { useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import {
   AlertCircle,
@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CniBrand } from "@/components/brand/cni-brand"
+import { AppBrand } from "@/components/brand/app-brand"
 import { ApiError, requestJson } from "@/lib/api"
 import { cn } from "@/lib/utils"
 
@@ -207,7 +207,7 @@ export default function SelectionProjetPage() {
         <Card className="border-slate-200/80 bg-white/90 shadow-lg shadow-sky-100/60 backdrop-blur">
           <CardContent className="flex flex-col gap-5 p-5 sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
-              <CniBrand subtitle="Choix de projet de stage" />
+              <AppBrand subtitle="Choix de projet de stage" />
               <Badge className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-800">
                 Lien securise
               </Badge>
@@ -304,7 +304,7 @@ export default function SelectionProjetPage() {
                               {project.intitule}
                             </p>
                             <p className="mt-1 text-xs text-slate-600">
-                              {project.code_projet} • {enumToLabel(project.departement)}
+                              {project.code_projet} â€¢ {enumToLabel(project.departement)}
                             </p>
                           </div>
                           <div

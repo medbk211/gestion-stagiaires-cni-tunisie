@@ -22,7 +22,7 @@ from app.modules.notifications.router import router as notifications_router
 from app.modules.attestation.router import router as attestation_router
 
 
-app = FastAPI(title="Gestion des Stagiaires - CNI")
+app = FastAPI(title="Plateforme de Gestion des Stages")
 
 # Prefix par module
 app.include_router(utilisateur_router, tags=["utilisateur"], prefix="/utilisateur")

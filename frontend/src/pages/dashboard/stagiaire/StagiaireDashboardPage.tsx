@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
+﻿import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
 import {
   AlertCircle,
   BookOpen,
@@ -424,7 +424,7 @@ export default function StagiaireDashboardPage() {
     if (fromUser) {
       return fromUser
     }
-    const fromStorage = localStorage.getItem("cni_user_name") || ""
+    const fromStorage = localStorage.getItem("stages_user_name") || ""
     return fromStorage.trim() || "Stagiaire"
   }, [currentUser?.nom, currentUser?.prenom, profile?.nom, profile?.prenom])
 
@@ -497,7 +497,7 @@ export default function StagiaireDashboardPage() {
       setPageError("")
       setDataWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)
@@ -636,8 +636,8 @@ export default function StagiaireDashboardPage() {
         }
 
         if (nextCurrentUser) {
-          localStorage.setItem("cni_user_email", nextCurrentUser.email)
-          localStorage.setItem("cni_user_name", `${nextCurrentUser.prenom} ${nextCurrentUser.nom}`.trim())
+          localStorage.setItem("stages_user_email", nextCurrentUser.email)
+          localStorage.setItem("stages_user_name", `${nextCurrentUser.prenom} ${nextCurrentUser.nom}`.trim())
         }
 
         setCurrentUser(nextCurrentUser)
@@ -1109,7 +1109,7 @@ export default function StagiaireDashboardPage() {
                           className="gap-2"
                         >
                           <Download className="h-4 w-4" />
-                          Télécharger
+                          TÃ©lÃ©charger
                         </Button>
                       </div>
                     ))}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import {
   LayoutDashboard,
@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import { CniBrand } from "@/components/brand/cni-brand"
+import { AppBrand } from "@/components/brand/app-brand"
 import { ApiError, clearAuthSession, requestAuthJson } from "@/lib/api"
 
 export interface NavItem {
@@ -151,7 +151,7 @@ export function DashboardShell({
   topSubtitle,
   topActions,
   sidebarFooter,
-  logoutLabel = "Déconnexion",
+  logoutLabel = "DÃ©connexion",
   onLogout,
   roleTheme,
 }: DashboardShellProps) {
@@ -347,7 +347,7 @@ export function DashboardShell({
                 to="/"
                 className="flex items-center gap-3 rounded-xl px-1 py-1 transition-colors hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
-                <CniBrand
+                <AppBrand
                   logoClassName="h-8 w-8"
                   titleClassName="text-slate-900"
                   subtitleClassName="text-[11px] text-slate-500"

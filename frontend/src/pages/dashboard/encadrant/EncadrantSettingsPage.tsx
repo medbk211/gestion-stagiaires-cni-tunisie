@@ -63,7 +63,7 @@ export default function EncadrantSettingsPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <Label className="text-sm">Email</Label>
-                <Input defaultValue="leila.k@cni.tn" type="email" className="text-sm" />
+                <Input defaultValue="leila.k@entreprise.com" type="email" className="text-sm" />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label className="text-sm">{"T\u00e9l\u00e9phone"}</Label>

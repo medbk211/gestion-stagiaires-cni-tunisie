@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   BarChart3,
   Briefcase,
@@ -168,7 +168,7 @@ export default function AdminDashboardPage() {
       setPageError("")
       setDataWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)
@@ -219,9 +219,9 @@ export default function AdminDashboardPage() {
         }
 
         if (nextUser) {
-          localStorage.setItem("cni_user_name", `${nextUser.prenom} ${nextUser.nom}`.trim())
-          localStorage.setItem("cni_user_email", nextUser.email)
-          localStorage.setItem("cni_user_role", nextUser.role)
+          localStorage.setItem("stages_user_name", `${nextUser.prenom} ${nextUser.nom}`.trim())
+          localStorage.setItem("stages_user_email", nextUser.email)
+          localStorage.setItem("stages_user_role", nextUser.role)
         }
 
         setCurrentUser(nextUser)
@@ -279,12 +279,12 @@ export default function AdminDashboardPage() {
     if (fromUser) {
       return fromUser
     }
-    const fromStorage = localStorage.getItem("cni_user_name") || ""
+    const fromStorage = localStorage.getItem("stages_user_name") || ""
     return fromStorage.trim() || "Administrateur"
   }, [currentUser])
 
   const userRole = useMemo(() => {
-    const fromRole = enumToLabel(currentUser?.role || localStorage.getItem("cni_user_role"))
+    const fromRole = enumToLabel(currentUser?.role || localStorage.getItem("stages_user_role"))
     return fromRole !== "-" ? fromRole : "Administrateur"
   }, [currentUser?.role])
 
@@ -411,7 +411,7 @@ export default function AdminDashboardPage() {
                               <tr key={demande.id} className="border-b border-border/50 last:border-0 hover:bg-secondary/30">
                                 <td className="py-3">
                                   <p className="font-medium text-foreground">{`${demande.prenom} ${demande.nom}`}</p>
-                                  <p className="text-xs text-muted-foreground">#{demande.id} · {formatDate(demande.created_at)}</p>
+                                  <p className="text-xs text-muted-foreground">#{demande.id} Â· {formatDate(demande.created_at)}</p>
                                 </td>
                                 <td className="py-3 hidden sm:table-cell text-xs text-muted-foreground">
                                   {enumToLabel(demande.niveau_etude)}

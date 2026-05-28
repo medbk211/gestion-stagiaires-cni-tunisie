@@ -1,4 +1,4 @@
-import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from "react"
+﻿import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from "react"
 import {
   Briefcase,
   ChevronRight,
@@ -272,7 +272,7 @@ export default function AdminProjectsPage() {
       setPageError("")
       setDataWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)

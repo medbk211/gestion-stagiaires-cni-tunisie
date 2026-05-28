@@ -1,0 +1,335 @@
+@startuml
+title Diagramme de classes detaille - Plateforme de Gestion des Stages
+left to right direction
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+
+package "Utilisateurs" {
+  class Utilisateur {
+    +id: int
+    +nom: String
+    +prenom: String
+    +email: String
+    +motDePasse: String
+    +role: RoleEnum
+    +actif: Boolean
+    +emailVerifie: Boolean
+    +dateCreation: DateTime
+    +dateModification: DateTime
+    +dernierLogin: DateTime
+  }
+
+  class Stagiaire {
+    +matricule: String
+    +type_stage: TypeStageEnum
+    +statut_stage: StatutStageEnum
+    +date_debut_stage: Date
+    +date_fin_stage: Date
+    +etablissement: String
+    +niveau_etude: String
+    +encadreur_id: int
+    +date_validation: DateTime
+    +note_finale: int
+  }
+
+  class Encadreur {
+    +matricule: String
+    +grade: GradeEnum
+    +departement: DepartementEnum
+    +actif_encadrement: Boolean
+    +is_active: Boolean
+    +max_stagiaires: int
+    +nb_stagiaires_actuels(): int
+    +peut_prendre_stagiaire(): bool
+  }
+
+  class ResetMotDePasse {
+    +id: int
+    +utilisateur_id: int
+    +token: String
+    +date_creation: DateTime
+    +date_expiration: Date
+    +utilisee: Boolean
+  }
+}
+
+package "Candidatures et affectations" {
+  class DemandeStage {
+    +id: int
+    +nom: String
+    +prenom: String
+    +email: String
+    +telephone: String
+    +etablissement: String
+    +niveau_etude: String
+    +departement_souhaite: String
+    +date_debut_souhaitee: Date
+    +date_fin_souhaitee: Date
+    +competences: JSON
+    +tags: JSON
+    +statut: StatutDemandeEnum
+    +encadreur_id: int
+    +created_at: DateTime
+  }
+
+  class DemandeStageStatusHistory {
+    +id: int
+    +demande_id: int
+    +previous_status: String
+    +new_status: String
+    +reason: Text
+    +changed_by: int
+    +changed_at: DateTime
+  }
+
+  class PropositionProjet {
+    +id: int
+    +demande_id: int
+    +projet_id: int
+    +token: String
+    +date_expiration: DateTime
+    +statut: StatutPropositionEnum
+    +date_choix: DateTime
+    +created_at: DateTime
+  }
+
+  class ChoixProjet {
+    +id: int
+    +demande_id: int
+    +projet_id: int
+    +date_choix: DateTime
+    +created_at: DateTime
+  }
+
+  class Affectation {
+    +id: int
+    +demande_id: int
+    +projet_id: int
+    +encadreur_id: int
+    +stagiaire_id: int
+    +statut: StatutAffectationEnum
+    +date_affectation: DateTime
+    +date_debut_prevue: DateTime
+    +date_fin_prevue: DateTime
+    +created_at: DateTime
+    +updated_at: DateTime
+  }
+}
+
+package "Projets et stages" {
+  class Projet {
+    +id: int
+    +code_projet: String
+    +intitule: String
+    +departement: DepartementEnum
+    +type_stage: TypeStageEnum
+    +description: Text
+    +objectifs: Text
+    +livrables: Text
+    +fiche_pdf_path: String
+    +duree_semaines: int
+    +charge_hebdo: int
+    +niveau_requis: NiveauEnum
+    +competences: JSON
+    +tags: JSON
+    +complexite: int
+    +priorite: int
+    +status: ProjetStatusEnum
+    +nombre_max_stagiaires: int
+    +encadreur_id: int
+    +created_at: DateTime
+    +updated_at: DateTime
+  }
+
+  class Stage {
+    +id: int
+    +demandestage_id: int
+    +stagiaire_id: int
+    +encadreur_id: int
+    +projet_id: int
+    +date_debut: Date
+    +date_fin: Date
+    +statut_stage: StatutStageEnum
+    +texte_objectif: String
+  }
+}
+
+package "Suivi stage" {
+  class Task {
+    +id: int
+    +title: String
+    +description: Text
+    +stage_id: int
+    +projet_id: int
+    +created_by: int
+    +status: taskStatusEnum
+    +priority: taskPriorityEnum
+    +deadline: DateTime
+    +created_at: DateTime
+    +updated_at: DateTime
+  }
+
+  class Task_submission {
+    +id: int
+    +task_id: int
+    +stagiaire_id: int
+    +content: Text
+    +file_url: String
+    +submitted_at: DateTime
+  }
+
+  class Evaluation {
+    +id: int
+    +stagiaire_id: int
+    +projet_id: int
+    +encadreur_id: int
+    +note: int
+    +commentaire: Text
+    +created_at: DateTime
+    +updated_at: DateTime
+  }
+
+  class PlanningEvent {
+    +id: int
+    +encadreur_id: int
+    +stagiaire_id: int
+    +title: String
+    +description: Text
+    +event_type: planningEventTypeEnum
+    +priority: taskPriorityEnum
+    +attendee_name: String
+    +location: String
+    +start_at: DateTime
+    +end_at: DateTime
+    +created_at: DateTime
+    +updated_at: DateTime
+  }
+
+  class Attestation {
+    +id: int
+    +stagiaire_id: int
+    +stage_id: int
+    +created_by: int
+    +numero_attestation: String
+    +file_path: String
+    +date_debut_stage: DateTime
+    +date_fin_stage: DateTime
+    +description: Text
+    +created_at: DateTime
+    +updated_at: DateTime
+  }
+}
+
+package "Documents et communication" {
+  class Document {
+    +id: int
+    +demande_id: int
+    +user_id: int
+    +type: DocumentTypeEnum
+    +file_path: String
+    +created_at: DateTime
+  }
+
+  class DocumentReview {
+    +id: int
+    +document_id: int
+    +status: String
+    +comment: Text
+    +reviewed_by: int
+    +reviewed_at: DateTime
+  }
+
+  class MessageInterne {
+    +id: int
+    +id_expediteur: int
+    +id_destinataire: int
+    +sujet: String
+    +contenu: String
+    +date_envoi: DateTime
+    +lu: Boolean
+  }
+
+  class Notification {
+    +id: int
+    +user_id: int
+    +title: String
+    +message: Text
+    +category: String
+    +payload: Text
+    +created_at: DateTime
+    +read_at: DateTime
+  }
+}
+
+package "Reporting" {
+  class Statistiques {
+    +id: int
+    +periode: String
+    +nombreDemandes: int
+    +nbrStagesvalides: int
+    +nbrStagesencours: int
+    +taxeReussite: float
+  }
+}
+
+Utilisateur <|-- Stagiaire
+Utilisateur <|-- Encadreur
+
+Utilisateur "1" o-- "0..*" ResetMotDePasse : reset_tokens
+Utilisateur "1" o-- "0..*" Document : documents
+Utilisateur "1" --> "0..*" MessageInterne : expediteur
+Utilisateur "1" --> "0..*" MessageInterne : destinataire
+Utilisateur "1" --> "0..*" Notification : notifications
+Utilisateur "1" --> "0..*" Attestation : cree
+Utilisateur "1" --> "0..*" DocumentReview : revise
+
+Encadreur "1" --> "0..*" Stagiaire : encadre
+Encadreur "1" --> "0..*" DemandeStage : traite
+Encadreur "1" --> "0..*" Projet : propose
+Encadreur "1" --> "0..*" Affectation : affecte
+Encadreur "1" --> "0..*" Stage : supervise
+Encadreur "1" --> "0..*" Task : cree
+Encadreur "1" --> "0..*" Evaluation : saisit
+Encadreur "1" --> "0..*" PlanningEvent : planifie
+
+DemandeStage "1" o-- "0..*" Document : contient
+DemandeStage "1" o-- "0..*" DemandeStageStatusHistory : historique
+DemandeStage "1" --> "0..*" PropositionProjet : propositions
+DemandeStage "1" --> "0..*" ChoixProjet : choix
+DemandeStage "1" --> "0..*" Affectation : affectations
+DemandeStage "1" --> "0..1" Stage : devient
+
+Projet "1" --> "0..*" PropositionProjet : propose
+Projet "1" --> "0..*" ChoixProjet : choisi
+Projet "1" --> "0..*" Affectation : affectations
+Projet "1" --> "0..*" Stage : realise
+Projet "1" o-- "0..*" Task : taches
+Projet "1" o-- "0..*" Evaluation : evaluations
+
+Stagiaire "1" --> "0..*" Affectation : affectations
+Stagiaire "1" --> "0..*" Stage : stages
+Stagiaire "1" --> "0..*" Task_submission : soumissions
+Stagiaire "1" o-- "0..*" Evaluation : evaluations
+Stagiaire "1" o-- "0..*" Attestation : attestations
+Stagiaire "1" --> "0..*" PlanningEvent : participe
+
+Stage "1" o-- "0..*" Task : taches
+Stage "1" o-- "0..*" Attestation : attestations
+
+Task "1" --> "0..*" Task_submission : soumissions
+Document "1" --> "0..*" DocumentReview : reviews
+
+note right of Evaluation
+  Contrainte:
+  note entre 0 et 20.
+  Une evaluation est unique
+  par stagiaire, projet et encadreur.
+end note
+
+note right of Affectation
+  Relie demande, projet,
+  encadreur et stagiaire.
+  Le stagiaire peut etre null
+  avant creation du compte.
+end note
+@enduml

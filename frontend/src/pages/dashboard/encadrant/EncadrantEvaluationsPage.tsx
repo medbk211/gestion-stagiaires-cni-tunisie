@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
+﻿import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
 import {
   Calendar,
   CheckCircle2,
@@ -205,7 +205,7 @@ export default function EncadrantEvaluationsPage() {
       setDataWarning("")
       setActionSuccess("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)
@@ -791,7 +791,7 @@ export default function EncadrantEvaluationsPage() {
               </select>
               {selectedCandidate?.stage && (
                 <p className="text-[11px] text-muted-foreground">
-                  Projet #{selectedCandidate.stage.projet_id} • {selectedCandidate.taskCompleted}/{selectedCandidate.taskTotal} taches completees
+                  Projet #{selectedCandidate.stage.projet_id} â€¢ {selectedCandidate.taskCompleted}/{selectedCandidate.taskTotal} taches completees
                 </p>
               )}
             </div>

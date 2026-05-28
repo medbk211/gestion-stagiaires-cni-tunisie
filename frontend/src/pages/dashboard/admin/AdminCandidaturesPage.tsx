@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+﻿import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Building2,
   Calendar,
@@ -396,7 +396,7 @@ export default function AdminCandidaturesPage() {
       setPageError("")
       setDataWarning("")
 
-      const accessToken = localStorage.getItem("cni_access_token")
+      const accessToken = localStorage.getItem("stages_access_token")
       if (!accessToken) {
         if (silent) {
           setIsRefreshing(false)
@@ -1175,7 +1175,7 @@ export default function AdminCandidaturesPage() {
 
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/60 px-3 py-2.5">
                   <p className="text-xs text-slate-600">
-                    {filteredDemandes.length} candidature(s) • page {currentPage}/{totalPages}
+                    {filteredDemandes.length} candidature(s) â€¢ page {currentPage}/{totalPages}
                   </p>
                   <div className="flex items-center gap-1.5">
                     <Button
@@ -1476,7 +1476,7 @@ export default function AdminCandidaturesPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmer les propositions de projets</AlertDialogTitle>
             <AlertDialogDescription>
-              {proposedProjects.length} projet(s) proposé(s) au stagiaire. Vérifiez la sélection avant de confirmer.
+              {proposedProjects.length} projet(s) proposÃ©(s) au stagiaire. VÃ©rifiez la sÃ©lection avant de confirmer.
             </AlertDialogDescription>
           </AlertDialogHeader>
 
